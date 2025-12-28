@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok Demo Dinámico</title>
+<title>TikTok Demo Funcional iOS</title>
 <style>
 :root{
   --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
@@ -60,7 +60,7 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
+      <input id="user" placeholder="@usuario">
     </div>
     <div class="error" id="error">Formato inválido</div>
 
@@ -86,13 +86,20 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
 <audio id="coinSound" src="https://freesound.org/data/previews/341/341695_624037-lq.mp3"></audio>
 
 <script>
-let historial=[]; 
+const user = document.getElementById("user");
+const hist = document.getElementById("hist");
+const error = document.getElementById("error");
+const avatar = document.getElementById("avatar");
+const saldo = document.getElementById("saldo");
+const coinSound = document.getElementById("coinSound");
+
+let historial=[];
 const USUARIOS={};
-const saldo=document.getElementById("saldo");
-const coinSound=document.getElementById("coinSound");
 
 function haptic(){if(navigator.vibrate) navigator.vibrate(10);}
 function bloquear(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
+
+user.addEventListener('input', validarUsuario);
 
 function validarUsuario(){
   const u=user.value.trim(); haptic();
@@ -103,7 +110,7 @@ function validarUsuario(){
   }
   error.style.display="none"; 
   avatar.innerText=u[1].toUpperCase();
-  if(!USUARIOS[u]) USUARIOS[u]=0; // Crear usuario dinámicamente si no existe
+  if(!USUARIOS[u]) USUARIOS[u]=0; // Crear usuario dinámicamente
   saldo.innerText=USUARIOS[u]; 
   historial=[]; 
   hist.innerHTML=""; 
