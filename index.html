@@ -2,184 +2,149 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>TikTok Panel — Simulador</title>
-
-<link rel="manifest" href="data:application/json,{
-  &quot;name&quot;:&quot;TikTok Panel&quot;,
-  &quot;display&quot;:&quot;standalone&quot;
-}">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TikTok</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  background:#000;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  color:#fff;
+:root{
+  --bg:#0f0f0f;
+  --card:#1c1c1e;
+  --pink:#ff0050;
+  --text:#fff;
+  --muted:#9b9b9b;
 }
-.app{max-width:420px;margin:auto;min-height:100vh}
-.header{
-  padding:14px;
-  text-align:center;
-  font-size:20px;
-  font-weight:700;
-  border-bottom:1px solid #222;
+
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+body{margin:0;background:black;color:var(--text);display:flex;justify-content:center}
+
+/* VIDEO BACKGROUND */
+.video-bg{
+  position:fixed;inset:0;
+  background:linear-gradient(180deg,#111,#000);
+  animation:videoMove 8s infinite alternate;
+  z-index:-1;
 }
-.header span{color:#ff0050}
-.section{padding:16px}
-input{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:#111;
-  color:#fff;
-  font-size:16px;
-  margin-bottom:14px;
+@keyframes videoMove{
+  from{filter:brightness(0.9)}
+  to{filter:brightness(1.1)}
 }
-.card{
-  background:#111;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:12px;
-  border:1px solid #222;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+
+.app{width:100%;max-width:420px;min-height:100vh;padding:16px}
+.header{text-align:center;font-weight:700;font-size:22px;margin:10px 0 18px}
+
+.card{background:var(--card);border-radius:18px;padding:18px}
+
+/* USER */
+.user{display:flex;align-items:center;gap:12px}
+.avatar{
+  width:46px;height:46px;border-radius:50%;
+  background:#333;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:18px;text-transform:uppercase;
 }
-.card.active{border-color:#ff0050}
-button{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:16px;
-  background:#ff0050;
-  color:#fff;
-  font-size:17px;
-  font-weight:700;
+.user input{
+  flex:1;background:#2a2a2c;border:none;color:white;
+  padding:12px;border-radius:12px;font-size:15px
 }
-button:disabled{opacity:.5}
-.loader,.success{display:none;text-align:center;padding:20px}
-.spinner{
-  width:46px;height:46px;
-  border:4px solid #333;
-  border-top:4px solid #ff0050;
-  border-radius:50%;
-  margin:0 auto 12px;
-  animation:spin 1s linear infinite;
+
+/* BALANCE */
+.balance{text-align:center;margin:22px 0}
+.balance .coins{font-size:36px;font-weight:800}
+.balance span{color:var(--muted);font-size:14px}
+
+/* PACKAGES */
+.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pkg{
+  background:#2a2a2c;border-radius:16px;padding:14px;
+  text-align:center;cursor:pointer;transition:.15s
 }
-@keyframes spin{to{transform:rotate(360deg)}}
-.progress{height:8px;background:#222;border-radius:8px;overflow:hidden}
-.bar{height:100%;width:0%;background:#ff0050;transition:.3s}
+.pkg:active{transform:scale(.96)}
+.pkg strong{display:block;font-size:18px}
+.pkg span{color:var(--muted);font-size:13px}
+
+/* CONFIRM */
+.confirm{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  display:flex;align-items:center;justify-content:center;
+  animation:fade .25s
+}
+.paybox{
+  background:#1c1c1e;border-radius:22px;
+  padding:28px;text-align:center;width:260px
+}
 .check{
-  width:72px;height:72px;
-  background:#00c27a;
-  border-radius:50%;
-  margin:0 auto 12px;
-  position:relative;
-  animation:pop .4s ease;
+  width:90px;height:90px;border-radius:50%;
+  background:var(--pink);margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;font-weight:900
 }
-.check:after{
-  content:"";
-  position:absolute;
-  left:24px;top:38px;
-  width:12px;height:24px;
-  border-right:4px solid #fff;
-  border-bottom:4px solid #fff;
-  transform:rotate(45deg);
-}
-@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1)}}
-.counter{font-size:24px;color:#ff0050;font-weight:700}
-.history{padding:16px;font-size:13px;opacity:.8}
-.footer{font-size:11px;opacity:.5;text-align:center;padding:10px}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 
 <body>
+<div class="video-bg"></div>
+
 <div class="app">
-  <div class="header">TikTok <span>Panel</span></div>
+  <div class="header">TikTok</div>
 
-  <div class="section">
-    <input id="user" placeholder="@usuario">
+  <div class="card">
+    <div class="user">
+      <div class="avatar" id="avatar">U</div>
+      <input id="user" placeholder="@usuario" oninput="setUser()">
+    </div>
 
-    <div class="card" onclick="setPack(1000,this)">1,000 monedas <b>$9.99</b></div>
-    <div class="card" onclick="setPack(5000,this)">5,000 monedas <b>$39.99</b></div>
-    <div class="card" onclick="setPack(10000,this)">10,000 monedas <b>$74.99</b></div>
+    <div class="balance">
+      <div class="coins" id="saldo">0</div>
+      <span>Monedas</span>
+    </div>
 
-    <button id="pay" onclick="pagar()">Confirmar pago</button>
+    <div class="packages">
+      <div class="pkg" onclick="recargar(70)"><strong>70</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="recargar(350)"><strong>350</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="recargar(700)"><strong>700</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="recargar(1400)"><strong>1400</strong><span>Monedas</span></div>
+    </div>
   </div>
-
-  <div class="loader" id="loader">
-    <div class="spinner"></div>
-    Procesando…
-    <div class="progress"><div class="bar" id="bar"></div></div>
-  </div>
-
-  <div class="success" id="success">
-    <div class="check"></div>
-    <div>Pago confirmado</div>
-    <div class="counter" id="coins">+0</div>
-  </div>
-
-  <div class="history" id="history"></div>
-  <div class="footer">Simulación visual · No es un pago real</div>
 </div>
 
-<audio id="sound">
-  <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">
-</audio>
-
 <script>
-let pack=0, locked=false;
-const lang=navigator.language.startsWith("en")?"en":"es";
+let usuario = localStorage.getItem("user") || "";
+let saldo = parseInt(localStorage.getItem("saldo_"+usuario) || "0");
 
-function setPack(v,el){
-  pack=v;
-  document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-  el.classList.add("active");
+document.getElementById("user").value = usuario;
+updateAvatar();
+updateSaldo();
+
+function setUser(){
+  usuario = document.getElementById("user").value.trim();
+  localStorage.setItem("user",usuario);
+  saldo = parseInt(localStorage.getItem("saldo_"+usuario) || "0");
+  updateAvatar(); updateSaldo();
 }
 
-function pagar(){
-  if(locked) return;
-  const u=user.value.trim();
-  if(!u||!pack) return alert(lang==="es"?"Completa los datos":"Fill all fields");
-  locked=true; pay.disabled=true;
-
-  navigator.vibrate?.(50);
-  loader.style.display="block";
-  success.style.display="none";
-
-  let p=0;
-  const i=setInterval(()=>{
-    p+=10; bar.style.width=p+"%";
-    if(p>=100){
-      clearInterval(i);
-      loader.style.display="none";
-      success.style.display="block";
-      sound.play();
-      animCoins();
-      addHistory(u,pack);
-      setTimeout(reset,4000);
-    }
-  },200);
+function updateAvatar(){
+  const a = document.getElementById("avatar");
+  a.textContent = usuario ? usuario.replace("@","")[0] : "U";
 }
 
-function animCoins(){
-  let c=0, inc=pack/20;
-  const i=setInterval(()=>{
-    c+=inc; coins.textContent="+"+Math.floor(c);
-    if(c>=pack) clearInterval(i);
-  },80);
+function updateSaldo(){
+  document.getElementById("saldo").innerText = saldo;
 }
 
-function addHistory(u,p){
-  history.innerHTML+=`✔️ ${u} — ${p} monedas<br>`;
-}
+function recargar(c){
+  saldo += c;
+  localStorage.setItem("saldo_"+usuario,saldo);
+  updateSaldo();
 
-function reset(){
-  locked=false; pay.disabled=false;
-  bar.style.width="0%"; coins.textContent="+0";
+  const box = document.createElement("div");
+  box.className="confirm";
+  box.innerHTML=`
+    <div class="paybox">
+      <div class="check">✓</div>
+      <div>Pago confirmado</div>
+    </div>`;
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(),1200);
 }
 </script>
 </body>
