@@ -3,201 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins Demo</title>
+<title>TikTok Demo v2</title>
 
 <style>
-:root{
-  --bg:#000;
-  --card:#1c1c1e;
-  --field:#2c2c2e;
-  --pink:#ff0050;
-  --text:#fff;
-  --muted:#9b9b9b;
-}
-
-*{
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;
-}
-
 body{
   margin:0;
-  background:var(--bg);
-  color:var(--text);
+  background:#000;
+  color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto;
   display:flex;
   justify-content:center;
 }
-
 .app{
-  width:100%;
   max-width:430px;
+  width:100%;
   min-height:100vh;
   padding:16px;
 }
-
 .header{
   text-align:center;
   font-size:22px;
-  font-weight:700;
-  margin:12px 0 20px;
+  font-weight:800;
+  margin:10px 0 6px;
 }
-
+.version{
+  text-align:center;
+  font-size:12px;
+  color:#ff0050;
+  margin-bottom:16px;
+}
 .card{
-  background:var(--card);
-  border-radius:26px;
+  background:#1c1c1e;
+  border-radius:24px;
   padding:18px;
 }
-
-/* USER */
-.user{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.avatar{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:var(--field);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-}
-
-.user input{
-  flex:1;
-  background:var(--field);
-  border:none;
-  outline:none;
-  color:white;
-  padding:14px;
-  border-radius:16px;
-  font-size:16px;
-}
-
-/* BALANCE */
 .balance{
   text-align:center;
-  margin:28px 0;
+  margin:30px 0;
 }
-
-.balance .coins{
+.balance div{
   font-size:44px;
-  font-weight:800;
-  transition:.25s;
+  font-weight:900;
 }
-
-.balance span{
-  font-size:14px;
-  color:var(--muted);
-}
-
-/* PACKAGES */
-.packages{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
 .pkg{
-  background:var(--field);
-  border-radius:20px;
-  padding:18px 10px;
+  background:#2c2c2e;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:10px;
   text-align:center;
+  font-size:18px;
   font-weight:700;
-  cursor:pointer;
-  transition:.12s;
 }
-
-.pkg span{
-  display:block;
-  font-size:13px;
-  color:var(--muted);
-}
-
-.pkg:active{
-  transform:scale(.96);
-}
-
-.pkg.disabled{
-  opacity:.35;
-  pointer-events:none;
-}
-
-/* OVERLAY */
-.overlay{
+.success{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.45);
-  backdrop-filter:blur(18px);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  z-index:999;
-}
-
-/* SHEET */
-.sheet{
-  width:100%;
-  max-width:430px;
-  background:var(--card);
-  border-radius:26px 26px 0 0;
-  padding:22px;
-  animation:up .35s cubic-bezier(.22,.61,.36,1);
-}
-
-@keyframes up{
-  from{transform:translateY(120px);opacity:0}
-  to{transform:none;opacity:1}
-}
-
-.sheet button{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:16px;
-  font-size:16px;
-  font-weight:600;
-}
-
-.confirm{background:var(--pink);color:#fff}
-.cancel{background:var(--field);color:#fff}
-
-/* SUCCESS */
-.success{
-  text-align:center;
-}
-
-.check{
-  width:96px;
-  height:96px;
-  border-radius:50%;
-  background:var(--pink);
-  margin:10px auto 14px;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(20px);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:46px;
+}
+.success div{
+  background:#1c1c1e;
+  border-radius:26px;
+  padding:30px;
+  text-align:center;
+}
+.check{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#ff0050;
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:44px;
   font-weight:900;
-  animation:check .4s;
-}
-
-@keyframes check{
-  0%{transform:scale(.4)}
-  60%{transform:scale(1.15)}
-  100%{transform:scale(1)}
-}
-
-/* COINS */
-.coin{
-  position:fixed;
-  font-size:26px;
-  pointer-events:none;
-  transition:transform .9s cubic-bezier(.22,.61,.36,1), opacity .9s;
-  z-index:2000;
 }
 </style>
 </head>
@@ -205,159 +87,38 @@ body{
 <body>
 <div class="app">
   <div class="header">TikTok</div>
+  <div class="version">DEMO v2 — CAMBIO FORZADO</div>
 
   <div class="card">
-    <div class="user">
-      <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario">
-    </div>
-
     <div class="balance">
-      <div class="coins" id="saldo">0</div>
+      <div id="saldo">0</div>
       <span>Monedas</span>
     </div>
 
-    <div class="packages">
-      <div class="pkg" data-c="70">70<span>Monedas</span></div>
-      <div class="pkg" data-c="350">350<span>Monedas</span></div>
-      <div class="pkg" data-c="700">700<span>Monedas</span></div>
-      <div class="pkg" data-c="1400">1400<span>Monedas</span></div>
-    </div>
+    <div class="pkg" onclick="buy(70)">Comprar 70 monedas</div>
+    <div class="pkg" onclick="buy(350)">Comprar 350 monedas</div>
   </div>
 </div>
 
 <script>
-const user = document.getElementById("user");
-const avatar = document.getElementById("avatar");
-const saldo = document.getElementById("saldo");
-const USERS = {};
-let currentUser = null;
+let saldo = 0;
+const saldoEl = document.getElementById("saldo");
 
-/* LOCK PACKAGES */
-function lock(b){
-  document.querySelectorAll(".pkg")
-    .forEach(p=>p.classList.toggle("disabled",b));
-}
-lock(true);
+function buy(c){
+  saldo += c;
+  saldoEl.textContent = saldo;
 
-/* USER INPUT */
-user.addEventListener("input",()=>{
-  const u = user.value.trim();
-  if(!/^@[a-zA-Z0-9._-]{1,30}$/.test(u)){
-    lock(true);
-    saldo.textContent = 0;
-    avatar.textContent = "U";
-    currentUser = null;
-    return;
-  }
-  currentUser = u;
-  avatar.textContent = u[1].toUpperCase();
-  if(!USERS[u]) USERS[u] = { saldo: 0 };
-  saldo.textContent = USERS[u].saldo;
-  lock(false);
-});
-
-/* PACKAGE CLICK */
-document.querySelectorAll(".pkg").forEach(pkg=>{
-  pkg.addEventListener("click",()=>{
-    if(!currentUser) return;
-    openConfirm(pkg, +pkg.dataset.c);
-  });
-});
-
-/* CONFIRM SHEET */
-function openConfirm(pkg, coins){
-  const o = document.createElement("div");
-  o.className = "overlay";
-  o.innerHTML = `
-    <div class="sheet">
-      <div style="text-align:center;font-size:14px;color:#aaa">
-        Confirmar compra
-      </div>
-      <div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">
-        ${coins} monedas
-      </div>
-      <button class="confirm">Confirmar</button>
-      <button class="cancel">Cancelar</button>
-    </div>
-  `;
-  document.body.appendChild(o);
-
-  o.querySelector(".confirm").onclick = ()=>{
-    o.remove();
-    processPurchase(pkg, coins);
-  };
-  o.querySelector(".cancel").onclick = ()=>o.remove();
-}
-
-/* PURCHASE FLOW */
-function processPurchase(pkg, coins){
-  flyCoins(pkg);
-  animateBalance(coins);
-  setTimeout(()=>showSuccess(coins),900);
-}
-
-/* COIN ANIMATION */
-function flyCoins(pkg){
-  const r = pkg.getBoundingClientRect();
-  const s = saldo.getBoundingClientRect();
-
-  for(let i=0;i<5;i++){
-    setTimeout(()=>{
-      const c = document.createElement("div");
-      c.className="coin";
-      c.textContent="🪙";
-      c.style.left=r.left+"px";
-      c.style.top=r.top+"px";
-      document.body.appendChild(c);
-
-      setTimeout(()=>{
-        c.style.transform =
-          `translate(${s.left-r.left}px,${s.top-r.top}px) scale(.4) rotate(360deg)`;
-        c.style.opacity=0;
-      },20);
-
-      setTimeout(()=>c.remove(),1000);
-    },i*90);
-  }
-}
-
-/* BALANCE ANIMATION */
-function animateBalance(add){
-  const base = USERS[currentUser].saldo;
-  const target = base + add;
-  USERS[currentUser].saldo = target;
-
-  let cur = base;
-  const step = Math.ceil(add / 12);
-
-  const i = setInterval(()=>{
-    cur += step;
-    if(cur >= target){
-      cur = target;
-      clearInterval(i);
-    }
-    saldo.textContent = cur;
-    saldo.style.transform = "scale(1.15)";
-    setTimeout(()=>saldo.style.transform="scale(1)",100);
-  },50);
-}
-
-/* SUCCESS MESSAGE */
-function showSuccess(coins){
-  const o = document.createElement("div");
-  o.className = "overlay";
-  o.innerHTML = `
-    <div class="sheet success">
+  const s = document.createElement("div");
+  s.className = "success";
+  s.innerHTML = `
+    <div>
       <div class="check">✓</div>
-      <div style="font-size:18px;font-weight:700">Compra realizada</div>
-      <div style="font-size:14px;color:#aaa;margin-top:4px">
-        +${coins} monedas añadidas
-      </div>
+      <div style="font-size:18px;font-weight:700">Compra confirmada</div>
+      <div style="color:#aaa;margin-top:6px">+${c} monedas</div>
     </div>
   `;
-  document.body.appendChild(o);
-  setTimeout(()=>o.remove(),1500);
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1400);
 }
 </script>
 </body>
