@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins Demo Final + Sonido</title>
+<title>TikTok Coins Demo Avanzado</title>
 <style>
 :root{
   --bg:#000; --card:#1c1c1e; --field:#2c2c2e;
-  --pink:#ff0050; --text:#fff; --muted:#9b9b9b;
+  --pink:#ff0050; --text:#fff; --muted:#9b9b9b; --danger:#ff453a;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;}
@@ -26,6 +26,9 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .pkg span{display:block;font-size:13px;color:var(--muted);}
 .pkg:active{transform:scale(.96);}
 .pkg.disabled{opacity:.35;pointer-events:none;}
+.history{margin-top:18px;border-top:1px solid #2c2c2e;padding-top:10px;}
+.history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px;}
+.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(18px);display:flex;align-items:flex-end;justify-content:center;z-index:999;}
 .sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px 26px 0 0;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);}
 @keyframes up{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}
@@ -37,17 +40,19 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 @keyframes check{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
 .coin{position:fixed;font-size:26px;pointer-events:none;transition:transform .9s cubic-bezier(.22,.61,.36,1), opacity .9s;z-index:2000;}
 .particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;}
+.error{font-size:12px;color:var(--danger);margin-top:6px;display:none;}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">TikTok</div>
-  <div class="version">DEMO FINAL + SONIDO & VIBRACIÓN</div>
+  <div class="version">DEMO AVANZADO – HISTORIAL & SONIDO</div>
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
       <input id="user" placeholder="@usuario">
     </div>
+    <div class="error" id="error">Formato inválido</div>
     <div class="balance">
       <div class="coins" id="saldo">0</div>
       <span>Monedas</span>
@@ -58,6 +63,10 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <div class="pkg" data-c="700">700<span>Monedas</span></div>
       <div class="pkg" data-c="1400">1400<span>Monedas</span></div>
     </div>
+    <div class="history">
+      <h4>Historial</h4>
+      <div id="hist"></div>
+    </div>
   </div>
 </div>
 
@@ -67,19 +76,22 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 const user=document.getElementById("user");
 const avatar=document.getElementById("avatar");
 const saldo=document.getElementById("saldo");
+const error=document.getElementById("error");
+const hist=document.getElementById("hist");
 const USERS={};
 let currentUser=null;
+let historial=[];
 
 function lock(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 lock(true);
 
 user.addEventListener("input",()=>{
   const u=user.value.trim();
-  if(!/^@[a-zA-Z0-9._-]{1,30}$/.test(u)){lock(true); saldo.textContent=0; avatar.textContent="U"; currentUser=null; return;}
-  currentUser=u; avatar.textContent=u[1].toUpperCase();
+  const regex=/^@[a-zA-Z0-9._-]{1,30}$/;
+  if(!regex.test(u)){error.style.display="block"; avatar.textContent="U"; saldo.textContent=0; hist.innerHTML=""; lock(true); currentUser=null; return;}
+  error.style.display="none"; currentUser=u; avatar.textContent=u[1].toUpperCase();
   if(!USERS[u]) USERS[u]={saldo:0};
-  saldo.textContent=USERS[u].saldo;
-  lock(false);
+  saldo.textContent=USERS[u].saldo; historial=[]; hist.innerHTML=""; lock(false);
 });
 
 document.querySelectorAll(".pkg").forEach(pkg=>{
@@ -97,16 +109,17 @@ function openConfirm(pkg,coins){
     <button class="confirm">Confirmar</button>
     <button class="cancel">Cancelar</button>
   </div>`; document.body.appendChild(o);
+
   o.querySelector(".confirm").onclick=()=>{
-    navigator.vibrate?.(50); // vibración
-    document.getElementById("coinSound").play(); // sonido
+    navigator.vibrate?.(50);
+    document.getElementById("coinSound").play();
     o.remove(); processPurchase(pkg,coins);
   };
   o.querySelector(".cancel").onclick=()=>o.remove();
 }
 
 function processPurchase(pkg,coins){
-  flyCoins(pkg); animateBalance(coins); setTimeout(()=>showSuccess(coins),900);
+  flyCoins(pkg); animateBalance(coins); addHistory(coins); setTimeout(()=>showSuccess(coins),900);
 }
 
 function flyCoins(pkg){
@@ -143,6 +156,18 @@ function animateBalance(add){
     saldo.textContent=cur; saldo.style.transform="scale(1.15)";
     setTimeout(()=>saldo.style.transform="scale(1)",100);
   },50);
+}
+
+function addHistory(coins){
+  const t=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  historial.unshift({coins,t}); historial=historial.slice(0,5);
+  hist.innerHTML="";
+  historial.forEach(h=>{
+    const div=document.createElement("div"); div.className="item";
+    div.innerHTML=`<span>+${h.coins}</span><span>${h.t}</span>`;
+    hist.appendChild(div);
+    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
+  });
 }
 
 function showSuccess(coins){
