@@ -13,7 +13,6 @@
   --pink:#ff0050;
   --text:#fff;
   --muted:#9b9b9b;
-  --danger:#ff453a;
 }
 
 *{
@@ -40,7 +39,7 @@ body{
   text-align:center;
   font-size:22px;
   font-weight:700;
-  margin:10px 0 20px;
+  margin:12px 0 20px;
 }
 
 .card{
@@ -56,32 +55,20 @@ body{
 }
 
 .avatar{
-  width:48px;
-  height:48px;
-  border-radius:50%;
+  width:48px;height:48px;border-radius:50%;
   background:var(--field);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   font-weight:700;
 }
 
 .user input{
   flex:1;
   background:var(--field);
-  border:none;
-  outline:none;
+  border:none;outline:none;
   color:white;
   padding:14px;
   border-radius:16px;
   font-size:16px;
-}
-
-.error{
-  font-size:12px;
-  color:var(--danger);
-  margin-top:6px;
-  display:none;
 }
 
 .balance{
@@ -90,7 +77,7 @@ body{
 }
 
 .balance .coins{
-  font-size:42px;
+  font-size:44px;
   font-weight:800;
   transition:.3s;
 }
@@ -122,61 +109,36 @@ body{
   color:var(--muted);
 }
 
-.pkg:active{
-  transform:scale(.96);
-}
+.pkg:active{transform:scale(.96)}
+.pkg.disabled{opacity:.35;pointer-events:none}
 
-.pkg.disabled{
-  opacity:.35;
-  pointer-events:none;
-}
-
-.history{
-  margin-top:18px;
-  border-top:1px solid #2c2c2e;
-  padding-top:10px;
-}
-
-.history h4{
-  font-size:13px;
-  color:var(--muted);
-  margin:0 0 6px;
-}
-
-.item{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  opacity:0;
-  transform:translateY(-10px);
-  transition:.3s;
-}
-
+/* Overlay + sheets */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.4);
+  background:rgba(0,0,0,.45);
   backdrop-filter:blur(18px);
   display:flex;
   align-items:flex-end;
   justify-content:center;
+  z-index:999;
 }
 
-.modal{
-  width:280px;
+.sheet{
+  width:100%;
+  max-width:430px;
   background:var(--card);
-  border-radius:24px;
+  border-radius:26px 26px 0 0;
   padding:22px;
-  text-align:center;
   animation:up .35s cubic-bezier(.22,.61,.36,1);
 }
 
 @keyframes up{
-  from{transform:translateY(100px);opacity:0}
+  from{transform:translateY(120px);opacity:0}
   to{transform:none;opacity:1}
 }
 
-.modal button{
+.sheet button{
   width:100%;
   margin-top:12px;
   padding:14px;
@@ -189,31 +151,33 @@ body{
 .confirm{background:var(--pink);color:#fff}
 .cancel{background:var(--field);color:#fff}
 
-.check{
-  width:88px;
-  height:88px;
-  border-radius:50%;
-  background:var(--pink);
-  margin:0 auto 14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:44px;
-  font-weight:900;
-  animation:bounce .35s;
+/* Success cinematic */
+.success{
+  text-align:center;
 }
 
-@keyframes bounce{
-  0%{transform:scale(.5)}
-  60%{transform:scale(1.1)}
+.check{
+  width:96px;height:96px;border-radius:50%;
+  background:var(--pink);
+  margin:10px auto 14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:46px;font-weight:900;
+  animation:check .4s;
+}
+
+@keyframes check{
+  0%{transform:scale(.4)}
+  60%{transform:scale(1.15)}
   100%{transform:scale(1)}
 }
 
+/* Coins */
 .coin{
   position:fixed;
   font-size:26px;
   pointer-events:none;
-  transition:transform .8s ease, opacity .8s;
+  transition:transform .9s cubic-bezier(.22,.61,.36,1), opacity .9s;
+  z-index:2000;
 }
 </style>
 </head>
@@ -227,7 +191,6 @@ body{
       <div class="avatar" id="avatar">U</div>
       <input id="user" placeholder="@usuario">
     </div>
-    <div class="error" id="error">Usuario inválido</div>
 
     <div class="balance">
       <div class="coins" id="saldo">0</div>
@@ -240,109 +203,141 @@ body{
       <div class="pkg" data-c="700">700<span>Monedas</span></div>
       <div class="pkg" data-c="1400">1400<span>Monedas</span></div>
     </div>
-
-    <div class="history">
-      <h4>Historial</h4>
-      <div id="hist"></div>
-    </div>
   </div>
 </div>
 
 <script>
-const user=document.getElementById("user");
-const avatar=document.getElementById("avatar");
-const error=document.getElementById("error");
-const saldo=document.getElementById("saldo");
-const hist=document.getElementById("hist");
-const USERS={};
-let history=[];
+const user = document.getElementById("user");
+const avatar = document.getElementById("avatar");
+const saldoEl = document.getElementById("saldo");
+const USERS = {};
+let currentUser = null;
 
-function lock(b){
-  document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));
-}
-
-user.oninput=()=>{
-  const u=user.value.trim();
+/* Validación usuario */
+user.oninput = () => {
+  const u = user.value.trim();
   if(!/^@[a-zA-Z0-9._-]{1,30}$/.test(u)){
-    error.style.display="block";
     lock(true);
-    saldo.textContent=0;
+    saldoEl.textContent = 0;
+    avatar.textContent = "U";
     return;
   }
-  error.style.display="none";
-  avatar.textContent=u[1].toUpperCase();
-  if(!USERS[u]) USERS[u]={saldo:0};
-  saldo.textContent=USERS[u].saldo;
+  currentUser = u;
+  avatar.textContent = u[1].toUpperCase();
+  if(!USERS[u]) USERS[u] = { saldo: 0 };
+  saldoEl.textContent = USERS[u].saldo;
   lock(false);
 };
 
+function lock(b){
+  document.querySelectorAll(".pkg")
+    .forEach(p=>p.classList.toggle("disabled",b));
+}
+
+/* Click paquete */
 document.querySelectorAll(".pkg").forEach(pkg=>{
-  pkg.onclick=()=>openConfirm(pkg,+pkg.dataset.c);
+  pkg.onclick = ()=>openConfirm(pkg, +pkg.dataset.c);
 });
 
-function openConfirm(pkg,c){
-  const u=user.value.trim();
-  if(!u)return;
+/* Confirmación */
+function openConfirm(pkg, coins){
+  if(!currentUser) return;
 
-  const o=document.createElement("div");
-  o.className="overlay";
-  o.innerHTML=`
-    <div class="modal">
-      <div style="font-size:14px">Confirmar compra</div>
-      <strong style="font-size:22px">${c} monedas</strong>
+  const o = document.createElement("div");
+  o.className = "overlay";
+  o.innerHTML = `
+    <div class="sheet">
+      <div style="text-align:center;font-size:14px;color:#aaa">
+        Confirmar compra
+      </div>
+      <div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">
+        ${coins} monedas
+      </div>
       <button class="confirm">Confirmar</button>
       <button class="cancel">Cancelar</button>
     </div>`;
   document.body.appendChild(o);
 
-  o.querySelector(".confirm").onclick=()=>{
-    animateCoin(pkg);
-    pay(u,c);
+  o.querySelector(".confirm").onclick = ()=>{
     o.remove();
+    cinematicPurchase(pkg, coins);
   };
-  o.querySelector(".cancel").onclick=()=>o.remove();
+  o.querySelector(".cancel").onclick = ()=>o.remove();
 }
 
-function animateCoin(pkg){
-  const r=pkg.getBoundingClientRect();
-  const s=saldo.getBoundingClientRect();
-  for(let i=0;i<5;i++){
+/* Cinemática completa */
+function cinematicPurchase(pkg, coins){
+  flyCoins(pkg);
+  animateBalance(coins);
+
+  setTimeout(()=>{
+    showSuccess(coins);
+  },900);
+}
+
+/* Monedas volando */
+function flyCoins(pkg){
+  const r = pkg.getBoundingClientRect();
+  const s = saldoEl.getBoundingClientRect();
+
+  for(let i=0;i<6;i++){
     setTimeout(()=>{
-      const c=document.createElement("div");
+      const c = document.createElement("div");
       c.className="coin";
       c.textContent="🪙";
       c.style.left=r.left+"px";
       c.style.top=r.top+"px";
       document.body.appendChild(c);
+
       setTimeout(()=>{
-        c.style.transform=`translate(${s.left-r.left}px,${s.top-r.top}px) scale(.5)`;
+        c.style.transform =
+          `translate(${s.left-r.left}px,${s.top-r.top}px) scale(.4) rotate(360deg)`;
         c.style.opacity=0;
       },20);
-      setTimeout(()=>c.remove(),900);
-    },i*80);
+
+      setTimeout(()=>c.remove(),1000);
+    },i*90);
   }
 }
 
-function pay(u,c){
-  USERS[u].saldo+=c;
-  saldo.textContent=USERS[u].saldo;
+/* Animación contador */
+function animateBalance(add){
+  const base = USERS[currentUser].saldo;
+  const target = base + add;
+  USERS[currentUser].saldo = target;
 
-  history.unshift({c,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
-  history=history.slice(0,5);
-  hist.innerHTML="";
-  history.forEach(h=>{
-    const d=document.createElement("div");
-    d.className="item";
-    d.innerHTML=`<span>+${h.c}</span><span>${h.time}</span>`;
-    hist.appendChild(d);
-    setTimeout(()=>{d.style.opacity=1;d.style.transform="none"},50);
-  });
+  let current = base;
+  const step = Math.ceil(add / 12);
 
-  const ok=document.createElement("div");
-  ok.className="overlay";
-  ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`;
-  document.body.appendChild(ok);
-  setTimeout(()=>ok.remove(),1200);
+  const i = setInterval(()=>{
+    current += step;
+    if(current >= target){
+      current = target;
+      clearInterval(i);
+    }
+    saldoEl.textContent = current;
+    saldoEl.style.transform = "scale(1.15)";
+    setTimeout(()=>saldoEl.style.transform="scale(1)",100);
+  },50);
+}
+
+/* Success sheet */
+function showSuccess(coins){
+  const o = document.createElement("div");
+  o.className="overlay";
+  o.innerHTML=`
+    <div class="sheet success">
+      <div class="check">✓</div>
+      <div style="font-size:18px;font-weight:700">
+        Compra realizada
+      </div>
+      <div style="font-size:14px;color:#aaa;margin-top:4px">
+        +${coins} monedas añadidas
+      </div>
+    </div>`;
+  document.body.appendChild(o);
+
+  setTimeout(()=>o.remove(),1500);
 }
 
 lock(true);
