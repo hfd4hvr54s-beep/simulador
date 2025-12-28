@@ -3,34 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins Demo Avanzado</title>
+<title>TikTok Coins Ultra Real</title>
 <style>
 :root{
-  --bg:#000; --card:#1c1c1e; --field:#2c2c2e;
-  --pink:#ff0050; --text:#fff; --muted:#9b9b9b; --danger:#ff453a;
+  --bg:#000; --card:#141414; --field:#1c1c1e;
+  --pink:#FE2C55; --cyan:#25F4EE; --text:#fff; --muted:#9b9b9b; --gold:#FFD700;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;}
 .app{width:100%;max-width:430px;padding:16px;}
-.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 8px;}
+.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 8px;color:var(--text);}
 .version{text-align:center;font-size:12px;color:var(--pink);margin-bottom:16px;}
 .card{background:var(--card);border-radius:26px;padding:18px;}
 .user{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
-.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--cyan);}
 .user input{flex:1;background:var(--field);border:none;outline:none;color:white;padding:14px;border-radius:16px;font-size:16px;}
 .balance{text-align:center;margin:20px 0;}
-.balance .coins{font-size:44px;font-weight:800;transition:.25s;}
+.balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--cyan);}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.pkg{background:var(--field);border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.12s;}
-.pkg span{display:block;font-size:13px;color:var(--muted);}
+.pkg{background:linear-gradient(145deg,var(--pink),var(--cyan));border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.12s;color:#fff;}
+.pkg span{display:block;font-size:13px;color:#fff;}
 .pkg:active{transform:scale(.96);}
 .pkg.disabled{opacity:.35;pointer-events:none;}
 .history{margin-top:18px;border-top:1px solid #2c2c2e;padding-top:10px;}
 .history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px;}
 .item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(18px);display:flex;align-items:flex-end;justify-content:center;z-index:999;}
-.sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px 26px 0 0;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;z-index:999;}
+.sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);}
 @keyframes up{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}
 .sheet button{width:100%;margin-top:12px;padding:14px;border:none;border-radius:16px;font-size:16px;font-weight:600;}
 .confirm{background:var(--pink);color:#fff;}
@@ -38,15 +38,22 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .success{text-align:center;}
 .check{width:96px;height:96px;border-radius:50%;background:var(--pink);margin:10px auto 14px;display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:900;animation:check .4s;}
 @keyframes check{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-.coin{position:fixed;font-size:26px;pointer-events:none;transition:transform .9s cubic-bezier(.22,.61,.36,1), opacity .9s;z-index:2000;}
-.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;}
+.coin{position:fixed;font-size:28px;pointer-events:none;transition:transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s;z-index:2000;will-change:transform,opacity;}
+.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--gold);pointer-events:none;will-change:transform,opacity;}
+.startOverlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;color:#fff;font-size:20px;font-weight:700;cursor:pointer;}
+.startOverlay span{color:var(--pink);margin-top:12px;font-size:14px;}
 .error{font-size:12px;color:var(--danger);margin-top:6px;display:none;}
 </style>
 </head>
 <body>
+<div class="startOverlay" id="startOverlay">
+  Toca para iniciar
+  <span>Demo Ultra Real TikTok</span>
+</div>
+
 <div class="app">
   <div class="header">TikTok</div>
-  <div class="version">DEMO AVANZADO – HISTORIAL & SONIDO</div>
+  <div class="version">DEMO ULTRA REAL – MÓVIL</div>
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
@@ -73,6 +80,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 <audio id="coinSound" src="https://actions.google.com/sounds/v1/cartoon/coin.ogg"></audio>
 
 <script>
+const startOverlay = document.getElementById("startOverlay");
 const user=document.getElementById("user");
 const avatar=document.getElementById("avatar");
 const saldo=document.getElementById("saldo");
@@ -85,6 +93,14 @@ let historial=[];
 function lock(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 lock(true);
 
+// Primer toque desbloquea todo y permite audio
+startOverlay.addEventListener("click",()=>{
+  const sound=document.getElementById("coinSound");
+  sound.play().catch(()=>{}); // desbloquea sonido
+  startOverlay.remove();
+});
+
+// Validación usuario
 user.addEventListener("input",()=>{
   const u=user.value.trim();
   const regex=/^@[a-zA-Z0-9._-]{1,30}$/;
@@ -94,6 +110,7 @@ user.addEventListener("input",()=>{
   saldo.textContent=USERS[u].saldo; historial=[]; hist.innerHTML=""; lock(false);
 });
 
+// Paquetes clic
 document.querySelectorAll(".pkg").forEach(pkg=>{
   pkg.addEventListener("click",()=>{
     if(!currentUser) return;
@@ -101,6 +118,7 @@ document.querySelectorAll(".pkg").forEach(pkg=>{
   });
 });
 
+// Confirmación compra
 function openConfirm(pkg,coins){
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="sheet">
@@ -110,54 +128,71 @@ function openConfirm(pkg,coins){
     <button class="cancel">Cancelar</button>
   </div>`; document.body.appendChild(o);
 
-  o.querySelector(".confirm").onclick=()=>{
+  const confirmBtn=o.querySelector(".confirm");
+  confirmBtn.addEventListener("click",()=>{
     navigator.vibrate?.(50);
-    document.getElementById("coinSound").play();
-    o.remove(); processPurchase(pkg,coins);
-  };
-  o.querySelector(".cancel").onclick=()=>o.remove();
+    const sound=document.getElementById("coinSound");
+    sound.currentTime=0;
+    sound.play().catch(()=>{});
+    o.remove();
+    requestAnimationFrame(()=>processPurchase(pkg,coins));
+  });
+  o.querySelector(".cancel").addEventListener("click",()=>o.remove());
 }
 
+// Compra real
 function processPurchase(pkg,coins){
-  flyCoins(pkg); animateBalance(coins); addHistory(coins); setTimeout(()=>showSuccess(coins),900);
+  flyCoins(pkg,coins);
+  animateBalance(coins);
+  addHistory(coins);
+  setTimeout(()=>showSuccess(coins),1200);
 }
 
-function flyCoins(pkg){
+// Monedas cayendo con rebote
+function flyCoins(pkg,coins){
   const r=pkg.getBoundingClientRect();
   const s=saldo.getBoundingClientRect();
-  for(let i=0;i<5;i++){
+  const count = Math.min(10,3 + Math.floor(Math.random()*6));
+  for(let i=0;i<count;i++){
     setTimeout(()=>{
       const c=document.createElement("div"); c.className="coin"; c.textContent="🪙";
-      c.style.left=r.left+"px"; c.style.top=r.top+"px"; document.body.appendChild(c);
-      setTimeout(()=>{
-        c.style.transform=`translate(${s.left-r.left}px,${s.top-r.top}px) scale(.4) rotate(360deg)`; c.style.opacity=0;
-        particles(r.left+r.width/2,r.top);
-      },20);
-      setTimeout(()=>c.remove(),1000);
-    },i*90);
+      c.style.left=r.left+"px"; c.style.top=r.top+"px";
+      document.body.appendChild(c);
+      requestAnimationFrame(()=>{
+        const dx=s.left - r.left + (Math.random()*20-10);
+        const dy=s.top - r.top + (Math.random()*20-10);
+        c.style.transform=`translate(${dx}px,${dy}px) scale(.4) rotate(${360*Math.random()}deg)`; 
+        c.style.opacity=0;
+      });
+      setTimeout(()=>c.remove(),1200);
+      createParticles(r.left+r.width/2,r.top);
+    },i*60);
   }
 }
 
-function particles(x,y){
-  for(let i=0;i<4;i++){
+// Partículas brillantes
+function createParticles(x,y){
+  for(let i=0;i<8;i++){
     const p=document.createElement("div"); p.className="particle";
     p.style.left=x+"px"; p.style.top=y+"px"; document.body.appendChild(p);
-    const a=Math.random()*2*Math.PI, d=10+Math.random()*20;
-    setTimeout(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`; p.style.opacity=0;},20);
-    setTimeout(()=>p.remove(),500);
+    const a=Math.random()*2*Math.PI, d=15+Math.random()*20;
+    requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`; p.style.opacity=0;});
+    setTimeout(()=>p.remove(),600);
   }
 }
 
+// Balance rebota
 function animateBalance(add){
   const base=USERS[currentUser].saldo; const target=base+add; USERS[currentUser].saldo=target;
   let cur=base; const step=Math.ceil(add/12);
   const i=setInterval(()=>{
     cur+=step; if(cur>=target){cur=target; clearInterval(i);}
-    saldo.textContent=cur; saldo.style.transform="scale(1.15)";
-    setTimeout(()=>saldo.style.transform="scale(1)",100);
-  },50);
+    saldo.textContent=cur; saldo.style.transform="scale(1.25)";
+    setTimeout(()=>saldo.style.transform="scale(1)",120);
+  },40);
 }
 
+// Historial animado
 function addHistory(coins){
   const t=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   historial.unshift({coins,t}); historial=historial.slice(0,5);
@@ -170,6 +205,7 @@ function addHistory(coins){
   });
 }
 
+// Check animado
 function showSuccess(coins){
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="sheet success">
