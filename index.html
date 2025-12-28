@@ -215,12 +215,9 @@ function recargar(c){
   const saldoEl = document.getElementById("saldo");
   const original = saldoEl.innerText;
 
-  // cambio visual temporal
   saldoEl.innerText = parseInt(original) + c;
-
   confirmAnim();
 
-  // vuelve al valor original después
   setTimeout(()=>{
     saldoEl.innerText = original;
   },1200);
