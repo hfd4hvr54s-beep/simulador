@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins - Ultra Real Oficial</title>
+<title>TikTok Coins - Ultra Real 2025</title>
 <style>
 :root{
-  --bg:#FFFFFF;        /* Fondo principal */
-  --card:#F2F2F4;      /* Ventanas y contenedores */
-  --field:#F5F5F5;     /* Campos de input */
-  --red:#FF3B30;       /* Botones / bordes */
-  --yellow:#FFD700;     /* Monedas */
-  --text:#000000;       /* Texto principal */
-  --muted:#555555;      /* Texto secundario */
-  --success-gradient: linear-gradient(135deg,#00C6FF,#0072FF); /* Confirmación azul-verde */
+  --bg:#FFFFFF;
+  --card:#F2F2F4;
+  --field:#F5F5F5;
+  --red:#FF3B30;
+  --yellow:#FFD700;
+  --text:#000;
+  --muted:#555;
+  --success-gradient: radial-gradient(circle at 50% 40%, #00C6FF, #0072FF);
 }
 
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
@@ -28,8 +28,9 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--yellow);}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-.pkg{background:linear-gradient(145deg,#FFD700,#FFC107);border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.25s;color:#000;box-shadow:0 5px 15px rgba(0,0,0,0.2);position:relative;overflow:hidden;border:2px solid var(--red);}
+.pkg{background:linear-gradient(145deg,#FFD700,#FFC107);border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.25s;color:#000;box-shadow:0 5px 15px rgba(0,0,0,0.2) inset,0 5px 15px rgba(0,0,0,0.2);position:relative;overflow:hidden;border:2px solid var(--red);}
 .pkg span{display:block;font-size:13px;color:#000;}
+.pkg:hover{transform:scale(1.05);box-shadow:0 10px 20px rgba(0,0,0,0.25) inset,0 10px 20px rgba(0,0,0,0.25);}
 .pkg:active{transform:scale(.96);}
 .pkg.disabled{opacity:.35;pointer-events:none;}
 .history{margin-top:10px;border-top:1px solid #ddd;padding-top:10px;}
@@ -40,8 +41,8 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;animation:fadein .15s forwards;}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);border:2px solid var(--red);}
-.sheet button{width:100%;margin-top:12px;padding:14px;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;}
-.confirm{background:var(--red);color:#fff;transition:transform .15s;}
+.sheet button{width:100%;margin-top:12px;padding:14px;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;transition:transform .15s;}
+.confirm{background:var(--red);color:#fff;}
 .confirm:active{transform:scale(.95);}
 .cancel{background:var(--field);color:#000;border:1px solid var(--red);}
 .success{text-align:center;background:var(--success-gradient);border-radius:26px;color:#fff;border:2px solid var(--red);}
@@ -76,7 +77,10 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
   </div>
 </div>
 
+<!-- Sonidos -->
 <audio id="coinSound" src="https://actions.google.com/sounds/v1/cartoon/coin.ogg"></audio>
+<audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+<audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
 const user=document.getElementById("user");
@@ -103,8 +107,10 @@ user.addEventListener("input",()=>{
 document.querySelectorAll(".pkg").forEach(pkg=>{
   pkg.addEventListener("click",()=>{
     if(!currentUser) return;
+    playSound('clickSound');
     openConfirm(pkg,+pkg.dataset.c);
   });
+  pkg.addEventListener("mouseenter",()=>createHoverParticles(pkg));
 });
 
 function openConfirm(pkg,coins){
@@ -118,25 +124,26 @@ function openConfirm(pkg,coins){
 
   o.querySelector(".confirm").addEventListener("click",()=>{
     navigator.vibrate?.(50);
-    const sound=document.getElementById("coinSound");
-    sound.currentTime=0;
-    sound.play().catch(()=>{});
+    playSound('coinSound');
     o.remove();
     requestAnimationFrame(()=>processPurchase(pkg,coins));
   });
-  o.querySelector(".cancel").addEventListener("click",()=>o.remove());
+  o.querySelector(".cancel").addEventListener("click",()=>{
+    playSound('clickSound');
+    o.remove();
+  });
 }
 
 function processPurchase(pkg,coins){
   const r=pkg.getBoundingClientRect();
   const s=saldo.getBoundingClientRect();
-  const count=Math.min(25,8+Math.floor(Math.random()*18));
+  const count=Math.min(30,10+Math.floor(Math.random()*20));
   for(let i=0;i<count;i++){
-    setTimeout(()=>flyCoin(r,s),i*35);
+    setTimeout(()=>flyCoin(r,s),i*30);
   }
   animateBalance(coins);
   addHistory(coins);
-  setTimeout(()=>showSuccess(coins),2000);
+  setTimeout(()=>showSuccess(coins),2200);
 }
 
 function flyCoin(start,end){
@@ -172,6 +179,19 @@ function createParticles(x,y){
   }
 }
 
+function createHoverParticles(pkg){
+  const rect=pkg.getBoundingClientRect();
+  for(let i=0;i<5;i++){
+    const p=document.createElement("div"); p.className="particle";
+    p.style.left=rect.left+Math.random()*rect.width+"px";
+    p.style.top=rect.top+Math.random()*rect.height+"px";
+    document.body.appendChild(p);
+    const a=Math.random()*2*Math.PI, d=10+Math.random()*15;
+    requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`; p.style.opacity=0;});
+    setTimeout(()=>p.remove(),500);
+  }
+}
+
 function animateBalance(add){
   const base=USERS[currentUser].saldo; const target=base+add; USERS[currentUser].saldo=target;
   let cur=base; const step=Math.ceil(add/25);
@@ -195,6 +215,7 @@ function addHistory(coins){
 }
 
 function showSuccess(coins){
+  playSound('successSound');
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="sheet success">
     <div class="check">✓</div>
@@ -202,6 +223,11 @@ function showSuccess(coins){
     <div style="font-size:14px;margin-top:4px">+${coins} monedas añadidas</div>
   </div>`; document.body.appendChild(o);
   setTimeout(()=>o.remove(),1800);
+}
+
+function playSound(id){
+  const s=document.getElementById(id);
+  if(s){s.currentTime=0; s.play().catch(()=>{});}
 }
 </script>
 </body>
