@@ -49,17 +49,28 @@ body{
 }
 
 /* USER */
-.user{display:flex;gap:12px;align-items:center}
+.user{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
 .avatar{
-  width:48px;height:48px;border-radius:50%;
+  width:48px;
+  height:48px;
+  border-radius:50%;
   background:var(--field);
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-weight:700;
 }
+
 .user input{
   flex:1;
   background:var(--field);
-  border:none;outline:none;
+  border:none;
+  outline:none;
   color:white;
   padding:14px;
   border-radius:16px;
@@ -67,13 +78,21 @@ body{
 }
 
 /* BALANCE */
-.balance{text-align:center;margin:28px 0}
+.balance{
+  text-align:center;
+  margin:28px 0;
+}
+
 .balance .coins{
   font-size:44px;
   font-weight:800;
   transition:.25s;
 }
-.balance span{font-size:14px;color:var(--muted)}
+
+.balance span{
+  font-size:14px;
+  color:var(--muted);
+}
 
 /* PACKAGES */
 .packages{
@@ -81,6 +100,7 @@ body{
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
+
 .pkg{
   background:var(--field);
   border-radius:20px;
@@ -90,9 +110,21 @@ body{
   cursor:pointer;
   transition:.12s;
 }
-.pkg span{display:block;font-size:13px;color:var(--muted)}
-.pkg:active{transform:scale(.96)}
-.pkg.disabled{opacity:.35;pointer-events:none}
+
+.pkg span{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.pkg:active{
+  transform:scale(.96);
+}
+
+.pkg.disabled{
+  opacity:.35;
+  pointer-events:none;
+}
 
 /* OVERLAY */
 .overlay{
@@ -135,15 +167,24 @@ body{
 .cancel{background:var(--field);color:#fff}
 
 /* SUCCESS */
-.success{text-align:center}
+.success{
+  text-align:center;
+}
+
 .check{
-  width:96px;height:96px;border-radius:50%;
+  width:96px;
+  height:96px;
+  border-radius:50%;
   background:var(--pink);
   margin:10px auto 14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:46px;font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:46px;
+  font-weight:900;
   animation:check .4s;
 }
+
 @keyframes check{
   0%{transform:scale(.4)}
   60%{transform:scale(1.15)}
@@ -192,100 +233,103 @@ const saldo = document.getElementById("saldo");
 const USERS = {};
 let currentUser = null;
 
-function haptic(){
-  if(navigator.vibrate) navigator.vibrate(15);
-}
-
+/* LOCK PACKAGES */
 function lock(b){
   document.querySelectorAll(".pkg")
     .forEach(p=>p.classList.toggle("disabled",b));
 }
+lock(true);
 
-/* USER */
-user.oninput = ()=>{
+/* USER INPUT */
+user.addEventListener("input",()=>{
   const u = user.value.trim();
   if(!/^@[a-zA-Z0-9._-]{1,30}$/.test(u)){
     lock(true);
     saldo.textContent = 0;
     avatar.textContent = "U";
+    currentUser = null;
     return;
   }
   currentUser = u;
   avatar.textContent = u[1].toUpperCase();
-  if(!USERS[u]) USERS[u] = { saldo:0 };
+  if(!USERS[u]) USERS[u] = { saldo: 0 };
   saldo.textContent = USERS[u].saldo;
   lock(false);
-};
-
-/* PACKAGES */
-document.querySelectorAll(".pkg").forEach(pkg=>{
-  pkg.onclick = ()=>openConfirm(pkg, +pkg.dataset.c);
 });
 
-/* CONFIRM */
-function openConfirm(pkg, coins){
-  if(!currentUser) return;
-  haptic();
+/* PACKAGE CLICK */
+document.querySelectorAll(".pkg").forEach(pkg=>{
+  pkg.addEventListener("click",()=>{
+    if(!currentUser) return;
+    openConfirm(pkg, +pkg.dataset.c);
+  });
+});
 
+/* CONFIRM SHEET */
+function openConfirm(pkg, coins){
   const o = document.createElement("div");
   o.className = "overlay";
   o.innerHTML = `
     <div class="sheet">
-      <div style="text-align:center;font-size:14px;color:#aaa">Confirmar compra</div>
-      <div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">${coins} monedas</div>
+      <div style="text-align:center;font-size:14px;color:#aaa">
+        Confirmar compra
+      </div>
+      <div style="text-align:center;font-size:26px;font-weight:800;margin:8px 0">
+        ${coins} monedas
+      </div>
       <button class="confirm">Confirmar</button>
       <button class="cancel">Cancelar</button>
-    </div>`;
+    </div>
+  `;
   document.body.appendChild(o);
 
   o.querySelector(".confirm").onclick = ()=>{
     o.remove();
-    cinematic(pkg, coins);
+    processPurchase(pkg, coins);
   };
   o.querySelector(".cancel").onclick = ()=>o.remove();
 }
 
-/* CINEMÁTICA */
-function cinematic(pkg, coins){
-  haptic();
+/* PURCHASE FLOW */
+function processPurchase(pkg, coins){
   flyCoins(pkg);
   animateBalance(coins);
   setTimeout(()=>showSuccess(coins),900);
 }
 
-/* MONEDAS */
+/* COIN ANIMATION */
 function flyCoins(pkg){
   const r = pkg.getBoundingClientRect();
   const s = saldo.getBoundingClientRect();
 
-  for(let i=0;i<6;i++){
+  for(let i=0;i<5;i++){
     setTimeout(()=>{
       const c = document.createElement("div");
-      c.className = "coin";
-      c.textContent = "🪙";
-      c.style.left = r.left+"px";
-      c.style.top = r.top+"px";
+      c.className="coin";
+      c.textContent="🪙";
+      c.style.left=r.left+"px";
+      c.style.top=r.top+"px";
       document.body.appendChild(c);
 
       setTimeout(()=>{
         c.style.transform =
           `translate(${s.left-r.left}px,${s.top-r.top}px) scale(.4) rotate(360deg)`;
-        c.style.opacity = 0;
+        c.style.opacity=0;
       },20);
 
       setTimeout(()=>c.remove(),1000);
-    }, i*90);
+    },i*90);
   }
 }
 
-/* BALANCE */
+/* BALANCE ANIMATION */
 function animateBalance(add){
   const base = USERS[currentUser].saldo;
   const target = base + add;
   USERS[currentUser].saldo = target;
 
   let cur = base;
-  const step = Math.ceil(add/12);
+  const step = Math.ceil(add / 12);
 
   const i = setInterval(()=>{
     cur += step;
@@ -299,22 +343,22 @@ function animateBalance(add){
   },50);
 }
 
-/* SUCCESS */
+/* SUCCESS MESSAGE */
 function showSuccess(coins){
-  haptic();
   const o = document.createElement("div");
   o.className = "overlay";
   o.innerHTML = `
     <div class="sheet success">
       <div class="check">✓</div>
       <div style="font-size:18px;font-weight:700">Compra realizada</div>
-      <div style="font-size:14px;color:#aaa;margin-top:4px">+${coins} monedas añadidas</div>
-    </div>`;
+      <div style="font-size:14px;color:#aaa;margin-top:4px">
+        +${coins} monedas añadidas
+      </div>
+    </div>
+  `;
   document.body.appendChild(o);
   setTimeout(()=>o.remove(),1500);
 }
-
-lock(true);
 </script>
 </body>
 </html>
