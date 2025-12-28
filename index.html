@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TikTok</title>
 
 <style>
@@ -15,31 +15,58 @@
 }
 
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
-body{margin:0;background:black;color:var(--text);display:flex;justify-content:center}
+body{
+  margin:0;
+  background:black;
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
 
-/* VIDEO BACKGROUND */
+/* FONDO TIPO VIDEO */
 .video-bg{
   position:fixed;inset:0;
-  background:linear-gradient(180deg,#111,#000);
-  animation:videoMove 8s infinite alternate;
+  background:linear-gradient(180deg,#141414,#000);
+  animation:bgmove 10s infinite alternate;
   z-index:-1;
 }
-@keyframes videoMove{
-  from{filter:brightness(0.9)}
+@keyframes bgmove{
+  from{filter:brightness(.9)}
   to{filter:brightness(1.1)}
 }
 
-.app{width:100%;max-width:420px;min-height:100vh;padding:16px}
-.header{text-align:center;font-weight:700;font-size:22px;margin:10px 0 18px}
+.app{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  padding:16px;
+}
 
-.card{background:var(--card);border-radius:18px;padding:18px}
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:22px;
+  margin:6px 0 14px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border-radius:20px;
+  padding:18px;
+}
 
 /* USER */
 .user{display:flex;align-items:center;gap:12px}
 .avatar{
-  width:46px;height:46px;border-radius:50%;
+  width:48px;height:48px;border-radius:50%;
   background:#333;display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:18px;text-transform:uppercase;
+  font-weight:800;font-size:18px;text-transform:uppercase;
 }
 .user input{
   flex:1;background:#2a2a2c;border:none;color:white;
@@ -48,7 +75,7 @@ body{margin:0;background:black;color:var(--text);display:flex;justify-content:ce
 
 /* BALANCE */
 .balance{text-align:center;margin:22px 0}
-.balance .coins{font-size:36px;font-weight:800}
+.balance .coins{font-size:38px;font-weight:900}
 .balance span{color:var(--muted);font-size:14px}
 
 /* PACKAGES */
@@ -61,6 +88,20 @@ body{margin:0;background:black;color:var(--text);display:flex;justify-content:ce
 .pkg strong{display:block;font-size:18px}
 .pkg span{color:var(--muted);font-size:13px}
 
+/* HISTORY */
+.history{
+  margin-top:18px;
+  border-top:1px solid #2a2a2c;
+  padding-top:12px;
+}
+.history h4{
+  margin:0 0 8px;font-size:14px;color:var(--muted)
+}
+.item{
+  display:flex;justify-content:space-between;
+  font-size:14px;padding:6px 0
+}
+
 /* CONFIRM */
 .confirm{
   position:fixed;inset:0;background:rgba(0,0,0,.65);
@@ -72,19 +113,34 @@ body{margin:0;background:black;color:var(--text);display:flex;justify-content:ce
   padding:28px;text-align:center;width:260px
 }
 .check{
-  width:90px;height:90px;border-radius:50%;
+  width:92px;height:92px;border-radius:50%;
   background:var(--pink);margin:0 auto 14px;
   display:flex;align-items:center;justify-content:center;
-  font-size:42px;font-weight:900
+  font-size:44px;font-weight:900
 }
 @keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* CLEAN MODE */
+.clean .history,
+.clean .packages,
+.clean .user input{
+  display:none
+}
+.clean .balance{margin-top:60px}
+.toggle{
+  margin-top:14px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 <div class="video-bg"></div>
 
-<div class="app">
+<div class="app" id="app">
   <div class="header">TikTok</div>
 
   <div class="card">
@@ -104,22 +160,38 @@ body{margin:0;background:black;color:var(--text);display:flex;justify-content:ce
       <div class="pkg" onclick="recargar(700)"><strong>700</strong><span>Monedas</span></div>
       <div class="pkg" onclick="recargar(1400)"><strong>1400</strong><span>Monedas</span></div>
     </div>
+
+    <div class="history">
+      <h4>Historial</h4>
+      <div id="hist"></div>
+    </div>
+
+    <div class="toggle" onclick="toggleClean()">Modo grabación</div>
   </div>
 </div>
 
 <script>
 let usuario = localStorage.getItem("user") || "";
-let saldo = parseInt(localStorage.getItem("saldo_"+usuario) || "0");
+let saldo = 0;
+let hist = [];
 
-document.getElementById("user").value = usuario;
-updateAvatar();
-updateSaldo();
+init();
+
+function init(){
+  document.getElementById("user").value = usuario;
+  loadUser();
+}
 
 function setUser(){
   usuario = document.getElementById("user").value.trim();
   localStorage.setItem("user",usuario);
+  loadUser();
+}
+
+function loadUser(){
   saldo = parseInt(localStorage.getItem("saldo_"+usuario) || "0");
-  updateAvatar(); updateSaldo();
+  hist = JSON.parse(localStorage.getItem("hist_"+usuario) || "[]");
+  updateAvatar(); updateSaldo(); drawHist();
 }
 
 function updateAvatar(){
@@ -131,11 +203,28 @@ function updateSaldo(){
   document.getElementById("saldo").innerText = saldo;
 }
 
+function drawHist(){
+  const h = document.getElementById("hist");
+  h.innerHTML = hist.map(i=>`
+    <div class="item">
+      <span>+${i.c}</span><span>${i.t}</span>
+    </div>`).join("");
+}
+
 function recargar(c){
   saldo += c;
-  localStorage.setItem("saldo_"+usuario,saldo);
-  updateSaldo();
+  const t = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  hist.unshift({c,t});
+  hist = hist.slice(0,6);
 
+  localStorage.setItem("saldo_"+usuario,saldo);
+  localStorage.setItem("hist_"+usuario,JSON.stringify(hist));
+
+  updateSaldo(); drawHist();
+  confirmAnim();
+}
+
+function confirmAnim(){
   const box = document.createElement("div");
   box.className="confirm";
   box.innerHTML=`
@@ -145,6 +234,10 @@ function recargar(c){
     </div>`;
   document.body.appendChild(box);
   setTimeout(()=>box.remove(),1200);
+}
+
+function toggleClean(){
+  document.getElementById("app").classList.toggle("clean");
 }
 </script>
 </body>
