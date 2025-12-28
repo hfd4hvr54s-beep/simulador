@@ -3,19 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins 2025 - Ultra Real</title>
+<title>TikTok Coins 3D Ultra Real</title>
 <style>
 :root {
-  --bg: #FFFFFF;
-  --card: #FFFFFF;
-  --field: #FAFAFA;
-  --tiktok-red: #FE2C55;
-  --tiktok-cyan: #25F4EE;
-  --text: #000000;
-  --muted: #555555;
-  --policy: #777777;
-  --coin-yellow: #FFD700;
-  --confirm-green: #34C759;
+  --bg:#FFFFFF; --card:#FFFFFF; --field:#FAFAFA;
+  --tiktok-red:#FE2C55; --tiktok-cyan:#25F4EE;
+  --text:#000; --muted:#555; --policy:#777;
+  --coin-yellow:#FFD700; --confirm-green:#34C759;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
 body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;color:var(--text);}
@@ -29,19 +23,7 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--coin-yellow);}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.pkg{
-  background:#FAFAFA;
-  border-radius:20px;
-  padding:18px 10px;
-  text-align:center;
-  font-weight:700;
-  cursor:pointer;
-  transition:.25s;
-  color:var(--text);
-  border:2px solid var(--tiktok-red);
-  position:relative;
-  overflow:hidden;
-}
+.pkg{background:#FAFAFA;border-radius:20px;padding:18px 10px;text-align:center;cursor:pointer;color:var(--text);border:2px solid var(--tiktok-red);position:relative;overflow:hidden;transition:.25s;}
 .pkg svg.coin-icon{width:28px;height:28px;margin-bottom:6px;}
 .pkg span.number{display:block;font-size:22px;font-weight:700;color:var(--text);}
 .pkg span.price{display:block;font-size:14px;color:var(--text);}
@@ -148,20 +130,21 @@ function openConfirm(pkg,coins){
 
 function processPurchase(pkg,coins){
   const r=pkg.getBoundingClientRect(), s=saldo.getBoundingClientRect();
-  const count=Math.min(30,10+Math.floor(Math.random()*20));
-  for(let i=0;i<count;i++){setTimeout(()=>flyCoin(r,s),i*30);}
-  animateBalance(coins); addHistory(coins); setTimeout(()=>showSuccess(coins),2200);
+  const count=Math.min(40,15+Math.floor(Math.random()*25));
+  for(let i=0;i<count;i++){setTimeout(()=>flyCoin(r,s),i*20);}
+  animateBalance(coins); addHistory(coins); setTimeout(()=>showSuccess(coins),2500);
 }
 
 function flyCoin(start,end){
   const c=document.createElement("div"); c.className="coin";
   c.style.left=start.left+"px"; c.style.top=start.top+"px";
   document.body.appendChild(c);
-  const dx=end.left-start.left + (Math.random()*20-10), dy=end.top-start.top + (Math.random()*20-10);
-  let duration=900, t=0;
-  function step(){t+=16; let progress=t/duration; if(progress>1){c.remove(); return;}
-    c.style.transform=`translate(${dx*progress}px,${dy*progress}px) scale(${0.5+0.5*progress}) rotate(${360*progress}deg)`; requestAnimationFrame(step);}
-  step(); createParticles(start.left+14,start.top+14);
+  c.getBoundingClientRect(); // fuerza layout para animación en iOS
+  const dx=end.left-start.left + (Math.random()*30-15), dy=end.top-start.top + (Math.random()*30-15);
+  c.style.transition='transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s';
+  requestAnimationFrame(()=>{c.style.transform=`translate(${dx}px,${dy}px) scale(0.5) rotate(${360+Math.random()*360}deg)`; c.style.opacity=0;});
+  setTimeout(()=>c.remove(),1100);
+  createParticles(start.left+14,start.top+14);
 }
 
 function createParticles(x,y){
