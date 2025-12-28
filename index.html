@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins Ultra Real</title>
+<title>TikTok Coins Ultra Premium</title>
 <style>
 :root{
   --bg:#000;
@@ -14,7 +14,6 @@
   --text:#fff;
   --muted:#9b9b9b;
   --gold:#FFD700;
-  --danger:#FF3B30;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;}
@@ -34,9 +33,11 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .pkg.disabled{opacity:.35;pointer-events:none;}
 .history{margin-top:18px;border-top:1px solid #2c2c2e;padding-top:10px;}
 .history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px;}
-.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
-.coin{position:fixed;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#FFD700,#FFA500);box-shadow:0 0 8px #FFD700;pointer-events:none;transition:transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s;z-index:2000;will-change:transform,opacity;}
-.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--gold);pointer-events:none;will-change:transform,opacity;}
+.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .35s ease;}
+.coin{position:fixed;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#FFD700,#FFA500);box-shadow:0 0 12px #FFD700,0 0 6px #FFD700 inset;pointer-events:none;transition:transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s;z-index:2000;will-change:transform,opacity;}
+.coin::after{content:"";position:absolute;width:100%;height:100%;border-radius:50%;box-shadow:0 0 20px #FFD700,0 0 10px #FFA500;opacity:.7;animation:glow 1s infinite alternate;}
+@keyframes glow{0%{opacity:.4}100%{opacity:.8}}
+.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--gold);pointer-events:none;will-change:transform,opacity;mix-blend-mode:screen;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;z-index:999;}
 .sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);}
 @keyframes up{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}
@@ -126,17 +127,16 @@ function openConfirm(pkg,coins){
   o.querySelector(".cancel").addEventListener("click",()=>o.remove());
 }
 
-// Función ultra real de monedas con rebote múltiple
 function processPurchase(pkg,coins){
   const r=pkg.getBoundingClientRect();
   const s=saldo.getBoundingClientRect();
-  const count=Math.min(12,4+Math.floor(Math.random()*8));
+  const count=Math.min(15,5+Math.floor(Math.random()*10));
   for(let i=0;i<count;i++){
-    setTimeout(()=>flyCoin(r,s),i*50);
+    setTimeout(()=>flyCoin(r,s),i*40);
   }
   animateBalance(coins);
   addHistory(coins);
-  setTimeout(()=>showSuccess(coins),1500);
+  setTimeout(()=>showSuccess(coins),1800);
 }
 
 function flyCoin(start,end){
@@ -147,8 +147,8 @@ function flyCoin(start,end){
   const dx=end.left-start.left + (Math.random()*20-10);
   const dy=end.top-start.top + (Math.random()*20-10);
 
-  let bounces=[0.6,0.35,0.2]; // alturas relativas de rebote
-  let duration=800;
+  let bounces=[0.6,0.35,0.2]; 
+  let duration=900;
   let t=0;
 
   function animateStep(){
@@ -156,9 +156,7 @@ function flyCoin(start,end){
     let progress=t/duration;
     if(progress>1){c.remove(); return;}
     let y=dy*progress;
-    bounces.forEach((b,i)=>{
-      y-=b*Math.sin(progress*Math.PI*(i+1))*20;
-    });
+    bounces.forEach((b,i)=>{ y-=b*Math.sin(progress*Math.PI*(i+1))*25; });
     c.style.transform=`translate(${dx}px,${y}px) scale(.4) rotate(${360*progress}deg)`;
     requestAnimationFrame(animateStep);
   }
@@ -167,23 +165,23 @@ function flyCoin(start,end){
 }
 
 function createParticles(x,y){
-  for(let i=0;i<12;i++){
+  for(let i=0;i<15;i++){
     const p=document.createElement("div"); p.className="particle";
     p.style.left=x+"px"; p.style.top=y+"px"; document.body.appendChild(p);
-    const a=Math.random()*2*Math.PI, d=15+Math.random()*20;
+    const a=Math.random()*2*Math.PI, d=15+Math.random()*25;
     requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`; p.style.opacity=0;});
-    setTimeout(()=>p.remove(),600);
+    setTimeout(()=>p.remove(),700);
   }
 }
 
 function animateBalance(add){
   const base=USERS[currentUser].saldo; const target=base+add; USERS[currentUser].saldo=target;
-  let cur=base; const step=Math.ceil(add/12);
+  let cur=base; const step=Math.ceil(add/15);
   const i=setInterval(()=>{
     cur+=step; if(cur>=target){cur=target; clearInterval(i);}
-    saldo.textContent=cur; saldo.style.transform="scale(1.25)";
-    setTimeout(()=>saldo.style.transform="scale(1)",100);
-  },35);
+    saldo.textContent=cur; saldo.style.transform="scale(1.3)";
+    setTimeout(()=>saldo.style.transform="scale(1)",80);
+  },30);
 }
 
 function addHistory(coins){
