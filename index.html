@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Get Coins</title>
+
+<style>
+:root{
+  --bg:#0b0b0d;
+  --panel:#121214;
+  --card:#17171b;
+  --card2:#1c1c22;
+  --border:#2a2a30;
+  --text:#ffffff;
+  --sub:#b3b3b8;
+  --accent:#fe2c55;
+  --accent-soft:rgba(254,44,85,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* Safe areas */
+.safe-top{padding-top:env(safe-area-inset-top)}
+.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
+
+/* Header */
+.header{
+  position:sticky;top:0;z-index:5;
+  background:linear-gradient(to bottom,#0b0b0d 80%,rgba(11,11,13,.6));
+  border-bottom:1px solid #0f0f12;
+}
+.header .row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px 8px;
+}
+.icon{
+  width:28px;height:28px;border-radius:8px;
+  display:grid;place-items:center;color:#fff;
+}
+.title{font-size:17px;font-weight:600}
+
+/* Balance */
+.balance{
+  padding:6px 16px 8px;
+  font-size:13px;color:var(--sub)
+}
+.balance b{color:#fff}
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:12px 16px 110px;
+}
+.card{
+  background:linear-gradient(180deg,var(--card),var(--card2));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 12px 14px;
+  text-align:center;
+  transition:.15s transform,.15s border,.15s box-shadow;
+}
+.card:active{transform:scale(.98)}
+.card .coins{font-size:22px;font-weight:700;margin-bottom:6px}
+.card .price{font-size:13px;color:var(--sub)}
+.card.featured{
+  box-shadow:0 0 0 2px var(--accent-soft) inset;
+}
+.card.selected{
+  border:2px solid var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+
+/* Bottom CTA */
+.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:6;
+  background:linear-gradient(to top,#0b0b0d 70%,rgba(11,11,13,.6));
+}
+.bottom .wrap{padding:10px 16px 16px}
+.btn{
+  width:100%;
+  background:var(--accent);
+  color:#fff;border:none;border-radius:12px;
+  padding:14px;font-size:17px;font-weight:600;
+}
+
+/* Sheet (Apple-style) */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.sheet{
+  width:100%;
+  background:#141418;
+  border-radius:18px 18px 0 0;
+  border:1px solid var(--border);
+  padding:14px 16px calc(16px + env(safe-area-inset-bottom));
+}
+.handle{
+  width:36px;height:4px;border-radius:4px;background:#2a2a30;
+  margin:0 auto 10px;
+}
+.sheet h3{margin:6px 0 4px;font-size:18px}
+.sheet p{margin:0 0 12px;color:var(--sub)}
+.rowline{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-top:1px solid #202026;
+}
+.primary{
+  width:100%;margin-top:10px;
+  background:var(--accent);border:none;color:#fff;
+  border-radius:12px;padding:14px;font-size:17px;font-weight:600;
+}
+
+/* Spinner */
+.spinner{
+  width:34px;height:34px;border-radius:50%;
+  border:3px solid #333;border-top-color:var(--accent);
+  animation:spin 1s linear infinite;margin:8px auto 10px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+
+<body>
+<div class="safe-top"></div>
+
+<div class="header">
+  <div class="row">
+    <div class="icon">✕</div>
+    <div class="title">Get Coins</div>
+    <div class="icon">?</div>
+  </div>
+</div>
+
+<div class="balance">Balance: <b>92,538,280</b> coins</div>
+
+<div class="grid">
+  <div class="card" onclick="select(this)">
+    <div class="coins">70</div><div class="price">$0.74</div>
+  </div>
+  <div class="card" onclick="select(this)">
+    <div class="coins">350</div><div class="price">$3.70</div>
+  </div>
+  <div class="card featured" onclick="select(this)">
+    <div class="coins">700</div><div class="price">$7.40</div>
+  </div>
+  <div class="card" onclick="select(this)">
+    <div class="coins">1,400</div><div class="price">$14.80</div>
+  </div>
+  <div class="card" onclick="select(this)">
+    <div class="coins">10,000</div><div class="price">$2.00</div>
+  </div>
+  <div class="card" onclick="select(this)">
+    <div class="coins">100,000</div><div class="price">$20.00</div>
+  </div>
+</div>
+
+<div class="bottom safe-bottom">
+  <div class="wrap">
+    <button class="btn" onclick="openSheet()">Recharge</button>
+  </div>
+</div>
+
+<div class="overlay" id="ov">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>Confirm purchase</h3>
+    <p>Coins will be added to your balance.</p>
+    <div class="rowline"><span>Payment</span><span>Apple Pay</span></div>
+    <div class="rowline"><span>Total</span><b>$7.40</b></div>
+    <div class="spinner"></div>
+    <button class="primary" onclick="closeSheet()">Done</button>
+  </div>
+</div>
+
+<script>
+const cards=[...document.querySelectorAll('.card')];
+function select(el){
+  cards.forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function openSheet(){
+  document.getElementById('ov').style.display='flex';
+}
+function closeSheet(){
+  document.getElementById('ov').style.display='none';
+}
+</script>
+</body>
+</html>
