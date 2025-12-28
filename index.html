@@ -212,16 +212,19 @@ function drawHist(){
 }
 
 function recargar(c){
-  saldo += c;
-  const t = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  hist.unshift({c,t});
-  hist = hist.slice(0,6);
+  const saldoEl = document.getElementById("saldo");
+  const original = saldoEl.innerText;
 
-  localStorage.setItem("saldo_"+usuario,saldo);
-  localStorage.setItem("hist_"+usuario,JSON.stringify(hist));
+  // cambio visual temporal
+  saldoEl.innerText = parseInt(original) + c;
 
-  updateSaldo(); drawHist();
   confirmAnim();
+
+  // vuelve al valor original después
+  setTimeout(()=>{
+    saldoEl.innerText = original;
+  },1200);
+
 }
 
 function confirmAnim(){
