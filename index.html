@@ -6,14 +6,21 @@
 <title>TikTok Coins Ultra Real</title>
 <style>
 :root{
-  --bg:#000; --card:#141414; --field:#1c1c1e;
-  --pink:#FE2C55; --cyan:#25F4EE; --text:#fff; --muted:#9b9b9b; --gold:#FFD700;
+  --bg:#000;
+  --card:#141414;
+  --field:#1c1c1e;
+  --pink:#FE2C55;
+  --cyan:#25F4EE;
+  --text:#fff;
+  --muted:#9b9b9b;
+  --gold:#FFD700;
+  --danger:#FF3B30;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;}
 .app{width:100%;max-width:430px;padding:16px;}
-.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 8px;color:var(--text);}
-.version{text-align:center;font-size:12px;color:var(--pink);margin-bottom:16px;}
+.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 4px;color:#fff;}
+.version{text-align:center;font-size:14px;color:var(--pink);margin-bottom:16px;font-weight:700;}
 .card{background:var(--card);border-radius:26px;padding:18px;}
 .user{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--cyan);}
@@ -48,12 +55,11 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 <body>
 <div class="startOverlay" id="startOverlay">
   Toca para iniciar
-  <span>Demo Ultra Real TikTok</span>
 </div>
 
 <div class="app">
   <div class="header">TikTok</div>
-  <div class="version">DEMO ULTRA REAL – MÓVIL</div>
+  <div class="version">DEMO PREMIUM – ANIMACIONES</div>
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
@@ -80,7 +86,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 <audio id="coinSound" src="https://actions.google.com/sounds/v1/cartoon/coin.ogg"></audio>
 
 <script>
-const startOverlay = document.getElementById("startOverlay");
+const startOverlay=document.getElementById("startOverlay");
 const user=document.getElementById("user");
 const avatar=document.getElementById("avatar");
 const saldo=document.getElementById("saldo");
@@ -93,14 +99,12 @@ let historial=[];
 function lock(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 lock(true);
 
-// Primer toque desbloquea todo y permite audio
 startOverlay.addEventListener("click",()=>{
   const sound=document.getElementById("coinSound");
-  sound.play().catch(()=>{}); // desbloquea sonido
+  sound.play().catch(()=>{}); 
   startOverlay.remove();
 });
 
-// Validación usuario
 user.addEventListener("input",()=>{
   const u=user.value.trim();
   const regex=/^@[a-zA-Z0-9._-]{1,30}$/;
@@ -110,7 +114,6 @@ user.addEventListener("input",()=>{
   saldo.textContent=USERS[u].saldo; historial=[]; hist.innerHTML=""; lock(false);
 });
 
-// Paquetes clic
 document.querySelectorAll(".pkg").forEach(pkg=>{
   pkg.addEventListener("click",()=>{
     if(!currentUser) return;
@@ -118,7 +121,6 @@ document.querySelectorAll(".pkg").forEach(pkg=>{
   });
 });
 
-// Confirmación compra
 function openConfirm(pkg,coins){
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="sheet">
@@ -128,8 +130,7 @@ function openConfirm(pkg,coins){
     <button class="cancel">Cancelar</button>
   </div>`; document.body.appendChild(o);
 
-  const confirmBtn=o.querySelector(".confirm");
-  confirmBtn.addEventListener("click",()=>{
+  o.querySelector(".confirm").addEventListener("click",()=>{
     navigator.vibrate?.(50);
     const sound=document.getElementById("coinSound");
     sound.currentTime=0;
@@ -140,7 +141,6 @@ function openConfirm(pkg,coins){
   o.querySelector(".cancel").addEventListener("click",()=>o.remove());
 }
 
-// Compra real
 function processPurchase(pkg,coins){
   flyCoins(pkg,coins);
   animateBalance(coins);
@@ -148,11 +148,10 @@ function processPurchase(pkg,coins){
   setTimeout(()=>showSuccess(coins),1200);
 }
 
-// Monedas cayendo con rebote
 function flyCoins(pkg,coins){
   const r=pkg.getBoundingClientRect();
   const s=saldo.getBoundingClientRect();
-  const count = Math.min(10,3 + Math.floor(Math.random()*6));
+  const count=Math.min(10,3+Math.floor(Math.random()*6));
   for(let i=0;i<count;i++){
     setTimeout(()=>{
       const c=document.createElement("div"); c.className="coin"; c.textContent="🪙";
@@ -170,7 +169,6 @@ function flyCoins(pkg,coins){
   }
 }
 
-// Partículas brillantes
 function createParticles(x,y){
   for(let i=0;i<8;i++){
     const p=document.createElement("div"); p.className="particle";
@@ -181,7 +179,6 @@ function createParticles(x,y){
   }
 }
 
-// Balance rebota
 function animateBalance(add){
   const base=USERS[currentUser].saldo; const target=base+add; USERS[currentUser].saldo=target;
   let cur=base; const step=Math.ceil(add/12);
@@ -192,7 +189,6 @@ function animateBalance(add){
   },40);
 }
 
-// Historial animado
 function addHistory(coins){
   const t=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   historial.unshift({coins,t}); historial=historial.slice(0,5);
@@ -205,7 +201,6 @@ function addHistory(coins){
   });
 }
 
-// Check animado
 function showSuccess(coins){
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="sheet success">
