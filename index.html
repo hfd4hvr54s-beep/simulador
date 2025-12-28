@@ -7,90 +7,216 @@
 
 <style>
 :root{
-  --bg:#0f0f0f;
+  --bg:#000;
   --card:#1c1c1e;
   --pink:#ff0050;
   --text:#fff;
   --muted:#9b9b9b;
+  --danger:#ff3b30;
 }
 
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+*{
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+}
+
 body{
-  margin:0;background:black;color:var(--text);
-  display:flex;justify-content:center;
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
 }
 
-.video-bg{
-  position:fixed;inset:0;
-  background:linear-gradient(180deg,#141414,#000);
-  animation:bg 10s infinite alternate;
-  z-index:-1;
+.app{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  padding:16px;
 }
-@keyframes bg{from{filter:brightness(.9)}to{filter:brightness(1.1)}}
 
-.app{width:100%;max-width:420px;min-height:100vh;padding:16px}
-.header{text-align:center;font-weight:700;font-size:22px;margin:8px 0 16px}
-.card{background:var(--card);border-radius:20px;padding:18px}
+.header{
+  text-align:center;
+  font-weight:700;
+  font-size:22px;
+  margin-bottom:16px;
+}
 
-.user{display:flex;gap:12px;align-items:center}
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:18px;
+}
+
+.user{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
 .avatar{
-  width:48px;height:48px;border-radius:50%;
-  background:#333;display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:18px
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#2c2c2e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:18px;
 }
+
 .user input{
-  flex:1;background:#2a2a2c;border:none;color:white;
-  padding:12px;border-radius:12px;font-size:15px
+  flex:1;
+  background:#2c2c2e;
+  border:none;
+  color:white;
+  padding:12px;
+  border-radius:14px;
+  font-size:15px;
 }
 
-.balance{text-align:center;margin:26px 0}
-.balance .coins{font-size:38px;font-weight:900}
-.balance span{color:var(--muted);font-size:14px}
+.error{
+  font-size:12px;
+  color:var(--danger);
+  margin-top:6px;
+  display:none;
+}
 
-.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.balance{
+  text-align:center;
+  margin:26px 0;
+}
+
+.balance .coins{
+  font-size:38px;
+  font-weight:900;
+}
+
+.balance span{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.packages{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
 .pkg{
-  background:#2a2a2c;border-radius:16px;padding:14px;
-  text-align:center;cursor:pointer;transition:.15s
+  background:#2c2c2e;
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s;
 }
-.pkg:active{transform:scale(.96)}
-.pkg strong{display:block;font-size:18px}
-.pkg span{color:var(--muted);font-size:13px}
+
+.pkg.disabled{
+  opacity:.4;
+  pointer-events:none;
+}
+
+.pkg:active{
+  transform:scale(.96);
+}
+
+.pkg strong{
+  display:block;
+  font-size:18px;
+}
+
+.pkg span{
+  color:var(--muted);
+  font-size:13px;
+}
 
 /* Historial */
 .history{
-  margin-top:16px;border-top:1px solid #2a2a2c;padding-top:10px
+  margin-top:16px;
+  border-top:1px solid #2c2c2e;
+  padding-top:10px;
 }
-.history h4{margin:0 0 6px;font-size:13px;color:var(--muted)}
-.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0}
+
+.history h4{
+  margin:0 0 6px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  padding:4px 0;
+}
 
 /* Modales */
 .overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.6);
-  display:flex;align-items:center;justify-content:center
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:fade .15s;
 }
+
+@keyframes fade{
+  from{opacity:0}
+  to{opacity:1}
+}
+
 .modal{
-  background:#1c1c1e;border-radius:20px;padding:22px;width:260px;text-align:center
+  background:#1c1c1e;
+  border-radius:20px;
+  padding:22px;
+  width:260px;
+  text-align:center;
+  animation:pop .2s;
 }
+
+@keyframes pop{
+  from{transform:scale(.9)}
+  to{transform:scale(1)}
+}
+
 .modal button{
-  width:100%;margin-top:10px;padding:12px;
-  border:none;border-radius:12px;font-size:15px
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  font-size:15px;
 }
-.confirm{background:var(--pink);color:white}
-.cancel{background:#2a2a2c;color:white}
+
+.confirm{
+  background:var(--pink);
+  color:white;
+}
+
+.cancel{
+  background:#2c2c2e;
+  color:white;
+}
 
 .check{
-  width:90px;height:90px;border-radius:50%;
-  background:var(--pink);margin:0 auto 14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:44px;font-weight:900
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:var(--pink);
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:44px;
+  font-weight:900;
 }
 </style>
 </head>
 
 <body>
-<div class="video-bg"></div>
 
 <div class="app">
   <div class="header">TikTok</div>
@@ -98,15 +224,16 @@ body{
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="setAvatar()">
+      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
     </div>
+    <div class="error" id="errorUser">Usuario no válido o inexistente</div>
 
     <div class="balance">
       <div class="coins" id="saldo">0</div>
       <span>Monedas</span>
     </div>
 
-    <div class="packages">
+    <div class="packages" id="packs">
       <div class="pkg" onclick="confirmar(70)"><strong>70</strong><span>Monedas</span></div>
       <div class="pkg" onclick="confirmar(350)"><strong>350</strong><span>Monedas</span></div>
       <div class="pkg" onclick="confirmar(700)"><strong>700</strong><span>Monedas</span></div>
@@ -121,16 +248,43 @@ body{
 </div>
 
 <script>
-let historial = [];
+let historial=[];
+let usuarioValido=false;
 
-function setAvatar(){
-  const u = document.getElementById("user").value.trim();
-  document.getElementById("avatar").innerText =
-    u ? u.replace("@","")[0].toUpperCase() : "U";
+/* Simulación de existencia */
+function validarUsuario(){
+  const u=document.getElementById("user").value.trim();
+  const err=document.getElementById("errorUser");
+  const avatar=document.getElementById("avatar");
+
+  // Formato real TikTok
+  const regex=/^@[a-zA-Z0-9._]{2,24}$/;
+
+  if(!regex.test(u)){
+    usuarioValido=false;
+    err.style.display="block";
+    avatar.innerText="U";
+    bloquearPacks(true);
+    return;
+  }
+
+  // Simulación: usuario válido = existe
+  usuarioValido=true;
+  err.style.display="none";
+  avatar.innerText=u.replace("@","")[0].toUpperCase();
+  bloquearPacks(false);
+}
+
+function bloquearPacks(b){
+  document.querySelectorAll(".pkg").forEach(p=>{
+    p.classList.toggle("disabled",b);
+  });
 }
 
 function confirmar(cantidad){
-  const o = document.createElement("div");
+  if(!usuarioValido) return;
+
+  const o=document.createElement("div");
   o.className="overlay";
   o.innerHTML=`
     <div class="modal">
@@ -144,12 +298,11 @@ function confirmar(cantidad){
 
 function procesar(c){
   const saldoEl=document.getElementById("saldo");
-  const original=saldoEl.innerText;
+  const original=parseInt(saldoEl.innerText);
   saldoEl.innerText="…";
 
   setTimeout(()=>{
-    saldoEl.innerText=parseInt(original)+c;
-
+    saldoEl.innerText=original+c;
     const t=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
     historial.unshift({c,t});
     historial=historial.slice(0,5);
@@ -164,17 +317,21 @@ function procesar(c){
       </div>`;
     document.body.appendChild(ok);
 
-    setTimeout(()=>{
-      ok.remove();
-      saldoEl.innerText=original;
-    },1200);
+    setTimeout(()=>ok.remove(),1200);
   },800);
 }
 
 function renderHist(){
   document.getElementById("hist").innerHTML=
-    historial.map(h=>`<div class="item"><span>+${h.c}</span><span>${h.t}</span></div>`).join("");
+    historial.map(h=>`
+      <div class="item">
+        <span>+${h.c}</span>
+        <span>${h.t}</span>
+      </div>`).join("");
 }
+
+bloquearPacks(true);
 </script>
+
 </body>
 </html>
