@@ -1,76 +1,191 @@
-<script>
-const MODO_GRABACION = false;
-if(MODO_GRABACION) app.classList.add("grabacion");
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TikTok Demo 3D Ultra Real</title>
+<style>
+:root{
+  --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
+  --pink:#FF0050; --text:#FFF; --muted:#A1A1A1; --danger:#FF453A;
+}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
+body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
+.app{width:100%;max-width:430px;min-height:100vh;padding:16px;perspective:1200px;}
+.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 20px}
+.card{background:var(--card);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:24px;padding:18px;}
+.user{display:flex;gap:12px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.user input{flex:1;background:var(--field);border:none;outline:none;color:white;padding:13px 14px;border-radius:14px;font-size:16px}
+.error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
 
-let historial=[];
+.balance{text-align:center;margin:28px 0}
+.balance .coins{font-size:40px;font-weight:800;display:inline-block;transition:transform .3s;}
+.balance span{font-size:14px;color:var(--muted)}
+
+.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pkg{background:var(--field);border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;transition:.12s;position:relative;}
+.pkg strong{font-size:18px;font-weight:700}
+.pkg span{display:block;font-size:13px;color:var(--muted)}
+.pkg:active{transform:scale(.96)}
+.pkg.disabled{opacity:.35;pointer-events:none}
+
+.history{margin-top:18px;border-top:1px solid #2C2C2E;padding-top:10px}
+.history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter: blur(18px) saturate(180%);-webkit-backdrop-filter: blur(18px) saturate(180%);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.modal{width:270px;background:var(--card);backdrop-filter: blur(24px) saturate(180%);-webkit-backdrop-filter: blur(24px) saturate(180%);border-radius:22px;padding:22px;text-align:center;animation:sheetUp .35s cubic-bezier(.22,.61,.36,1);}
+@keyframes sheetUp{from{transform:translateY(100px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal button{width:100%;margin-top:10px;padding:13px;border:none;border-radius:14px;font-size:16px;font-weight:600;transition:transform .15s;}
+.modal button:active{transform:scale(0.97);}
+.confirm{background:var(--pink);color:white}
+.cancel{background:var(--field);color:white}
+
+.check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;animation:checkBounce .35s;}
+@keyframes checkBounce{0%{transform:scale(0.5)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+
+.coin-fly{position:fixed;width:36px;height:36px;z-index:9999;pointer-events:none;transform-style:preserve-3d;}
+.coin-fly svg{width:100%;height:100%;transform-origin:center center;}
+.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;opacity:0.8;}
+.pulse{animation:pulseAnim .15s ease;}
+@keyframes pulseAnim{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+</style>
+</head>
+
+<body>
+<div class="app" id="app">
+  <div class="header">TikTok</div>
+  <div class="card">
+    <div class="user">
+      <div class="avatar" id="avatar">U</div>
+      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
+    </div>
+    <div class="error" id="error">Formato inválido</div>
+
+    <div class="balance">
+      <div class="coins" id="saldo">0</div>
+      <span>Monedas</span>
+    </div>
+
+    <div class="packages">
+      <div class="pkg" onclick="confirmar(this,70)"><strong>70</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,350)"><strong>350</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,700)"><strong>700</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,1400)"><strong>1400</strong><span>Monedas</span></div>
+    </div>
+
+    <div class="history">
+      <h4>Historial</h4>
+      <div id="hist"></div>
+    </div>
+  </div>
+</div>
+
+<audio id="coinSound" src="https://freesound.org/data/previews/341/341695_624037-lq.mp3"></audio>
+
+<script>
+let historial=[]; const USUARIOS={};
+const saldo=document.getElementById("saldo");
+const coinSound=document.getElementById("coinSound");
 
 function haptic(){if(navigator.vibrate) navigator.vibrate(10);}
 function bloquear(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 
-// Objeto dinámico para guardar saldo de cualquier usuario
-const USUARIOS={};
-
 function validarUsuario(){
-  const u = user.value.trim();
-  haptic();
-
-  // Regex para validar formato de usuario: @usuario con letras, números, puntos o guiones
-  const formato = /^@[a-zA-Z0-9._-]{1,30}$/;
-  if(!formato.test(u)){
-    error.style.display="block"; suspend.style.display="none";
-    avatar.innerText="U"; saldo.innerText="0"; hist.innerHTML="";
-    bloquear(true); return;
-  }
-
-  error.style.display="none";
-  suspend.style.display="none";
-  avatar.innerText=u[1].toUpperCase(); // primera letra después de @
-
-  // Inicializa saldo si es nuevo usuario
-  if(!USUARIOS[u]) USUARIOS[u] = { saldo: 0 };
-
-  saldo.innerText = USUARIOS[u].saldo;
-  historial = []; 
-  hist.innerHTML="";
-  bloquear(false);
+  const u=user.value.trim(); haptic();
+  const formato=/^@[a-zA-Z0-9._-]{1,30}$/;
+  if(!formato.test(u)){error.style.display="block"; avatar.innerText="U"; saldo.innerText="0"; hist.innerHTML=""; bloquear(true); return;}
+  error.style.display="none"; avatar.innerText=u[1].toUpperCase();
+  if(!USUARIOS[u]) USUARIOS[u]={saldo:0};
+  saldo.innerText=USUARIOS[u].saldo; historial=[]; hist.innerHTML=""; bloquear(false);
 }
 
-function confirmar(c){
-  const u = user.value.trim();
-  if(!u) return; // no hay usuario
-  haptic();
-
+function confirmar(pkgEl,c){
+  const u=user.value.trim(); if(!u) return; haptic();
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="modal">
     <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
     <strong style="font-size:22px">${c} monedas</strong>
-    <button class="confirm pulse" onclick="pagar('${u}',${c});o.remove()">Confirmar</button>
+    <button class="confirm pulse" onclick="animarMonedas3D(pkgEl);pagar('${u}',${c});o.remove()">Confirmar</button>
     <button class="cancel" onclick="o.remove()">Cancelar</button>
-  </div>`;
-  document.body.appendChild(o);
+  </div>`; document.body.appendChild(o);
 }
 
-function pagar(u, c){
-  haptic(); 
-  const base = USUARIOS[u].saldo;
-  saldo.innerText = "…";
+// monedas apiladas 3D + logo + trail + sonido
+function animarMonedas3D(pkgEl){
+  const layers=Math.min(5,3+Math.floor(Math.random()*3));
+  for(let i=0;i<layers;i++){
+    setTimeout(()=>crearMoneda3D(pkgEl), i*100);
+  }
+}
+
+function crearMoneda3D(pkgEl){
+  const coin=document.createElement("div"); coin.className="coin-fly";
+  coin.innerHTML=`<svg viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="url(#grad)"/>
+    <text x="32" y="40" font-size="28" text-anchor="middle" fill="#000" font-weight="700" font-family="Arial">🎵</text>
+    <defs><radialGradient id="grad" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA500"/></radialGradient></defs>
+  </svg>`;
+  const rect=pkgEl.getBoundingClientRect();
+  coin.style.left=rect.left+rect.width/2-18+"px";
+  coin.style.top=rect.top+"px";
+  coin.style.transform=`rotateX(${Math.random()*360}deg) rotateY(${Math.random()*360}deg) rotateZ(${Math.random()*360}deg)`;
+  document.body.appendChild(coin);
+
+  const saldoRect=saldo.getBoundingClientRect();
+  const dx=saldoRect.left+saldoRect.width/2-(rect.left+rect.width/2);
+  const dy=saldoRect.top+saldoRect.height/2-rect.top;
+  const dz=(Math.random()-0.5)*200;
 
   setTimeout(()=>{
-    const nuevo = base + c;
-    USUARIOS[u].saldo = nuevo;
-    saldo.innerText = nuevo;
+    coin.style.transition="transform 0.8s ease-out, opacity 0.8s ease-out";
+    coin.style.transform=`translate3d(${dx}px,${dy}px,${dz}px) rotateX(${Math.random()*360}deg) rotateY(${Math.random()*360}deg) rotateZ(${Math.random()*360}deg) scale(0.5)`;
+    coin.style.opacity=0;
+    coinSound.currentTime=0; coinSound.play();
+    crearParticulas3D(rect.left+rect.width/2, rect.top);
+  },50);
+  setTimeout(()=>coin.remove(),900);
+}
 
-    // historial dinámico por usuario
-    historial.unshift({c, t: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})});
-    historial = historial.slice(0,5);
-    hist.innerHTML = historial.map(h=>`<div class="item"><span>+${h.c}</span><span>${h.t}</span></div>`).join("");
+function crearParticulas3D(x,y){
+  for(let i=0;i<7;i++){
+    const p=document.createElement("div"); p.className="particle";
+    p.style.left=x+"px"; p.style.top=y+"px";
+    document.body.appendChild(p);
+    const angle=Math.random()*Math.PI*2; const dist=15+Math.random()*25;
+    const dz=(Math.random()-0.5)*50;
+    const dx=Math.cos(angle)*dist; const dy=Math.sin(angle)*dist;
+    p.style.transition="all 0.7s ease-out";
+    setTimeout(()=>{p.style.transform=`translate3d(${dx}px,${dy}px,${dz}px)`; p.style.opacity=0;},20);
+    setTimeout(()=>p.remove(),700);
+  }
+}
 
-    const ok = document.createElement("div"); ok.className="overlay";
-    ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`;
-    document.body.appendChild(ok); 
-    setTimeout(()=>ok.remove(),1200);
-  },700);
+function pagar(u,c){
+  haptic(); const base=USUARIOS[u].saldo; const target=base+c; USUARIOS[u].saldo=target;
+  let current=base; const step=Math.ceil(c/10);
+  const interval=setInterval(()=>{
+    current+=step; if(current>=target) current=target;
+    saldo.innerText=current; saldo.style.transform='scale(1.25)';
+    setTimeout(()=>saldo.style.transform='scale(1)',120);
+    if(current>=target) clearInterval(interval);
+  },40);
+
+  historial.unshift({c,t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+  historial=historial.slice(0,5); hist.innerHTML="";
+  historial.forEach(h=>{
+    const div=document.createElement("div"); div.className="item"; div.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`; hist.appendChild(div);
+    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
+  });
+
+  const ok=document.createElement("div"); ok.className="overlay"; ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`; document.body.appendChild(ok);
+  setTimeout(()=>ok.remove(),1200);
 }
 
 bloquear(true);
 </script>
+</body>
+</html>
