@@ -25,9 +25,10 @@ body{
   padding-bottom:env(safe-area-inset-bottom);
 }
 
-/* FONDO TIPO VIDEO */
+/* Fondo tipo video */
 .video-bg{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   background:linear-gradient(180deg,#141414,#000);
   animation:bgmove 10s infinite alternate;
   z-index:-1;
@@ -44,89 +45,114 @@ body{
   padding:16px;
 }
 
-/* HEADER */
 .header{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  text-align:center;
   font-weight:700;
   font-size:22px;
-  margin:6px 0 14px;
+  margin:8px 0 16px;
 }
 
-/* CARD */
 .card{
   background:var(--card);
   border-radius:20px;
   padding:18px;
 }
 
-/* USER */
-.user{display:flex;align-items:center;gap:12px}
+/* Usuario */
+.user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 .avatar{
-  width:48px;height:48px;border-radius:50%;
-  background:#333;display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:18px;text-transform:uppercase;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#333;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  font-size:18px;
 }
 .user input{
-  flex:1;background:#2a2a2c;border:none;color:white;
-  padding:12px;border-radius:12px;font-size:15px
+  flex:1;
+  background:#2a2a2c;
+  border:none;
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  font-size:15px;
 }
 
-/* BALANCE */
-.balance{text-align:center;margin:22px 0}
-.balance .coins{font-size:38px;font-weight:900}
-.balance span{color:var(--muted);font-size:14px}
+/* Saldo */
+.balance{
+  text-align:center;
+  margin:26px 0;
+}
+.balance .coins{
+  font-size:38px;
+  font-weight:900;
+}
+.balance span{
+  color:var(--muted);
+  font-size:14px;
+}
 
-/* PACKAGES */
-.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Paquetes */
+.packages{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
 .pkg{
-  background:#2a2a2c;border-radius:16px;padding:14px;
-  text-align:center;cursor:pointer;transition:.15s
+  background:#2a2a2c;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s;
 }
 .pkg:active{transform:scale(.96)}
 .pkg strong{display:block;font-size:18px}
 .pkg span{color:var(--muted);font-size:13px}
 
-/* HISTORY */
-.history{
-  margin-top:18px;
-  border-top:1px solid #2a2a2c;
-  padding-top:12px;
-}
-.history h4{
-  margin:0 0 8px;font-size:14px;color:var(--muted)
-}
-.item{
-  display:flex;justify-content:space-between;
-  font-size:14px;padding:6px 0
-}
-
-/* CONFIRM */
+/* Confirmación */
 .confirm{
-  position:fixed;inset:0;background:rgba(0,0,0,.65);
-  display:flex;align-items:center;justify-content:center;
-  animation:fade .25s
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:fade .25s;
 }
 .paybox{
-  background:#1c1c1e;border-radius:22px;
-  padding:28px;text-align:center;width:260px
+  background:#1c1c1e;
+  border-radius:22px;
+  padding:28px;
+  text-align:center;
+  width:260px;
 }
 .check{
-  width:92px;height:92px;border-radius:50%;
-  background:var(--pink);margin:0 auto 14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:44px;font-weight:900
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  background:var(--pink);
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:44px;
+  font-weight:900;
 }
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
-/* CLEAN MODE */
-.clean .history,
-.clean .packages,
-.clean .user input{
-  display:none
+/* Modo grabación */
+.clean .user input,
+.clean .packages{
+  display:none;
 }
-.clean .balance{margin-top:60px}
 .toggle{
   margin-top:14px;
   text-align:center;
@@ -146,7 +172,7 @@ body{
   <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="setUser()">
+      <input id="user" placeholder="@usuario" oninput="updateAvatar()">
     </div>
 
     <div class="balance">
@@ -161,56 +187,18 @@ body{
       <div class="pkg" onclick="recargar(1400)"><strong>1400</strong><span>Monedas</span></div>
     </div>
 
-    <div class="history">
-      <h4>Historial</h4>
-      <div id="hist"></div>
-    </div>
-
     <div class="toggle" onclick="toggleClean()">Modo grabación</div>
   </div>
 </div>
 
 <script>
-let usuario = localStorage.getItem("user") || "";
-let saldo = 0;
-let hist = [];
-
-init();
-
-function init(){
-  document.getElementById("user").value = usuario;
-  loadUser();
-}
-
-function setUser(){
-  usuario = document.getElementById("user").value.trim();
-  localStorage.setItem("user",usuario);
-  loadUser();
-}
-
-function loadUser(){
-  saldo = parseInt(localStorage.getItem("saldo_"+usuario) || "0");
-  hist = JSON.parse(localStorage.getItem("hist_"+usuario) || "[]");
-  updateAvatar(); updateSaldo(); drawHist();
-}
-
 function updateAvatar(){
-  const a = document.getElementById("avatar");
-  a.textContent = usuario ? usuario.replace("@","")[0] : "U";
+  const u = document.getElementById("user").value.trim();
+  document.getElementById("avatar").innerText =
+    u ? u.replace("@","")[0].toUpperCase() : "U";
 }
 
-function updateSaldo(){
-  document.getElementById("saldo").innerText = saldo;
-}
-
-function drawHist(){
-  const h = document.getElementById("hist");
-  h.innerHTML = hist.map(i=>`
-    <div class="item">
-      <span>+${i.c}</span><span>${i.t}</span>
-    </div>`).join("");
-}
-
+/* RECARGA SOLO VISUAL */
 function recargar(c){
   const saldoEl = document.getElementById("saldo");
   const original = saldoEl.innerText;
@@ -221,7 +209,6 @@ function recargar(c){
   setTimeout(()=>{
     saldoEl.innerText = original;
   },1200);
-
 }
 
 function confirmAnim(){
