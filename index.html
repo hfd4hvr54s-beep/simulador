@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok Demo 3D Ultra Real</title>
+<title>TikTok Demo Estable</title>
 <style>
 :root{
   --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
   --pink:#FF0050; --text:#FFF; --muted:#A1A1A1; --danger:#FF453A;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
-body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
-.app{width:100%;max-width:430px;min-height:100vh;padding:16px;perspective:1200px;}
+body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);position:relative;}
+.app{width:100%;max-width:430px;min-height:100vh;padding:16px;perspective:800px;}
 .header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 20px}
 .card{background:var(--card);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:24px;padding:18px;}
 .user{display:flex;gap:12px;align-items:center}
@@ -47,7 +47,7 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
 .check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;animation:checkBounce .35s;}
 @keyframes checkBounce{0%{transform:scale(0.5)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
 
-.coin-fly{position:fixed;width:36px;height:36px;z-index:9999;pointer-events:none;transform-style:preserve-3d;}
+.coin-fly{position:fixed;width:32px;height:32px;z-index:9999;pointer-events:none;transform-style:preserve-3d;will-change:transform;}
 .coin-fly svg{width:100%;height:100%;transform-origin:center center;}
 .particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;opacity:0.8;}
 .pulse{animation:pulseAnim .15s ease;}
@@ -109,20 +109,20 @@ function confirmar(pkgEl,c){
   o.innerHTML=`<div class="modal">
     <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
     <strong style="font-size:22px">${c} monedas</strong>
-    <button class="confirm pulse" onclick="animarMonedas3D(pkgEl);pagar('${u}',${c});o.remove()">Confirmar</button>
+    <button class="confirm pulse" onclick="animarMonedasEstable(pkgEl);pagar('${u}',${c});o.remove()">Confirmar</button>
     <button class="cancel" onclick="o.remove()">Cancelar</button>
   </div>`; document.body.appendChild(o);
 }
 
-// monedas apiladas 3D + logo + trail + sonido
-function animarMonedas3D(pkgEl){
-  const layers=Math.min(5,3+Math.floor(Math.random()*3));
+// Animación de monedas estable
+function animarMonedasEstable(pkgEl){
+  const layers=3+Math.floor(Math.random()*3);
   for(let i=0;i<layers;i++){
-    setTimeout(()=>crearMoneda3D(pkgEl), i*100);
+    setTimeout(()=>crearMonedaEstable(pkgEl), i*80);
   }
 }
 
-function crearMoneda3D(pkgEl){
+function crearMonedaEstable(pkgEl){
   const coin=document.createElement("div"); coin.className="coin-fly";
   coin.innerHTML=`<svg viewBox="0 0 64 64">
     <circle cx="32" cy="32" r="30" fill="url(#grad)"/>
@@ -130,36 +130,35 @@ function crearMoneda3D(pkgEl){
     <defs><radialGradient id="grad" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA500"/></radialGradient></defs>
   </svg>`;
   const rect=pkgEl.getBoundingClientRect();
-  coin.style.left=rect.left+rect.width/2-18+"px";
+  coin.style.left=rect.left+rect.width/2-16+"px";
   coin.style.top=rect.top+"px";
-  coin.style.transform=`rotateX(${Math.random()*360}deg) rotateY(${Math.random()*360}deg) rotateZ(${Math.random()*360}deg)`;
   document.body.appendChild(coin);
 
   const saldoRect=saldo.getBoundingClientRect();
   const dx=saldoRect.left+saldoRect.width/2-(rect.left+rect.width/2);
   const dy=saldoRect.top+saldoRect.height/2-rect.top;
-  const dz=(Math.random()-0.5)*200;
+  const dz=(Math.random()-0.5)*60; // profundidad menor para compatibilidad
 
-  setTimeout(()=>{
+  requestAnimationFrame(()=>{
     coin.style.transition="transform 0.8s ease-out, opacity 0.8s ease-out";
     coin.style.transform=`translate3d(${dx}px,${dy}px,${dz}px) rotateX(${Math.random()*360}deg) rotateY(${Math.random()*360}deg) rotateZ(${Math.random()*360}deg) scale(0.5)`;
     coin.style.opacity=0;
     coinSound.currentTime=0; coinSound.play();
-    crearParticulas3D(rect.left+rect.width/2, rect.top);
-  },50);
+    crearParticulasEstable(rect.left+rect.width/2, rect.top);
+  });
   setTimeout(()=>coin.remove(),900);
 }
 
-function crearParticulas3D(x,y){
-  for(let i=0;i<7;i++){
+function crearParticulasEstable(x,y){
+  for(let i=0;i<5;i++){
     const p=document.createElement("div"); p.className="particle";
     p.style.left=x+"px"; p.style.top=y+"px";
     document.body.appendChild(p);
-    const angle=Math.random()*Math.PI*2; const dist=15+Math.random()*25;
-    const dz=(Math.random()-0.5)*50;
+    const angle=Math.random()*Math.PI*2; const dist=10+Math.random()*20;
+    const dz=(Math.random()-0.5)*30;
     const dx=Math.cos(angle)*dist; const dy=Math.sin(angle)*dist;
     p.style.transition="all 0.7s ease-out";
-    setTimeout(()=>{p.style.transform=`translate3d(${dx}px,${dy}px,${dz}px)`; p.style.opacity=0;},20);
+    requestAnimationFrame(()=>{p.style.transform=`translate3d(${dx}px,${dy}px,${dz}px)`; p.style.opacity=0;});
     setTimeout(()=>p.remove(),700);
   }
 }
@@ -169,10 +168,10 @@ function pagar(u,c){
   let current=base; const step=Math.ceil(c/10);
   const interval=setInterval(()=>{
     current+=step; if(current>=target) current=target;
-    saldo.innerText=current; saldo.style.transform='scale(1.25)';
-    setTimeout(()=>saldo.style.transform='scale(1)',120);
+    saldo.innerText=current; saldo.style.transform='scale(1.2)';
+    setTimeout(()=>saldo.style.transform='scale(1)',100);
     if(current>=target) clearInterval(interval);
-  },40);
+  },50);
 
   historial.unshift({c,t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
   historial=historial.slice(0,5); hist.innerHTML="";
