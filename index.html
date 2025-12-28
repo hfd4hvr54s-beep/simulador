@@ -1,199 +1,76 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok</title>
-<style>
-:root{
-  --bg:#0f0f0f;
-  --card:rgba(28,28,30,.88);
-  --field:#2c2c2e;
-  --pink:#ff0050;
-  --text:#fff;
-  --muted:#8e8e93;
-  --danger:#ff453a;
-}
-
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
-
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  display:flex;justify-content:center;
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
-}
-
-.app{width:100%;max-width:430px;min-height:100vh;padding:16px}
-.header{text-align:center;font-weight:700;font-size:22px;margin:10px 0 18px}
-
-.card{
-  background:var(--card);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border-radius:24px;padding:18px;
-}
-
-.user{display:flex;gap:12px;align-items:center}
-.avatar{
-  width:48px;height:48px;border-radius:50%;
-  background:var(--field);display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:18px
-}
-.user input{
-  flex:1;background:var(--field);border:none;outline:none;color:white;
-  padding:13px 14px;border-radius:14px;font-size:16px
-}
-
-.error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
-.suspend{background:rgba(255,69,58,.12);color:#ff453a;border-radius:14px;padding:12px;text-align:center;font-size:14px;margin-top:12px;display:none}
-
-.balance{text-align:center;margin:28px 0}
-.balance .coins{font-size:40px;font-weight:800}
-.balance span{font-size:14px;color:var(--muted)}
-
-.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pkg{
-  background:var(--field);border-radius:18px;padding:16px 10px;
-  text-align:center;cursor:pointer;transition:.12s;
-  position:relative;
-}
-.pkg strong{font-size:18px;font-weight:700}
-.pkg span{display:block;font-size:13px;color:var(--muted)}
-.pkg:active{transform:scale(.96)}
-.pkg.disabled{opacity:.35;pointer-events:none}
-
-.history{margin-top:18px;border-top:1px solid #2c2c2e;padding-top:10px}
-.history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
-.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0}
-
-/* Overlay iOS */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.35);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  display:flex;align-items:flex-end;justify-content:center;
-  animation:fade .15s;
-}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-
-.modal{
-  width:270px;background:rgba(28,28,30,.92);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-radius:22px;padding:22px;text-align:center;
-  animation:sheetUp .25s cubic-bezier(.22,.61,.36,1);
-}
-@keyframes sheetUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-.modal button{
-  width:100%;margin-top:10px;padding:13px;border:none;border-radius:14px;
-  font-size:16px;font-weight:600
-}
-.confirm{background:var(--pink);color:white}
-.cancel{background:var(--field);color:white}
-
-.check{
-  width:90px;height:90px;border-radius:50%;background:var(--pink);
-  margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
-  font-size:44px;font-weight:900
-}
-
-/* Iconos SVG dentro de pkg */
-.pkg svg{width:18px;height:18px;margin-left:4px;vertical-align:middle}
-
-/* Modo grabación limpio */
-.grabacion .error,.grabacion .history h4,.grabacion .suspend{display:none}
-</style>
-</head>
-
-<body>
-<div class="app" id="app">
-  <div class="header">TikTok</div>
-  <div class="card">
-    <div class="user">
-      <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
-    </div>
-    <div class="error" id="error">Usuario no encontrado</div>
-    <div class="suspend" id="suspend">Cuenta suspendida</div>
-
-    <div class="balance">
-      <div class="coins" id="saldo">0</div>
-      <span>Monedas</span>
-    </div>
-
-    <div class="packages">
-      <div class="pkg" onclick="confirmar(70)"><strong>70</strong><span>Monedas <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg></span></div>
-      <div class="pkg" onclick="confirmar(350)"><strong>350</strong><span>Monedas <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg></span></div>
-      <div class="pkg" onclick="confirmar(700)"><strong>700</strong><span>Monedas <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg></span></div>
-      <div class="pkg" onclick="confirmar(1400)"><strong>1400</strong><span>Monedas <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/></svg></span></div>
-    </div>
-
-    <div class="history">
-      <h4>Historial</h4>
-      <div id="hist"></div>
-    </div>
-  </div>
-</div>
-
 <script>
-const MODO_GRABACION = false; 
+const MODO_GRABACION = false;
 if(MODO_GRABACION) app.classList.add("grabacion");
 
-const USUARIOS={
-  "@jonathan": {saldo:350},
-  "@demo.user": {saldo:1400},
-  "@tiktokmvp": {saldo:700},
-  "@suspendido": {suspendido:true}
-};
-
-let activo=null, historial=[];
+let historial=[];
 
 function haptic(){if(navigator.vibrate) navigator.vibrate(10);}
 function bloquear(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 
+// Objeto dinámico para guardar saldo de cualquier usuario
+const USUARIOS={};
+
 function validarUsuario(){
-  const u=user.value.trim().toLowerCase(); haptic();
-  if(!USUARIOS[u]){
+  const u = user.value.trim();
+  haptic();
+
+  // Regex para validar formato de usuario: @usuario con letras, números, puntos o guiones
+  const formato = /^@[a-zA-Z0-9._-]{1,30}$/;
+  if(!formato.test(u)){
     error.style.display="block"; suspend.style.display="none";
-    avatar.innerText="U"; saldo.innerText="0"; hist.innerHTML=""; activo=null; bloquear(true); return;
+    avatar.innerText="U"; saldo.innerText="0"; hist.innerHTML="";
+    bloquear(true); return;
   }
-  if(USUARIOS[u].suspendido){
-    suspend.style.display="block"; error.style.display="none";
-    avatar.innerText=u.replace("@","")[0].toUpperCase(); saldo.innerText="—"; activo=null; bloquear(true); return;
-  }
-  activo=u; suspend.style.display="none"; error.style.display="none";
-  avatar.innerText=u.replace("@","")[0].toUpperCase();
-  saldo.innerText=USUARIOS[u].saldo; historial=[]; hist.innerHTML=""; bloquear(false);
+
+  error.style.display="none";
+  suspend.style.display="none";
+  avatar.innerText=u[1].toUpperCase(); // primera letra después de @
+
+  // Inicializa saldo si es nuevo usuario
+  if(!USUARIOS[u]) USUARIOS[u] = { saldo: 0 };
+
+  saldo.innerText = USUARIOS[u].saldo;
+  historial = []; 
+  hist.innerHTML="";
+  bloquear(false);
 }
 
 function confirmar(c){
-  if(!activo) return; haptic();
+  const u = user.value.trim();
+  if(!u) return; // no hay usuario
+  haptic();
+
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="modal">
     <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
     <strong style="font-size:22px">${c} monedas</strong>
-    <button class="confirm" onclick="pagar(${c});o.remove()">Confirmar</button>
+    <button class="confirm pulse" onclick="pagar('${u}',${c});o.remove()">Confirmar</button>
     <button class="cancel" onclick="o.remove()">Cancelar</button>
   </div>`;
   document.body.appendChild(o);
 }
 
-function pagar(c){
-  haptic(); const base=parseInt(saldo.innerText); saldo.innerText="…";
+function pagar(u, c){
+  haptic(); 
+  const base = USUARIOS[u].saldo;
+  saldo.innerText = "…";
+
   setTimeout(()=>{
-    const nuevo=base+c; saldo.innerText=nuevo; USUARIOS[activo].saldo=nuevo;
-    historial.unshift({c,t:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
-    historial=historial.slice(0,5);
-    hist.innerHTML=historial.map(h=>`<div class="item"><span>+${h.c}</span><span>${h.t}</span></div>`).join("");
-    const ok=document.createElement("div"); ok.className="overlay";
+    const nuevo = base + c;
+    USUARIOS[u].saldo = nuevo;
+    saldo.innerText = nuevo;
+
+    // historial dinámico por usuario
+    historial.unshift({c, t: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})});
+    historial = historial.slice(0,5);
+    hist.innerHTML = historial.map(h=>`<div class="item"><span>+${h.c}</span><span>${h.t}</span></div>`).join("");
+
+    const ok = document.createElement("div"); ok.className="overlay";
     ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`;
-    document.body.appendChild(ok); setTimeout(()=>ok.remove(),1200);
+    document.body.appendChild(ok); 
+    setTimeout(()=>ok.remove(),1200);
   },700);
 }
 
 bloquear(true);
 </script>
-</body>
-</html>
