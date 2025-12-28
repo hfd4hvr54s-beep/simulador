@@ -7,7 +7,7 @@
 <style>
 :root{
   --bg:#fff;
-  --card:#fff;
+  --card:#f2f2f2; /* gris muy claro */
   --field:#f5f5f5;
   --red:#FF3B30;
   --yellow:#FFD700;
@@ -18,15 +18,15 @@
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;}
 .app{width:100%;max-width:430px;padding:16px;}
 .header{text-align:center;font-weight:700;font-size:24px;margin:12px 0 16px;color:var(--text);}
-.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.08);}
+.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.08);border:2px solid var(--red);}
 .user{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--red);}
-.user input{flex:1;background:var(--field);border:none;outline:none;color:var(--text);padding:14px;border-radius:16px;font-size:16px;}
+.user input{flex:1;background:var(--field);border:none;outline:none;color:var(--text);padding:14px;border-radius:16px;font-size:16px;border:1px solid var(--red);}
 .balance{text-align:center;margin:20px 0;}
 .balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--yellow);}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-.pkg{background:var(--yellow);border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.25s;color:#000;box-shadow:0 5px 12px rgba(0,0,0,0.2);position:relative;overflow:hidden;}
+.pkg{background:var(--yellow);border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;transition:.25s;color:#000;box-shadow:0 5px 12px rgba(0,0,0,0.2);position:relative;overflow:hidden;border:2px solid var(--red);}
 .pkg span{display:block;font-size:13px;color:#000;}
 .pkg:active{transform:scale(.96);}
 .pkg.disabled{opacity:.35;pointer-events:none;}
@@ -40,12 +40,12 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .particle{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--yellow);pointer-events:none;will-change:transform,opacity;mix-blend-mode:screen;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;animation:fadein .15s forwards;}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
-.sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);}
+.sheet{width:100%;max-width:430px;background:var(--card);border-radius:26px;padding:22px;animation:up .35s cubic-bezier(.22,.61,.36,1);border:2px solid var(--red);}
 @keyframes up{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}
 .sheet button{width:100%;margin-top:12px;padding:14px;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;}
 .confirm{background:var(--red);color:#fff;transition:transform .15s;}
 .confirm:active{transform:scale(.95);}
-.cancel{background:var(--field);color:#000;}
+.cancel{background:var(--field);color:#000;border:1px solid var(--red);}
 .success{text-align:center;}
 .check{width:96px;height:96px;border-radius:50%;background:var(--red);margin:10px auto 14px;display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:900;animation:check .4s;}
 @keyframes check{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
