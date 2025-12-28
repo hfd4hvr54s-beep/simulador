@@ -11,9 +11,10 @@
   --field:#F5F5F5;
   --red:#FF3B30;
   --yellow:#FFD700;
+  --green:#34C759;
   --text:#000;
   --muted:#555;
-  --success-gradient: radial-gradient(circle at 50% 40%, #00C6FF, #0072FF);
+  --policy:#777;
 }
 
 /* Base */
@@ -21,22 +22,31 @@
 body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;color:var(--text);}
 .app{width:100%;max-width:430px;padding:16px;}
 .header{text-align:center;font-weight:700;font-size:24px;margin:12px 0 16px;}
-.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.08);border:2px solid var(--red);}
+.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.08);}
 .user{display:flex;gap:12px;align-items:center;margin-bottom:16px;}
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--red);}
 .user input{flex:1;background:var(--field);border:none;outline:none;color:var(--text);padding:14px;border-radius:16px;font-size:16px;border:1px solid var(--red);}
 .balance{text-align:center;margin:20px 0;}
 .balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--yellow);}
 .balance span{font-size:14px;color:var(--muted);}
-.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .pkg{
-  background:linear-gradient(145deg,#FFD700,#FFC107);
-  border-radius:20px;padding:18px 10px;text-align:center;font-weight:700;cursor:pointer;
-  transition:.25s;color:#000;box-shadow:0 5px 15px rgba(0,0,0,0.2) inset,0 5px 15px rgba(0,0,0,0.2);
-  position:relative;overflow:hidden;border:2px solid var(--red);
+  background:var(--field);
+  border-radius:20px;
+  padding:18px 10px;
+  text-align:center;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+  color:var(--text);
+  border:2px solid var(--red);
+  position:relative;
+  overflow:hidden;
 }
-.pkg span{display:block;font-size:13px;color:#000;}
-.pkg:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(255,215,0,0.6) inset,0 0 20px rgba(255,215,0,0.6);}
+.pkg img.coin-icon{width:24px;height:24px;margin-bottom:6px;}
+.pkg span.number{display:block;font-size:22px;font-weight:800;color:var(--text);}
+.pkg span.price{display:block;font-size:14px;color:var(--text);margin-bottom:6px;}
+.pkg:hover{box-shadow:0 0 10px rgba(255,59,48,0.5);}
 .pkg:active{transform:scale(.96);}
 .pkg.disabled{opacity:.35;pointer-events:none;}
 .history{margin-top:10px;border-top:1px solid #ddd;padding-top:10px;}
@@ -51,10 +61,11 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .confirm{background:var(--red);color:#fff;box-shadow:0 0 10px rgba(255,59,48,0.5);}
 .confirm:active{transform:scale(.95);box-shadow:0 0 20px rgba(255,59,48,0.8);}
 .cancel{background:var(--field);color:#000;border:1px solid var(--red);}
-.success{text-align:center;background:var(--success-gradient);border-radius:26px;color:#fff;border:2px solid var(--red);}
-.check{width:96px;height:96px;border-radius:50%;background:var(--red);margin:10px auto 14px;display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:900;animation:check .4s,glowCheck 1.2s infinite alternate;}
+.success{text-align:center;background:#fff;border-radius:26px;color:var(--text);border:2px solid var(--red);}
+.check{width:96px;height:96px;border-radius:50%;background:var(--green);margin:10px auto 14px;display:flex;align-items:center;justify-content:center;font-size:46px;font-weight:900;animation:check .4s,glowCheck 1.2s infinite alternate;}
 @keyframes check{0%{transform:scale(.4)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-@keyframes glowCheck{0%{box-shadow:0 0 10px rgba(0,198,255,0.6);}100%{box-shadow:0 0 25px rgba(0,198,255,1);}}
+@keyframes glowCheck{0%{box-shadow:0 0 10px rgba(52,199,89,0.6);}100%{box-shadow:0 0 25px rgba(52,199,89,1);}}
+.policy-footer{font-size:11px;color:var(--policy);text-align:center;margin-top:8px;}
 .error{font-size:12px;color:#FF3B30;margin-top:6px;display:none;}
 </style>
 </head>
@@ -72,11 +83,40 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
       <span>Monedas</span>
     </div>
     <div class="packages">
-      <div class="pkg" data-c="70">70<span>Monedas</span></div>
-      <div class="pkg" data-c="350">350<span>Monedas</span></div>
-      <div class="pkg" data-c="700">700<span>Monedas</span></div>
-      <div class="pkg" data-c="1400">1400<span>Monedas</span></div>
+      <div class="pkg" data-c="70">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">70</span>
+        <span class="price">~$0.99</span>
+      </div>
+      <div class="pkg" data-c="350">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">350</span>
+        <span class="price">~$4.99</span>
+      </div>
+      <div class="pkg" data-c="700">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">700</span>
+        <span class="price">~$9.99</span>
+      </div>
+      <div class="pkg" data-c="1400">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">1400</span>
+        <span class="price">~$19.99</span>
+      </div>
+      <div class="pkg" data-c="2800">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">2800</span>
+        <span class="price">~$39.99</span>
+      </div>
+      <div class="pkg" data-c="5600">
+        <img src="https://i.imgur.com/1XfFGZP.png" class="coin-icon">
+        <span class="number">5600</span>
+        <span class="price">~$79.99</span>
+      </div>
     </div>
+
+    <div class="policy-footer">Sujeto a Términos y Condiciones de la plataforma</div>
+
     <div class="history">
       <h4>Historial</h4>
       <div id="hist"></div>
@@ -90,6 +130,7 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 <audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
+// --- Script idéntico a la versión anterior, manejando animaciones y sonidos ---
 const user=document.getElementById("user");
 const avatar=document.getElementById("avatar");
 const saldo=document.getElementById("saldo");
