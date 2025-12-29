@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TikTok Coins 3D Ultra Real</title>
+<title>TikTok Coins Real</title>
 <style>
 :root {
   --bg:#FFFFFF; --card:#FFFFFF; --field:#FAFAFA;
@@ -21,7 +20,7 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--confirm-green);}
 .user input{flex:1;background:var(--field);border:none;outline:none;color:var(--text);padding:14px;border-radius:16px;font-size:16px;border:1px solid #ccc;}
 .balance{text-align:center;margin:20px 0;}
-.balance .coins{font-size:44px;font-weight:800;transition:.25s;color:#000;} /* Contador negro */
+.balance .coins{font-size:44px;font-weight:800;color:#000;transition:.25s;}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .pkg{background:#FAFAFA;border-radius:20px;padding:18px 10px;text-align:center;cursor:pointer;color:var(--text);border:2px solid var(--tiktok-red);position:relative;overflow:hidden;transition:.25s;}
@@ -89,7 +88,6 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 <audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
-// Código JavaScript idéntico para validación, animación, partículas, balance y confirmación
 const user=document.getElementById("user"), avatar=document.getElementById("avatar"), saldo=document.getElementById("saldo"), error=document.getElementById("error"), hist=document.getElementById("hist");
 const USERS={}, historialArr=[]; let currentUser=null;
 
