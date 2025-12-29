@@ -248,12 +248,9 @@ body{
   gap:10px;
   padding:10px 0;
 }
-.pay{
-  font-size:11px;
-  font-weight:700;
-  background:#ededf0;
-  padding:3px 8px;
-  border-radius:6px;
+.pay img{
+  width:40px;
+  height:auto;
 }
 .buy{
   margin:10px 14px 14px;
@@ -261,7 +258,7 @@ body{
   padding:16px;
   border:none;
   border-radius:14px;
-  background:linear-gradient(135deg,#fe2c55,#25f4ee);
+  background:#fe2c55; /* rojo sólido */
   color:#fff;
   font-size:18px;
   font-weight:800;
@@ -318,7 +315,7 @@ body{
 
 <div class="user">
   <div class="avatar" onclick="file.click()">
-    <img id="pic" src="https://cdn3d.iconscout.com/3d/free/preview/free-tiktok-coin-with-blink-star-3d-icon-png-download-6220600.png">
+    <img id="pic" src="https://i.pravatar.cc/46?u=JTN">
   </div>
   <input type="file" id="file" hidden onchange="updatePic(this)">
   <div class="user-info">
@@ -356,7 +353,7 @@ body{
 </div>
 
 <div class="info">
-  <div class="illu"><img src="https://ppc.land/content/images/2024/10/TikTok-Coins-3.webp"></div>
+  <div class="illu"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Green_shield_icon.svg/512px-Green_shield_icon.svg.png" alt="Pago Seguro"></div>
   <div>
     <strong>Pago seguro</strong><br>
     Protección de pagos y datos
@@ -369,9 +366,9 @@ body{
 
 <div class="footer">
   <div class="payments">
-    <div class="pay">VISA</div>
-    <div class="pay"> Pay</div>
-    <div class="pay">PayPal</div>
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA"></div>
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Pay"></div>
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal"></div>
   </div>
   <button class="buy" onclick="buy()">Comprar</button>
 </div>
@@ -394,7 +391,6 @@ document.querySelectorAll('.card').forEach(card=>{
 
 const coinsContainer=document.querySelector('.coins');
 
-// Compra con animación GIF
 function buy(){
   modal.classList.add('show');
   box.innerHTML='Procesando compra<div class="loader"></div>';
@@ -403,7 +399,7 @@ function buy(){
     count.textContent=coins;
     anim.innerHTML=`<span class="plus">+${selected}</span>`;
     
-    // GIF de monedas cayendo
+    // GIFs monedas cayendo
     for(let i=0;i<5;i++){
       const gif=document.createElement('img');
       gif.src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
@@ -417,7 +413,6 @@ function buy(){
   },1400);
 }
 
-// Edición de usuario
 function editUser(){
   const u=document.querySelector('.username');
   const i=document.createElement('input');
@@ -435,7 +430,6 @@ function editUser(){
   }
 }
 
-// Cambiar imagen y reiniciar contador
 function resetUser(name){
   coins=0;
   count.textContent=coins;
@@ -443,7 +437,6 @@ function resetUser(name){
   pic.src=`https://i.pravatar.cc/46?u=${first}`;
 }
 
-// Cambiar imagen con archivo
 function updatePic(input){
   if(input.files && input.files[0]){
     pic.src=URL.createObjectURL(input.files[0]);
