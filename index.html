@@ -3,143 +3,236 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TikTok Coins – Demo</title>
+<title>TikTok Coins</title>
 
 <style>
+:root{
+  --red:#FE2C55;
+  --bg:#F8F8F8;
+  --text:#0f0f0f;
+  --gray:#8a8a8a;
+  --line:#e6e6e6;
+}
 *{
   box-sizing:border-box;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
 }
-body{margin:0;background:#f2f2f5}
-.app{max-width:390px;margin:auto;background:#fff;min-height:100vh}
+body{
+  margin:0;
+  background:#000;
+}
+.app{
+  width:390px;
+  min-height:100vh;
+  margin:auto;
+  background:#fff;
+}
 
 /* HEADER */
 .header{
-  padding:14px;
-  border-bottom:1px solid #eee;
-}
-.header-top{
-  display:flex;align-items:center;justify-content:space-between;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-bottom:1px solid var(--line);
+  position:relative;
 }
 .header-title{
-  font-size:18px;font-weight:800;letter-spacing:.2px;
+  font-size:17px;
+  font-weight:700;
 }
-.menu{font-size:20px}
+.balance{
+  position:absolute;
+  right:14px;
+  background:#000;
+  color:#fff;
+  font-size:12px;
+  padding:4px 9px;
+  border-radius:11px;
+  font-weight:600;
+}
 
-/* PROFILE */
-.profile{
-  display:flex;align-items:center;gap:12px;
-  margin-top:12px;
+/* USER */
+.user{
+  padding:14px;
 }
-.avatar{
-  width:56px;height:56px;border-radius:50%;
-  background:#ddd;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+.user input{
+  width:100%;
+  border:none;
+  border-bottom:1px solid var(--line);
+  padding:6px 0;
+  font-size:15px;
+  font-weight:600;
+  outline:none;
 }
-.avatar img{width:100%;height:100%;object-fit:cover}
-.avatar span{font-size:22px;font-weight:700;color:#777}
-.profile-info{flex:1}
-.profile-info input{
-  width:100%;border:none;border-bottom:1px solid #ccc;
-  font-size:15px;font-weight:600;outline:none;padding:4px
-}
-.invalid{font-size:11px;color:#d93025;display:none}
-.upload{
-  font-size:11px;color:#555;margin-top:4px;
+.invalid{
+  font-size:11px;
+  color:#d93025;
+  margin-top:4px;
+  display:none;
 }
 
 /* INVITE */
 .invite{
-  margin-top:14px;
-  padding:14px;
-  background:#f6f6f6;
-  display:flex;justify-content:space-between;align-items:center;
+  background:var(--bg);
+  padding:12px 14px;
   font-size:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 /* SECTION */
-.section{padding:14px}
-.section h3{margin:0 0 4px;font-size:16px}
-.note{font-size:12px;color:#555}
+.section{
+  padding:14px;
+}
+.section h3{
+  margin:0;
+  font-size:16px;
+  font-weight:700;
+}
+.note{
+  margin-top:4px;
+  font-size:12px;
+  color:#555;
+}
 
 /* GRID */
 .grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;margin-top:14px
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
 }
 .card{
-  background:#fafafa;border-radius:16px;padding:12px;
-  text-align:center;font-weight:700;
-  box-shadow:0 3px 8px rgba(0,0,0,.08);
-  cursor:pointer;position:relative
+  background:#fafafa;
+  border-radius:14px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:15px;
+  font-weight:700;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  cursor:pointer;
+  position:relative;
 }
-.card small{display:block;font-weight:400;color:#666;margin-top:4px}
+.card small{
+  display:block;
+  font-size:12px;
+  font-weight:400;
+  color:#666;
+  margin-top:3px;
+}
 .card.active{
-  outline:2px solid #ff2f5b;
-  background:#fff0f4
+  outline:2px solid var(--red);
+  background:#fff;
 }
 .badge{
-  position:absolute;top:-8px;left:50%;
+  position:absolute;
+  top:-7px;
+  left:50%;
   transform:translateX(-50%);
-  background:#ff2f5b;color:#fff;
-  font-size:10px;padding:2px 6px;border-radius:8px
+  background:var(--red);
+  color:#fff;
+  font-size:10px;
+  padding:2px 6px;
+  border-radius:8px;
 }
 
 /* NOTIFY */
 .notify{
-  margin:14px;padding:14px;
-  background:#f9f9f9;border-radius:16px;
-  font-size:14px
+  margin:14px;
+  padding:14px;
+  background:#f3f3f3;
+  border-radius:14px;
+  font-size:14px;
 }
 .notify button{
-  width:100%;margin-top:8px;padding:10px;
-  border:none;border-radius:12px;
-  background:#000;color:#fff;font-weight:600
+  margin-top:8px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:#000;
+  color:#fff;
+  font-weight:600;
 }
 
 /* PAYMENTS */
 .payments{
-  display:flex;gap:12px;padding:14px
+  display:flex;
+  gap:10px;
+  padding:0 14px 14px;
 }
 .pay{
-  flex:1;border:1px solid #ddd;border-radius:12px;
-  padding:10px;text-align:center;font-weight:700;color:#444
+  flex:1;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  font-size:14px;
+  font-weight:600;
 }
 
 /* FOOTER */
-.footer{padding:14px}
+.footer{
+  padding:14px;
+}
 .buy{
-  width:100%;padding:16px;border:none;border-radius:20px;
-  background:#ff2f5b;color:#fff;
-  font-size:17px;font-weight:700
+  width:100%;
+  height:48px;
+  border:none;
+  border-radius:24px;
+  background:var(--red);
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
 }
 
 /* MODAL */
 .modal{
-  position:fixed;inset:0;background:rgba(0,0,0,.55);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:.3s;z-index:30
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
 }
-.modal.show{opacity:1;pointer-events:auto}
+.modal.show{
+  opacity:1;
+  pointer-events:auto;
+}
 .box{
-  width:280px;background:#fff;border-radius:22px;
-  padding:22px;text-align:center;
-  transform:scale(.85);opacity:0;transition:.3s
+  width:270px;
+  background:#fff;
+  border-radius:22px;
+  padding:22px;
+  text-align:center;
+  transform:scale(.9);
+  transition:.25s;
 }
-.modal.show .box{transform:scale(1);opacity:1}
+.modal.show .box{
+  transform:scale(1);
+}
 
 /* LOADER */
 .loader{
-  width:44px;height:44px;border-radius:50%;
-  border:4px solid #eee;border-top:4px solid #ff2f5b;
-  margin:18px auto;animation:spin 1s linear infinite
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:4px solid #eee;
+  border-top:4px solid var(--red);
+  margin:16px auto;
+  animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* CONFIRM */
-.coins{font-size:30px;margin:10px 0;animation:pop .4s}
-@keyframes pop{from{transform:scale(.6)}to{transform:scale(1)}}
+.coins{
+  font-size:28px;
+  margin-bottom:8px;
+}
 </style>
 </head>
 
@@ -147,36 +240,21 @@ body{margin:0;background:#f2f2f5}
 
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
-    <div class="header-top">
-      <div class="header-title">TikTok Coins</div>
-      <div class="menu">⋮</div>
-    </div>
-
-    <!-- PROFILE -->
-    <div class="profile">
-      <div class="avatar" id="avatar">
-        <span>◎</span>
-      </div>
-      <div class="profile-info">
-        <input id="user" placeholder="@usuario">
-        <div class="invalid" id="invalid">Usuario inválido</div>
-        <div class="upload">
-          Foto de perfil:
-          <input type="file" accept="image/*" onchange="loadPhoto(event)">
-        </div>
-      </div>
-    </div>
+    <div class="header-title">TikTok Coins</div>
+    <div class="balance" id="balance">0</div>
   </div>
 
-  <!-- INVITE -->
+  <div class="user">
+    <input id="user" placeholder="@usuario">
+    <div class="invalid" id="invalid">Usuario inválido</div>
+  </div>
+
   <div class="invite">
     <span>Invita y consigue recompensas</span>
     <strong>USD 3.35 ›</strong>
   </div>
 
-  <!-- RECARGA -->
   <div class="section">
     <h3>Recargar</h3>
     <div class="note">
@@ -202,92 +280,66 @@ body{margin:0;background:#f2f2f5}
     </div>
   </div>
 
-  <!-- NOTIFY -->
   <div class="notify">
     Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
     <button>Activar</button>
   </div>
 
-  <!-- PAYMENTS -->
   <div class="payments">
     <div class="pay">VISA</div>
     <div class="pay">Pay</div>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
     <button class="buy" id="buy">Comprar por €4.32</button>
   </div>
 
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="box" id="box"></div>
 </div>
 
 <script>
 let selected={coins:400,price:"4.32"};
-let busy=false;
+let balance=Number(localStorage.getItem("demo_balance")||0);
+const balanceEl=document.getElementById("balance");
+balanceEl.textContent=balance;
 
-document.querySelectorAll('.card').forEach(card=>{
-  card.onclick=()=>{
-    document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-    card.classList.add('active');
-    selected.coins=card.dataset.c;
-    selected.price=card.dataset.p;
-    document.getElementById('buy').textContent =
+document.querySelectorAll(".card").forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll(".card").forEach(x=>x.classList.remove("active"));
+    c.classList.add("active");
+    selected.coins=Number(c.dataset.c);
+    selected.price=c.dataset.p;
+    document.getElementById("buy").textContent=
       selected.price>0?`Comprar por €${selected.price}`:"Personalizar";
   };
 });
 
-document.getElementById('buy').onclick=()=>{
-  if(busy)return;
-  const user=document.getElementById('user').value.trim();
-  const invalid=document.getElementById('invalid');
-  if(!/^@[\w.]{3,}$/.test(user)){
-    invalid.style.display="block";return;
-  }
-  invalid.style.display="none";
-  busy=true;
+document.getElementById("buy").onclick=()=>{
+  const u=document.getElementById("user").value.trim();
+  const inv=document.getElementById("invalid");
+  if(!/^@[\w.]{3,}$/.test(u)){inv.style.display="block";return;}
+  inv.style.display="none";
 
-  const modal=document.getElementById('modal');
-  const box=document.getElementById('box');
-  modal.classList.add('show');
-
-  box.innerHTML=`
-    <strong>Procesando compra</strong>
-    <div class="loader"></div>
-    <small>${user}<br>${selected.coins} monedas</small>
-  `;
+  modal.classList.add("show");
+  box.innerHTML=`<strong>Procesando compra</strong><div class="loader"></div>`;
 
   setTimeout(()=>{
+    balance+=selected.coins;
+    localStorage.setItem("demo_balance",balance);
+    balanceEl.textContent=balance;
     box.innerHTML=`
       <div class="coins">🪙🪙🪙</div>
       <strong>Compra confirmada</strong>
-      <p>${selected.coins} monedas añadidas a<br><b>${user}</b></p>
-      <button onclick="closeModal()"
-        style="margin-top:14px;width:100%;padding:12px;
+      <p>${selected.coins} monedas añadidas</p>
+      <button onclick="modal.classList.remove('show')"
+        style="margin-top:12px;width:100%;padding:10px;
         border:none;border-radius:14px;background:#000;
-        color:#fff;font-weight:600">Aceptar</button>
-    `;
-    busy=false;
-  },2200);
+        color:#fff;font-weight:600">Aceptar</button>`;
+  },2000);
 };
-
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-}
-
-function loadPhoto(e){
-  const file=e.target.files[0];
-  if(!file)return;
-  const img=document.createElement('img');
-  img.src=URL.createObjectURL(file);
-  const avatar=document.getElementById('avatar');
-  avatar.innerHTML='';
-  avatar.appendChild(img);
-}
 </script>
 
 </body>
