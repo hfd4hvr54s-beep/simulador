@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok Demo Ultra Real + Partículas</title>
+<title>TikTok Demo Con Red + Partículas</title>
 <style>
 :root{
   --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
@@ -28,13 +28,12 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
 .pkg strong{font-size:18px;font-weight:700}
 .pkg span{display:block;font-size:13px;color:var(--muted)}
 .pkg:active{transform:scale(.96)}
-.pkg.disabled{opacity:.35;pointer-events:none}
 
 .history{margin-top:18px;border-top:1px solid #2C2C2E;padding-top:10px}
 .history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
 .item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter: blur(18px) saturate(180%);-webkit-backdrop-filter: blur(18px) saturate(180%);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter: blur(18px) saturate(180%);-webkit-backdrop-filter: blur(18px) saturate(180%);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;z-index:999;}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
 .modal{width:270px;background:var(--card);backdrop-filter: blur(24px) saturate(180%);-webkit-backdrop-filter: blur(24px) saturate(180%);border-radius:22px;padding:22px;text-align:center;animation:sheetUp .35s cubic-bezier(.22,.61,.36,1);}
@@ -64,7 +63,7 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
       <div class="avatar" id="avatar">U</div>
       <input id="user" placeholder="@usuario" oninput="validarUsuario()">
     </div>
-    <div class="error" id="error">Formato inválido</div>
+    <div class="error" id="error">No se pudo conectar al servidor</div>
 
     <div class="balance">
       <div class="coins" id="saldo">0</div>
@@ -86,35 +85,71 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
 </div>
 
 <script>
-let historial=[]; const USUARIOS={};
 const saldo=document.getElementById("saldo");
+const hist=document.getElementById("hist");
+const avatar=document.getElementById("avatar");
+const error=document.getElementById("error");
+const user=document.getElementById("user");
+let currentUser=null;
 
-function haptic(){if(navigator.vibrate) navigator.vibrate(10);}
-
-// función bloquear vacía: eliminada la restricción de conexión
-function bloquear(b){ /* ya no hace nada */ }
-
-function validarUsuario(){
-  const u=user.value.trim(); haptic();
-  const formato=/^@[a-zA-Z0-9._-]{1,30}$/;
-  if(!formato.test(u)){error.style.display="block"; avatar.innerText="U"; saldo.innerText="0"; historial=[]; hist.innerHTML=""; return;}
-  error.style.display="none"; avatar.innerText=u[1].toUpperCase();
-  if(!USUARIOS[u]) USUARIOS[u]={saldo:0};
-  saldo.innerText=USUARIOS[u].saldo; historial=[]; hist.innerHTML="";
+// obtiene saldo e historial del servidor
+async function validarUsuario(){
+  currentUser=user.value.trim() || "@anonimo";
+  avatar.innerText=currentUser[1]? currentUser[1].toUpperCase():"U";
+  try {
+    const res = await fetch(`http://localhost:3000/saldo/${currentUser}`);
+    const data = await res.json();
+    saldo.innerText = data.saldo;
+    renderHistorial(data.historial);
+    error.style.display="none";
+  } catch(e){
+    console.error("Error servidor:", e);
+    saldo.innerText = "0"; hist.innerHTML=""; error.style.display="block";
+  }
 }
 
+// realiza el pago y actualiza servidor
+async function pagar(u,c){
+  haptic();
+  try {
+    const res = await fetch("http://localhost:3000/pagar",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({user:u,coins:c})
+    });
+    const data = await res.json();
+    saldo.innerText = data.saldo;
+    renderHistorial(data.historial);
+  } catch(e){
+    console.error("Error al pagar:", e);
+  }
+}
+
+// render historial animado
+function renderHistorial(historial){
+  hist.innerHTML="";
+  historial.forEach(h=>{
+    const div=document.createElement("div"); div.className="item"; div.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`;
+    hist.appendChild(div);
+    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
+  });
+}
+
+// confirmación de compra
 function confirmar(pkgEl,c){
-  const u=user.value.trim(); if(!u) return; haptic();
+  if(!currentUser) return;
+  haptic();
   const o=document.createElement("div"); o.className="overlay";
   o.innerHTML=`<div class="modal">
     <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
     <strong style="font-size:22px">${c} monedas</strong>
-    <button class="confirm pulse" onclick="animarMonedas(pkgEl);pagar('${u}',${c});o.remove()">Confirmar</button>
+    <button class="confirm pulse" onclick="animarMonedas(pkgEl);pagar('${currentUser}',${c});o.remove()">Confirmar</button>
     <button class="cancel" onclick="o.remove()">Cancelar</button>
-  </div>`; document.body.appendChild(o);
+  </div>`;
+  document.body.appendChild(o);
 }
 
-// múltiples monedas + partículas
+// animaciones monedas
 function animarMonedas(pkgEl){
   const count=Math.min(5,3+Math.floor(Math.random()*3));
   for(let i=0;i<count;i++){
@@ -149,26 +184,7 @@ function crearParticulas(x,y){
   }
 }
 
-function pagar(u,c){
-  haptic(); const base=USUARIOS[u].saldo; const target=base+c; USUARIOS[u].saldo=target;
-  let current=base; const step=Math.ceil(c/10);
-  const interval=setInterval(()=>{
-    current+=step; if(current>=target) current=target;
-    saldo.innerText=current; saldo.style.transform='scale(1.2)';
-    setTimeout(()=>saldo.style.transform='scale(1)',100);
-    if(current>=target) clearInterval(interval);
-  },50);
-  historial.unshift({c,t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
-  historial=historial.slice(0,5); hist.innerHTML="";
-  historial.forEach(h=>{
-    const div=document.createElement("div"); div.className="item"; div.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`; hist.appendChild(div);
-    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
-  });
-  const ok=document.createElement("div"); ok.className="overlay"; ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`; document.body.appendChild(ok);
-  setTimeout(()=>ok.remove(),1200);
-}
-
-// bloqueos eliminados, todo disponible siempre
+function haptic(ms=15){if(navigator.vibrate) navigator.vibrate(ms);}
 </script>
 </body>
 </html>
