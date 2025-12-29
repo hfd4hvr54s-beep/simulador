@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +13,7 @@
 }
 body{
   margin:0;
-  background:transparent;
+  background:#eee;
 }
 .app{
   width:390px;
@@ -54,6 +55,12 @@ body{
   display:flex;
   flex-direction:column;
 }
+.user-info input{
+  border:none;
+  font-size:14px;
+  font-weight:600;
+  outline:none;
+}
 .invite{
   display:flex;
   justify-content:space-between;
@@ -64,9 +71,6 @@ body{
 }
 .section{
   padding:12px;
-}
-.section h3{
-  margin:0 0 6px;
 }
 .note{
   font-size:12px;
@@ -84,31 +88,15 @@ body{
   padding:12px 6px;
   text-align:center;
   font-weight:600;
+  cursor:pointer;
 }
 .card small{
   display:block;
   color:#666;
   margin-top:4px;
 }
-.highlight{
+.card.active{
   border:2px solid #ff2f5b;
-}
-.notify{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  background:#f9f9f9;
-  margin:12px;
-  border-radius:12px;
-  font-size:14px;
-}
-.notify button{
-  background:#000;
-  color:#fff;
-  border:none;
-  padding:6px 12px;
-  border-radius:10px;
 }
 .footer{
   padding:12px;
@@ -129,6 +117,32 @@ body{
   color:#999;
   margin-top:6px;
 }
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.modal-content{
+  background:#fff;
+  width:300px;
+  border-radius:14px;
+  padding:16px;
+  text-align:center;
+}
+.modal-content button{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#000;
+  color:#fff;
+}
 </style>
 </head>
 
@@ -136,7 +150,6 @@ body{
 
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="left">
       <div class="time">17:36</div>
@@ -145,43 +158,33 @@ body{
     <div>⋮</div>
   </div>
 
-  <!-- USER -->
+  <!-- USUARIO EDITABLE -->
   <div class="user">
     <div class="avatar"></div>
     <div class="user-info">
-      <strong>usuario_demo</strong>
-      <small>ID: XXXX1234</small>
+      <input id="username" placeholder="@usuario" value="@usuario_demo">
+      <small>ID: simulación</small>
     </div>
   </div>
 
-  <!-- INVITAR -->
   <div class="invite">
     👏 Invita y consigue recompensas
     <strong>USD 3.35</strong>
   </div>
 
-  <!-- RECARGA -->
   <div class="section">
     <h3>Recargar</h3>
     <div class="note">Ahorra un 25 % con tarifa web (simulado)</div>
 
     <div class="grid">
-      <div class="card">30<small>€0.33</small></div>
-      <div class="card">60<small>€0.65</small></div>
-      <div class="card">80<small>€0.87</small></div>
-      <div class="card highlight">400<small>€4.32</small></div>
-      <div class="card">1,000<small>€10.80</small></div>
-      <div class="card">Personalizar</div>
+      <div class="card" data-coins="30" data-price="0.33">30<small>€0.33</small></div>
+      <div class="card" data-coins="60" data-price="0.65">60<small>€0.65</small></div>
+      <div class="card" data-coins="80" data-price="0.87">80<small>€0.87</small></div>
+      <div class="card active" data-coins="400" data-price="4.32">400<small>€4.32</small></div>
+      <div class="card" data-coins="1000" data-price="10.80">1,000<small>€10.80</small></div>
     </div>
   </div>
 
-  <!-- NOTIFICACIONES -->
-  <div class="notify">
-    Mantente al tanto de ofertas (simulación)
-    <button>Activar</button>
-  </div>
-
-  <!-- FOOTER -->
   <div class="footer">
     <button class="buy">Comprar por €4.32</button>
     <div class="disclaimer">
@@ -190,6 +193,45 @@ body{
   </div>
 
 </div>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <strong>Confirmar compra</strong>
+    <p id="resume"></p>
+    <button id="confirm">Confirmar</button>
+  </div>
+</div>
+
+<script>
+let selected = {coins:400, price:"4.32"};
+
+document.querySelectorAll('.card').forEach(card=>{
+  card.onclick=()=>{
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    selected.coins = card.dataset.coins;
+    selected.price = card.dataset.price;
+    document.querySelector('.buy').textContent = `Comprar por €${selected.price}`;
+  }
+});
+
+document.querySelector('.buy').onclick=()=>{
+  const user = document.getElementById('username').value.trim();
+  if(!/^@[\w.]{3,}$/.test(user)){
+    alert("Usuario inválido. Usa formato @usuario");
+    return;
+  }
+  document.getElementById('resume').innerHTML =
+    `Usuario: <b>${user}</b><br>Monedas: <b>${selected.coins}</b><br>Total: <b>€${selected.price}</b>`;
+  document.getElementById('modal').style.display='flex';
+};
+
+document.getElementById('confirm').onclick=()=>{
+  document.getElementById('modal').style.display='none';
+  alert("✅ Compra simulada confirmada");
+};
+</script>
 
 </body>
 </html>
