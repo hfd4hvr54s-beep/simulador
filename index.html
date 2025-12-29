@@ -3,67 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok Demo Con Red + Partículas</title>
+<title>TikTok Demo Online</title>
+
 <style>
 :root{
   --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
-  --pink:#FF0050; --text:#FFF; --muted:#A1A1A1; --danger:#FF453A;
+  --pink:#FF0050; --text:#FFF; --muted:#A1A1A1;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
-body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
+body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center}
 .app{width:100%;max-width:430px;min-height:100vh;padding:16px}
 .header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 20px}
-.card{background:var(--card);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:24px;padding:18px;}
+.card{background:var(--card);border-radius:24px;padding:18px}
 .user{display:flex;gap:12px;align-items:center}
-.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
-.user input{flex:1;background:var(--field);border:none;outline:none;color:white;padding:13px 14px;border-radius:14px;font-size:16px}
-.error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700}
+.user input{flex:1;background:var(--field);border:none;color:white;padding:13px;border-radius:14px}
 
-.balance{text-align:center;margin:28px 0}
-.balance .coins{font-size:40px;font-weight:800;display:inline-block;transition:transform .3s;}
+.balance{text-align:center;margin:24px 0}
+.balance .coins{font-size:40px;font-weight:800}
 .balance span{font-size:14px;color:var(--muted)}
 
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pkg{background:var(--field);border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;transition:.12s;position:relative;}
-.pkg strong{font-size:18px;font-weight:700}
-.pkg span{display:block;font-size:13px;color:var(--muted)}
+.pkg{background:var(--field);border-radius:18px;padding:16px;text-align:center;cursor:pointer}
 .pkg:active{transform:scale(.96)}
 
-.history{margin-top:18px;border-top:1px solid #2C2C2E;padding-top:10px}
-.history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
-.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
+.history{margin-top:16px;border-top:1px solid #2C2C2E;padding-top:10px}
+.item{display:flex;justify-content:space-between;font-size:14px;opacity:0;transform:translateY(-8px);transition:.3s}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter: blur(18px) saturate(180%);-webkit-backdrop-filter: blur(18px) saturate(180%);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;z-index:999;}
-@keyframes fade{from{opacity:0}to{opacity:1}}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--card);border-radius:22px;padding:22px;width:270px;text-align:center}
+.confirm{background:var(--pink);border:none;color:white;padding:14px;border-radius:14px;width:100%}
+.cancel{background:var(--field);border:none;color:white;padding:14px;border-radius:14px;width:100%;margin-top:8px}
 
-.modal{width:270px;background:var(--card);backdrop-filter: blur(24px) saturate(180%);-webkit-backdrop-filter: blur(24px) saturate(180%);border-radius:22px;padding:22px;text-align:center;animation:sheetUp .35s cubic-bezier(.22,.61,.36,1);}
-@keyframes sheetUp{from{transform:translateY(100px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
-.modal button{width:100%;margin-top:10px;padding:13px;border:none;border-radius:14px;font-size:16px;font-weight:600;transition:transform .15s;}
-.modal button:active{transform:scale(0.97);}
-.confirm{background:var(--pink);color:white}
-.cancel{background:var(--field);color:white}
-
-.check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;animation:checkBounce .35s;}
-@keyframes checkBounce{0%{transform:scale(0.5)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
-
-.coin-fly{position:fixed;width:28px;height:28px;z-index:9999;pointer-events:none;}
-.coin-fly svg{width:100%;height:100%;transform-origin:center center;}
-.pulse{animation:pulseAnim .15s ease;}
-@keyframes pulseAnim{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
-
-.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;opacity:0.8;}
+.check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 12px;
+display:flex;align-items:center;justify-content:center;font-size:42px}
 </style>
 </head>
 
 <body>
-<div class="app" id="app">
+<div class="app">
   <div class="header">TikTok</div>
   <div class="card">
+
     <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
+      <input id="user" placeholder="@usuario">
     </div>
-    <div class="error" id="error">No se pudo conectar al servidor</div>
 
     <div class="balance">
       <div class="coins" id="saldo">0</div>
@@ -71,120 +56,97 @@ body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-conten
     </div>
 
     <div class="packages">
-      <div class="pkg" onclick="confirmar(this,70)"><strong>70</strong><span>Monedas</span></div>
-      <div class="pkg" onclick="confirmar(this,350)"><strong>350</strong><span>Monedas</span></div>
-      <div class="pkg" onclick="confirmar(this,700)"><strong>700</strong><span>Monedas</span></div>
-      <div class="pkg" onclick="confirmar(this,1400)"><strong>1400</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,70)">70</div>
+      <div class="pkg" onclick="confirmar(this,350)">350</div>
+      <div class="pkg" onclick="confirmar(this,700)">700</div>
+      <div class="pkg" onclick="confirmar(this,1400)">1400</div>
     </div>
 
     <div class="history">
-      <h4>Historial</h4>
       <div id="hist"></div>
     </div>
+
   </div>
 </div>
 
 <script>
-const saldo=document.getElementById("saldo");
-const hist=document.getElementById("hist");
-const avatar=document.getElementById("avatar");
-const error=document.getElementById("error");
-const user=document.getElementById("user");
-let currentUser=null;
+// ======================
+// URL DEL SERVIDOR (YA INTEGRADA)
+// ======================
+const API_BASE = "https://tu-api.onrender.com"; 
+// ⬆️ Reemplaza SOLO esto por tu URL real
 
-// obtiene saldo e historial del servidor
-async function validarUsuario(){
-  currentUser=user.value.trim() || "@anonimo";
-  avatar.innerText=currentUser[1]? currentUser[1].toUpperCase():"U";
-  try {
-    const res = await fetch(`http://localhost:3000/saldo/${currentUser}`);
-    const data = await res.json();
-    saldo.innerText = data.saldo;
-    renderHistorial(data.historial);
-    error.style.display="none";
-  } catch(e){
-    console.error("Error servidor:", e);
-    saldo.innerText = "0"; hist.innerHTML=""; error.style.display="block";
-  }
+const saldo = document.getElementById("saldo");
+const hist = document.getElementById("hist");
+const avatar = document.getElementById("avatar");
+const userInput = document.getElementById("user");
+
+let currentUser = "@anonimo";
+
+// cargar datos
+userInput.oninput = cargarUsuario;
+
+async function cargarUsuario(){
+  currentUser = userInput.value.trim() || "@anonimo";
+  avatar.textContent = currentUser[1]?.toUpperCase() || "U";
+  const r = await fetch(`${API_BASE}/saldo/${encodeURIComponent(currentUser)}`);
+  const d = await r.json();
+  saldo.textContent = d.saldo;
+  renderHistorial(d.historial);
 }
 
-// realiza el pago y actualiza servidor
-async function pagar(u,c){
-  haptic();
-  try {
-    const res = await fetch("http://localhost:3000/pagar",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({user:u,coins:c})
-    });
-    const data = await res.json();
-    saldo.innerText = data.saldo;
-    renderHistorial(data.historial);
-  } catch(e){
-    console.error("Error al pagar:", e);
-  }
+// pagar
+async function pagar(coins){
+  const r = await fetch(`${API_BASE}/pagar`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ user: currentUser, coins })
+  });
+  const d = await r.json();
+  saldo.textContent = d.saldo;
+  renderHistorial(d.historial);
 }
 
-// render historial animado
-function renderHistorial(historial){
+// confirmar
+function confirmar(el, coins){
+  const o = document.createElement("div");
+  o.className="overlay";
+  o.innerHTML=`
+    <div class="modal">
+      <strong>${coins} monedas</strong>
+      <button class="confirm" id="ok">Confirmar</button>
+      <button class="cancel" id="no">Cancelar</button>
+    </div>`;
+  document.body.appendChild(o);
+
+  document.getElementById("no").onclick=()=>o.remove();
+  document.getElementById("ok").onclick=async()=>{
+    await pagar(coins);
+    o.remove();
+    confirmado();
+  };
+}
+
+// historial
+function renderHistorial(arr){
   hist.innerHTML="";
-  historial.forEach(h=>{
-    const div=document.createElement("div"); div.className="item"; div.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`;
-    hist.appendChild(div);
-    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
+  arr.forEach(h=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`;
+    hist.appendChild(d);
+    setTimeout(()=>{d.style.opacity=1;d.style.transform="translateY(0)"},50);
   });
 }
 
-// confirmación de compra
-function confirmar(pkgEl,c){
-  if(!currentUser) return;
-  haptic();
-  const o=document.createElement("div"); o.className="overlay";
-  o.innerHTML=`<div class="modal">
-    <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
-    <strong style="font-size:22px">${c} monedas</strong>
-    <button class="confirm pulse" onclick="animarMonedas(pkgEl);pagar('${currentUser}',${c});o.remove()">Confirmar</button>
-    <button class="cancel" onclick="o.remove()">Cancelar</button>
-  </div>`;
+// check
+function confirmado(){
+  const o=document.createElement("div");
+  o.className="overlay";
+  o.innerHTML=`<div class="modal"><div class="check">✓</div>Pago confirmado</div>`;
   document.body.appendChild(o);
+  setTimeout(()=>o.remove(),1200);
 }
-
-// animaciones monedas
-function animarMonedas(pkgEl){
-  const count=Math.min(5,3+Math.floor(Math.random()*3));
-  for(let i=0;i<count;i++){
-    setTimeout(()=>crearMoneda(pkgEl), i*80);
-  }
-}
-
-function crearMoneda(pkgEl){
-  const coin=document.createElement("div"); coin.className="coin-fly";
-  coin.innerHTML=`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="url(#grad)"/><defs><radialGradient id="grad" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA500"/></radialGradient></defs></svg>`;
-  const rect=pkgEl.getBoundingClientRect();
-  coin.style.left=rect.left+rect.width/2-14+"px";
-  coin.style.top=rect.top+"px";
-  document.body.appendChild(coin);
-  const saldoRect=saldo.getBoundingClientRect();
-  const dx=saldoRect.left+saldoRect.width/2-(rect.left+rect.width/2);
-  const dy=saldoRect.top+saldoRect.height/2-rect.top;
-  setTimeout(()=>{coin.style.transform=`translate(${dx}px,${dy}px) rotate(${360+Math.random()*360}deg) scale(0.5)`; coin.style.opacity=0; crearParticulas(rect.left+rect.width/2, rect.top);},50);
-  setTimeout(()=>coin.remove(),850);
-}
-
-function crearParticulas(x,y){
-  for(let i=0;i<3;i++){
-    const p=document.createElement("div"); p.className="particle";
-    p.style.left=x+"px"; p.style.top=y+"px";
-    document.body.appendChild(p);
-    const angle=Math.random()*Math.PI*2; const dist=10+Math.random()*20;
-    const dx=Math.cos(angle)*dist; const dy=Math.sin(angle)*dist;
-    p.style.transition="all 0.5s ease-out";
-    setTimeout(()=>{p.style.transform=`translate(${dx}px,${dy}px)`; p.style.opacity=0;},20);
-    setTimeout(()=>p.remove(),500);
-  }
-}
-
-function haptic(ms=15){if(navigator.vibrate) navigator.vibrate(ms);}
 </script>
 </body>
 </html>
