@@ -8,10 +8,11 @@
 <style>
 :root{
   --red:#FE2C55;
-  --bg:#F8F8F8;
-  --text:#0f0f0f;
-  --gray:#8a8a8a;
-  --line:#e6e6e6;
+  --bg:#F5F5F7;
+  --card:#FAFAFA;
+  --text:#0B0B0B;
+  --sub:#6E6E73;
+  --line:#E5E5EA;
 }
 *{
   box-sizing:border-box;
@@ -30,7 +31,7 @@ body{
 
 /* HEADER */
 .header{
-  height:52px;
+  height:56px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -47,14 +48,14 @@ body{
   background:#000;
   color:#fff;
   font-size:12px;
-  padding:4px 9px;
-  border-radius:11px;
+  padding:4px 10px;
+  border-radius:12px;
   font-weight:600;
 }
 
 /* USER */
 .user{
-  padding:14px;
+  padding:16px 14px 12px;
 }
 .user input{
   width:100%;
@@ -94,24 +95,24 @@ body{
 .note{
   margin-top:4px;
   font-size:12px;
-  color:#555;
+  color:var(--sub);
 }
 
 /* GRID */
 .grid{
-  margin-top:14px;
+  margin-top:12px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;
+  gap:8px;
 }
 .card{
-  background:#fafafa;
-  border-radius:14px;
-  padding:10px 6px;
+  background:var(--card);
+  border-radius:12px;
+  padding:9px 4px;
   text-align:center;
   font-size:15px;
   font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
   cursor:pointer;
   position:relative;
 }
@@ -119,8 +120,8 @@ body{
   display:block;
   font-size:12px;
   font-weight:400;
-  color:#666;
-  margin-top:3px;
+  color:var(--sub);
+  margin-top:2px;
 }
 .card.active{
   outline:2px solid var(--red);
@@ -142,19 +143,9 @@ body{
 .notify{
   margin:14px;
   padding:14px;
-  background:#f3f3f3;
+  background:var(--bg);
   border-radius:14px;
   font-size:14px;
-}
-.notify button{
-  margin-top:8px;
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:12px;
-  background:#000;
-  color:#fff;
-  font-weight:600;
 }
 
 /* PAYMENTS */
@@ -171,6 +162,7 @@ body{
   text-align:center;
   font-size:14px;
   font-weight:600;
+  color:#444;
 }
 
 /* FOOTER */
@@ -179,9 +171,9 @@ body{
 }
 .buy{
   width:100%;
-  height:48px;
+  height:50px;
   border:none;
-  border-radius:24px;
+  border-radius:25px;
   background:var(--red);
   color:#fff;
   font-size:16px;
@@ -205,22 +197,17 @@ body{
   pointer-events:auto;
 }
 .box{
-  width:270px;
+  width:260px;
   background:#fff;
   border-radius:22px;
   padding:22px;
   text-align:center;
-  transform:scale(.9);
-  transition:.25s;
-}
-.modal.show .box{
-  transform:scale(1);
 }
 
 /* LOADER */
 .loader{
-  width:42px;
-  height:42px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   border:4px solid #eee;
   border-top:4px solid var(--red);
@@ -228,11 +215,6 @@ body{
   animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.coins{
-  font-size:28px;
-  margin-bottom:8px;
-}
 </style>
 </head>
 
@@ -276,13 +258,12 @@ body{
         1,000<small>EUR 10.8</small>
       </div>
 
-      <div class="card" data-c="custom" data-p="0">Personalizar</div>
+      <div class="card" data-c="0" data-p="0">Personalizar</div>
     </div>
   </div>
 
   <div class="notify">
     Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
-    <button>Activar</button>
   </div>
 
   <div class="payments">
@@ -303,7 +284,6 @@ body{
 <script>
 let selected={coins:400,price:"4.32"};
 let balance=Number(localStorage.getItem("demo_balance")||0);
-const balanceEl=document.getElementById("balance");
 balanceEl.textContent=balance;
 
 document.querySelectorAll(".card").forEach(c=>{
@@ -312,16 +292,14 @@ document.querySelectorAll(".card").forEach(c=>{
     c.classList.add("active");
     selected.coins=Number(c.dataset.c);
     selected.price=c.dataset.p;
-    document.getElementById("buy").textContent=
-      selected.price>0?`Comprar por €${selected.price}`:"Personalizar";
+    buy.textContent=selected.price>0?`Comprar por €${selected.price}`:"Personalizar";
   };
 });
 
-document.getElementById("buy").onclick=()=>{
-  const u=document.getElementById("user").value.trim();
-  const inv=document.getElementById("invalid");
-  if(!/^@[\w.]{3,}$/.test(u)){inv.style.display="block";return;}
-  inv.style.display="none";
+buy.onclick=()=>{
+  const u=user.value.trim();
+  invalid.style.display = u.startsWith("@") && u.length>1 ? "none" : "block";
+  if(invalid.style.display==="block") return;
 
   modal.classList.add("show");
   box.innerHTML=`<strong>Procesando compra</strong><div class="loader"></div>`;
@@ -330,14 +308,8 @@ document.getElementById("buy").onclick=()=>{
     balance+=selected.coins;
     localStorage.setItem("demo_balance",balance);
     balanceEl.textContent=balance;
-    box.innerHTML=`
-      <div class="coins">🪙🪙🪙</div>
-      <strong>Compra confirmada</strong>
-      <p>${selected.coins} monedas añadidas</p>
-      <button onclick="modal.classList.remove('show')"
-        style="margin-top:12px;width:100%;padding:10px;
-        border:none;border-radius:14px;background:#000;
-        color:#fff;font-weight:600">Aceptar</button>`;
+    box.innerHTML=`<strong>Compra confirmada</strong><p>${selected.coins} monedas añadidas</p>
+    <button onclick="modal.classList.remove('show')" style="margin-top:12px;width:100%;height:44px;border:none;border-radius:22px;background:#000;color:#fff;font-weight:600">Aceptar</button>`;
   },2000);
 };
 </script>
