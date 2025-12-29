@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -88,7 +89,7 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 <audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
 
 <script>
-// Código JS idéntico al anterior (funciones de validación, animación, flyCoin, partículas, balance, historial, confirmación)
+// Código JavaScript idéntico para validación, animación, partículas, balance y confirmación
 const user=document.getElementById("user"), avatar=document.getElementById("avatar"), saldo=document.getElementById("saldo"), error=document.getElementById("error"), hist=document.getElementById("hist");
 const USERS={}, historialArr=[]; let currentUser=null;
 
@@ -137,4 +138,60 @@ function processPurchase(pkg,coins){
 }
 
 function flyCoin(start,end){
-  const c=document.createElement("div");
+  const c=document.createElement("div"); c.className="coin";
+  c.style.left=start.left+"px"; c.style.top=start.top+"px";
+  document.body.appendChild(c);
+  c.getBoundingClientRect();
+  const dx=end.left-start.left + (Math.random()*30-15), dy=end.top-start.top + (Math.random()*30-15);
+  c.style.transition='transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s';
+  requestAnimationFrame(()=>{c.style.transform=`translate(${dx}px,${dy}px) scale(0.5) rotate(${360+Math.random()*360}deg)`; c.style.opacity=0;});
+  setTimeout(()=>c.remove(),1100);
+  createParticles(start.left+14,start.top+14);
+}
+
+function createParticles(x,y){
+  for(let i=0;i<25;i++){
+    const p=document.createElement("div"); p.className="particle";
+    p.style.left=x+"px"; p.style.top=y+"px"; document.body.appendChild(p);
+    const a=Math.random()*2*Math.PI, d=15+Math.random()*30;
+    requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`; p.style.opacity=0;});
+    setTimeout(()=>p.remove(),700);
+  }
+}
+
+function animateBalance(add){
+  const base=USERS[currentUser].saldo, target=base+add; USERS[currentUser].saldo=target;
+  let cur=base, step=Math.ceil(add/25);
+  const i=setInterval(()=>{cur+=step; if(cur>=target){cur=target; clearInterval(i);}
+    saldo.textContent=cur; saldo.style.transform="scale(1.3)";
+    setTimeout(()=>saldo.style.transform="scale(1)",80);
+  },25);
+}
+
+function addHistory(coins){
+  const t=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  historialArr.unshift({coins,t}); historialArr.splice(5);
+  hist.innerHTML="";
+  historialArr.forEach(h=>{
+    const div=document.createElement("div"); div.className="item";
+    div.innerHTML=`<span>+${h.coins}</span><span>${h.t}</span>`;
+    hist.appendChild(div);
+    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
+  });
+}
+
+function showSuccess(coins){
+  playSound('successSound');
+  const o=document.createElement("div"); o.className="overlay";
+  o.innerHTML=`<div class="sheet success">
+    <div class="check">✓</div>
+    <div style="font-size:18px;font-weight:700">Compra realizada</div>
+    <div style="font-size:14px;margin-top:4px">+${coins} monedas añadidas</div>
+  </div>`; document.body.appendChild(o);
+  setTimeout(()=>o.remove(),1800);
+}
+
+function playSound(id){const s=document.getElementById(id); if(s){s.currentTime=0; s.play().catch(()=>{});}}
+</script>
+</body>
+</html>
