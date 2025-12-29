@@ -61,8 +61,8 @@ body{
   gap:8px;
 }
 .tiktok-logo{
-  width:24px;
-  height:24px;
+  width:20px;
+  height:20px;
 }
 .header-text{
   font-size:17px;
@@ -74,8 +74,8 @@ body{
   gap:10px;
 }
 .header-icon{
-  width:22px;
-  height:22px;
+  width:20px;
+  height:20px;
   cursor:pointer;
 }
 
@@ -249,8 +249,8 @@ body{
   padding:10px 0;
 }
 .pay img{
-  width:40px;
-  height:40px; /* ahora todos los íconos iguales */
+  width:28px;  /* más pequeños y uniformes */
+  height:28px;
 }
 .buy{
   margin:10px 14px 14px;
@@ -258,7 +258,7 @@ body{
   padding:16px;
   border:none;
   border-radius:14px;
-  background:#fe2c55; /* rojo sólido */
+  background:#fe2c55;
   color:#fff;
   font-size:18px;
   font-weight:800;
@@ -324,7 +324,6 @@ body{
       <div class="coin"></div>
       <span id="count">0</span>
       <span id="anim"></span>
-      <!-- imágenes de monedas -->
       <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" style="width:20px;position:absolute;top:-10px;left:50%;transform:translateX(-50%);">
     </div>
   </div>
@@ -401,7 +400,6 @@ function buy(){
     count.textContent=coins;
     anim.innerHTML=`<span class="plus">+${selected}</span>`;
     
-    // GIFs monedas cayendo
     for(let i=0;i<5;i++){
       const gif=document.createElement('img');
       gif.src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
