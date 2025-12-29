@@ -2,224 +2,178 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TikTok Dashboard PRO+</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TikTok Demo Ultra Real + Sonido</title>
 <style>
 :root{
-  --bg:#000; --card:#1c1c1e; --field:#2c2c2e;
-  --pink:#ff0050; --text:#fff; --muted:#9b9b9b;
-  --ok:#2ecc71; --warn:#f1c40f;
+  --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
+  --pink:#FF0050; --text:#FFF; --muted:#A1A1A1; --danger:#FF453A;
 }
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif}
-body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center}
-.app{width:100%;max-width:430px;padding:14px}
-.header{text-align:center;font-size:22px;font-weight:800;margin:8px 0 12px}
-.card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:10px}
-.row{display:flex;gap:10px;align-items:center}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.avatar{width:42px;height:42px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700}
-input,select{background:var(--field);border:none;border-radius:14px;color:#fff;padding:12px;font-size:15px;width:100%}
-small{color:var(--muted)}
-.balance{text-align:center}
-.balance .coins{font-size:38px;font-weight:900}
-.bar{height:10px;background:#111;border-radius:999px;overflow:hidden}
-.bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),#ff6a88);transition:width .3s}
-.btn{padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer}
-.primary{background:var(--pink);color:#fff}
-.secondary{background:var(--field);color:#fff}
-.ok{background:var(--ok);color:#000}
-.warn{background:var(--warn);color:#000}
-.item{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid #2a2a2a}
-.tag{background:#111;border:1px solid #2a2a2a;border-radius:999px;padding:4px 10px;font-size:12px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:99}
-.modal{background:var(--card);border-radius:22px;padding:20px;width:280px;text-align:center;animation:up .25s}
-@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-.check{width:76px;height:76px;border-radius:50%;background:var(--ok);margin:0 auto 8px;
-display:flex;align-items:center;justify-content:center;font-size:40px}
-.hide{display:none}
-.record .card:not(.keep){display:none}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
+body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
+.app{width:100%;max-width:430px;min-height:100vh;padding:16px}
+.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 20px}
+.card{background:var(--card);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:24px;padding:18px;}
+.user{display:flex;gap:12px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.user input{flex:1;background:var(--field);border:none;outline:none;color:white;padding:13px 14px;border-radius:14px;font-size:16px}
+.error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+
+.balance{text-align:center;margin:28px 0}
+.balance .coins{font-size:40px;font-weight:800;display:inline-block;transition:transform .3s;}
+.balance span{font-size:14px;color:var(--muted)}
+
+.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pkg{background:var(--field);border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;transition:.12s;position:relative;}
+.pkg strong{font-size:18px;font-weight:700}
+.pkg span{display:block;font-size:13px;color:var(--muted)}
+.pkg:active{transform:scale(.96)}
+.pkg.disabled{opacity:.35;pointer-events:none}
+
+.history{margin-top:18px;border-top:1px solid #2C2C2E;padding-top:10px}
+.history h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.item{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;opacity:0;transform:translateY(-10px);transition:all .3s ease;}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter: blur(18px) saturate(180%);-webkit-backdrop-filter: blur(18px) saturate(180%);display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.modal{width:270px;background:var(--card);backdrop-filter: blur(24px) saturate(180%);-webkit-backdrop-filter: blur(24px) saturate(180%);border-radius:22px;padding:22px;text-align:center;animation:sheetUp .35s cubic-bezier(.22,.61,.36,1);}
+@keyframes sheetUp{from{transform:translateY(100px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal button{width:100%;margin-top:10px;padding:13px;border:none;border-radius:14px;font-size:16px;font-weight:600;transition:transform .15s;}
+.modal button:active{transform:scale(0.97);}
+.confirm{background:var(--pink);color:white}
+.cancel{background:var(--field);color:white}
+
+.check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;animation:checkBounce .35s;}
+@keyframes checkBounce{0%{transform:scale(0.5)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+
+.coin-fly{position:fixed;width:28px;height:28px;z-index:9999;pointer-events:none;}
+.coin-fly svg{width:100%;height:100%;transform-origin:center center;}
+.particle{position:fixed;width:6px;height:6px;border-radius:50%;background:#FFD700;pointer-events:none;opacity:0.8;}
+.pulse{animation:pulseAnim .15s ease;}
+@keyframes pulseAnim{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 </style>
 </head>
 
 <body>
 <div class="app" id="app">
-  <div class="header">TikTok • Dashboard PRO+</div>
-
-  <!-- PERFIL / MULTIUSUARIO -->
-  <div class="card keep">
-    <div class="row">
+  <div class="header">TikTok</div>
+  <div class="card">
+    <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario">
+      <input id="user" placeholder="@usuario" oninput="validarUsuario()">
     </div>
-    <div class="row" style="margin-top:8px">
-      <select id="profiles"></select>
-      <button class="btn secondary" onclick="saveProfile()">Guardar</button>
-      <button class="btn secondary" onclick="deleteProfile()">Borrar</button>
-    </div>
-    <small>Perfiles locales</small>
-  </div>
+    <div class="error" id="error">Formato inválido</div>
 
-  <!-- SALDO -->
-  <div class="card balance keep">
-    <div class="coins" id="saldo">0</div>
-    <small>Monedas internas</small>
-  </div>
-
-  <!-- META -->
-  <div class="card">
-    <div class="row">
-      <input id="goal" type="number" min="1" placeholder="Meta LIVE">
-      <button class="btn secondary" onclick="setGoal()">Fijar</button>
+    <div class="balance">
+      <div class="coins" id="saldo">0</div>
+      <span>Monedas</span>
     </div>
-    <div style="margin:10px 0" class="bar"><div id="progress"></div></div>
-    <div class="row" style="justify-content:space-between">
-      <small id="goalText">Meta: —</small>
-      <span class="tag" id="pct">0%</span>
-    </div>
-  </div>
 
-  <!-- REGALOS -->
-  <div class="card">
-    <div class="grid">
-      <button class="btn secondary" onclick="addGift(10)">+10 Cofre</button>
-      <button class="btn secondary" onclick="addGift(50)">+50 Regalo</button>
-      <button class="btn secondary" onclick="addGift(100)">+100 Regalo</button>
-      <button class="btn primary" onclick="customGift()">Ingresar</button>
+    <div class="packages">
+      <div class="pkg" onclick="confirmar(this,70)"><strong>70</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,350)"><strong>350</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,700)"><strong>700</strong><span>Monedas</span></div>
+      <div class="pkg" onclick="confirmar(this,1400)"><strong>1400</strong><span>Monedas</span></div>
     </div>
-    <small>Registro manual / demo</small>
-  </div>
 
-  <!-- SPONSORS -->
-  <div class="card">
-    <strong>Sponsors</strong>
-    <div class="row" style="margin-top:8px">
-      <input id="sponsor" placeholder="Nombre sponsor">
-      <button class="btn secondary" onclick="addSponsor()">Agregar</button>
-    </div>
-    <div id="sponsors"></div>
-  </div>
-
-  <!-- HISTORIAL -->
-  <div class="card">
-    <strong>Historial</strong>
-    <div id="hist"></div>
-    <div class="row" style="margin-top:8px">
-      <button class="btn secondary" onclick="exportCSV()">Exportar CSV</button>
-      <button class="btn warn" onclick="toggleRecord()">Modo Grabación</button>
+    <div class="history">
+      <h4>Historial</h4>
+      <div id="hist"></div>
     </div>
   </div>
 </div>
 
-<audio id="snd" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA="></audio>
+<audio id="coinSound" src="https://freesound.org/data/previews/341/341695_624037-lq.mp3"></audio>
 
 <script>
-/* ---------------- UTIL ---------------- */
-const vib=()=>navigator.vibrate&&navigator.vibrate(10);
-const snd=()=>document.getElementById("snd").play().catch(()=>{});
+let historial=[]; const USUARIOS={};
+const saldo=document.getElementById("saldo");
+const coinSound=document.getElementById("coinSound");
 
-/* ---------------- STATE ---------------- */
-let data = JSON.parse(localStorage.getItem("PROPLUS")||"{}");
-let profiles = data.profiles||{};
-let current = data.current||"";
-let saldo = 0, goal = 0, hist = [], sponsors=[];
+function haptic(){if(navigator.vibrate) navigator.vibrate(10);}
+function bloquear(b){document.querySelectorAll(".pkg").forEach(p=>p.classList.toggle("disabled",b));}
 
-/* ---------------- UI REFS ---------------- */
-const saldoEl=saldo=>document.getElementById("saldo").textContent=saldo;
-const progressEl=document.getElementById("progress");
-const goalText=document.getElementById("goalText");
-const pctEl=document.getElementById("pct");
-const histEl=document.getElementById("hist");
-const avatar=document.getElementById("avatar");
-const user=document.getElementById("user");
-const profilesEl=document.getElementById("profiles");
-const sponsorsEl=document.getElementById("sponsors");
-const app=document.getElementById("app");
+function validarUsuario(){
+  const u=user.value.trim(); haptic();
+  const formato=/^@[a-zA-Z0-9._-]{1,30}$/;
+  if(!formato.test(u)){error.style.display="block"; avatar.innerText="U"; saldo.innerText="0"; hist.innerHTML=""; bloquear(true); return;}
+  error.style.display="none"; avatar.innerText=u[1].toUpperCase();
+  if(!USUARIOS[u]) USUARIOS[u]={saldo:0};
+  saldo.innerText=USUARIOS[u].saldo; historial=[]; hist.innerHTML=""; bloquear(false);
+}
 
-/* ---------------- RENDER ---------------- */
-function render(){
-  saldoEl(saldo);
-  const p = goal?Math.min(100,Math.round((saldo/goal)*100)):0;
-  progressEl.style.width=p+"%";
-  pctEl.textContent=p+"%";
-  goalText.textContent=goal?`Meta: ${goal}`:"Meta: —";
-  histEl.innerHTML="";
-  hist.slice(0,8).forEach(h=>{
-    const d=document.createElement("div");
-    d.className="item";
-    d.innerHTML=`<span>+${h.v}</span><span>${h.t}</span>`;
-    histEl.appendChild(d);
+function confirmar(pkgEl,c){
+  const u=user.value.trim(); if(!u) return; haptic();
+  const o=document.createElement("div"); o.className="overlay";
+  o.innerHTML=`<div class="modal">
+    <div style="font-size:15px;margin-bottom:6px">Confirmar compra</div>
+    <strong style="font-size:22px">${c} monedas</strong>
+    <button class="confirm pulse" onclick="animarMonedas(pkgEl);pagar('${u}',${c});o.remove()">Confirmar</button>
+    <button class="cancel" onclick="o.remove()">Cancelar</button>
+  </div>`; document.body.appendChild(o);
+}
+
+// monedas múltiples + partículas + sonido
+function animarMonedas(pkgEl){
+  const count=Math.min(5,3+Math.floor(Math.random()*3));
+  for(let i=0;i<count;i++){
+    setTimeout(()=>crearMoneda(pkgEl), i*80);
+  }
+}
+
+function crearMoneda(pkgEl){
+  const coin=document.createElement("div"); coin.className="coin-fly";
+  coin.innerHTML=`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="url(#grad)"/><defs><radialGradient id="grad" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA500"/></radialGradient></defs></svg>`;
+  const rect=pkgEl.getBoundingClientRect();
+  coin.style.left=rect.left+rect.width/2-14+"px";
+  coin.style.top=rect.top+"px";
+  document.body.appendChild(coin);
+  const saldoRect=saldo.getBoundingClientRect();
+  const dx=saldoRect.left+saldoRect.width/2-(rect.left+rect.width/2);
+  const dy=saldoRect.top+saldoRect.height/2-rect.top;
+  setTimeout(()=>{
+    coin.style.transform=`translate(${dx}px,${dy}px) rotate(${360+Math.random()*360}deg) scale(0.5)`;
+    coin.style.opacity=0;
+    coinSound.currentTime=0; coinSound.play();
+    crearParticulas(rect.left+rect.width/2, rect.top);
+  },50);
+  setTimeout(()=>coin.remove(),850);
+}
+
+function crearParticulas(x,y){
+  for(let i=0;i<3;i++){
+    const p=document.createElement("div"); p.className="particle";
+    p.style.left=x+"px"; p.style.top=y+"px";
+    document.body.appendChild(p);
+    const angle=Math.random()*Math.PI*2; const dist=10+Math.random()*20;
+    const dx=Math.cos(angle)*dist; const dy=Math.sin(angle)*dist;
+    p.style.transition="all 0.5s ease-out";
+    setTimeout(()=>{p.style.transform=`translate(${dx}px,${dy}px)`; p.style.opacity=0;},20);
+    setTimeout(()=>p.remove(),500);
+  }
+}
+
+function pagar(u,c){
+  haptic(); const base=USUARIOS[u].saldo; const target=base+c; USUARIOS[u].saldo=target;
+  let current=base; const step=Math.ceil(c/10);
+  const interval=setInterval(()=>{
+    current+=step; if(current>=target) current=target;
+    saldo.innerText=current; saldo.style.transform='scale(1.2)';
+    setTimeout(()=>saldo.style.transform='scale(1)',100);
+    if(current>=target) clearInterval(interval);
+  },50);
+  historial.unshift({c,t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
+  historial=historial.slice(0,5); hist.innerHTML="";
+  historial.forEach(h=>{
+    const div=document.createElement("div"); div.className="item"; div.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`; hist.appendChild(div);
+    setTimeout(()=>{div.style.opacity=1; div.style.transform='translateY(0)';},50);
   });
-  sponsorsEl.innerHTML="";
-  sponsors.forEach(s=>{
-    const d=document.createElement("div");
-    d.className="item";
-    d.innerHTML=`<span>${s}</span><span>✔</span>`;
-    sponsorsEl.appendChild(d);
-  });
-  avatar.textContent=user.value?.[1]?.toUpperCase()||"U";
-  save();
+  const ok=document.createElement("div"); ok.className="overlay"; ok.innerHTML=`<div class="modal"><div class="check">✓</div><div>Pago confirmado</div></div>`; document.body.appendChild(ok);
+  setTimeout(()=>ok.remove(),1200);
 }
 
-/* ---------------- PROFILES ---------------- */
-function loadProfiles(){
-  profilesEl.innerHTML="";
-  Object.keys(profiles).forEach(k=>{
-    const o=document.createElement("option");
-    o.value=k;o.textContent=k;
-    profilesEl.appendChild(o);
-  });
-  if(current){profilesEl.value=current;loadProfile();}
-}
-function saveProfile(){
-  const u=user.value||"@usuario";
-  profiles[u]={saldo,goal,hist,sponsors};
-  current=u; data.current=u; save(); loadProfiles(); flash("Perfil guardado");
-}
-function loadProfile(){
-  const u=profilesEl.value;
-  if(!profiles[u])return;
-  ({saldo,goal,hist,sponsors}=profiles[u]);
-  user.value=u; current=u; render();
-}
-function deleteProfile(){
-  const u=profilesEl.value;
-  if(!u)return;
-  delete profiles[u]; current=""; save(); loadProfiles(); flash("Perfil borrado");
-}
-profilesEl.onchange=loadProfile;
-
-/* ---------------- ACTIONS ---------------- */
-function setGoal(){ const g=+goalInput().value; if(g>0){goal=g; vib(); render();}}
-function addGift(v){
-  saldo+=v; hist.unshift({v,t:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
-  vib(); snd(); flash("Registro agregado"); render();
-}
-function customGift(){ const v=+prompt("Monto"); if(v>0)addGift(v); }
-function addSponsor(){ const s=document.getElementById("sponsor").value; if(s){sponsors.push(s); render();}}
-function exportCSV(){
-  let csv="valor,hora\n"+hist.map(h=>`${h.v},${h.t}`).join("\n");
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download="historial.csv"; a.click();
-}
-function toggleRecord(){ app.classList.toggle("record"); }
-
-/* ---------------- HELPERS ---------------- */
-function goalInput(){return document.getElementById("goal");}
-function flash(txt){
-  const o=document.createElement("div");
-  o.className="overlay";
-  o.innerHTML=`<div class="modal"><div class="check">✓</div><div>${txt}</div></div>`;
-  document.body.appendChild(o); setTimeout(()=>o.remove(),900);
-}
-function save(){
-  localStorage.setItem("PROPLUS", JSON.stringify({profiles, current}));
-}
-
-/* ---------------- INIT ---------------- */
-loadProfiles();
-render();
+bloquear(true);
 </script>
 </body>
 </html>
