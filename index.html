@@ -7,23 +7,26 @@
 
 <style>
 :root{
-  --pink:#ff2d55;
-  --pink-soft:#fff1f5;
-  --green:#1fbf75;
-  --gray:#8e8e93;
-  --border:#e5e5ea;
-  --bg:#f2f2f7;
+  --ttk-black:#010101;
+  --ttk-gray-dark:#292929;
+  --ttk-gray-mid:#5f5f5f;
+  --ttk-white:#ffffff;
+  --ttk-accent-red:#fe2c55;
+  --ttk-accent-cyan:#25f4ee;
+  --ttk-accent-gradient:linear-gradient(135deg,#fe2c55,#25f4ee);
 }
+
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:var(--bg);
+  background:var(--ttk-black);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,Arial;
+  color:var(--ttk-white);
 }
 .app{
   width:390px;
   margin:auto;
-  background:#fff;
+  background:var(--ttk-gray-dark);
   min-height:100vh;
 }
 
@@ -33,13 +36,13 @@ body{
   top:0;
   left:50%;
   transform:translateX(-50%);
-  background:#ecfbf4;
-  border:2px solid var(--green);
+  background:#1a1a1a;
+  border:2px solid var(--ttk-accent-cyan);
   border-radius:8px;
   padding:4px 10px;
   font-size:12px;
   font-weight:600;
-  color:#0f7a4a;
+  color:var(--ttk-white);
   text-align:center;
   display:inline-block;
   z-index:1000;
@@ -54,12 +57,13 @@ body{
   gap:10px;
   font-size:17px;
   font-weight:700;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--ttk-gray-mid);
+  color:var(--ttk-white);
 }
 .logo{
   width:22px;height:22px;
   border-radius:6px;
-  background:linear-gradient(135deg,#00f2ea,#ff0050);
+  background:var(--ttk-accent-gradient);
 }
 
 /* USUARIO */
@@ -67,13 +71,13 @@ body{
   display:flex;
   gap:12px;
   padding:14px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--ttk-gray-mid);
 }
 .avatar{
   width:46px;
   height:46px;
   border-radius:50%;
-  background:#d1d1d6;
+  background:#333;
   overflow:hidden;
   cursor:pointer;
 }
@@ -96,16 +100,16 @@ body{
   gap:6px;
   margin-top:6px;
   font-size:13px;
-  color:var(--gray);
+  color:var(--ttk-white);
 }
 .coin{
   width:14px;
   height:14px;
   border-radius:50%;
-  background:linear-gradient(135deg,#ffd36a,#f5b400);
+  background:var(--ttk-accent-gradient);
 }
 .plus{
-  color:var(--green);
+  color:var(--ttk-accent-cyan);
   font-weight:700;
   animation:float 1.2s ease forwards;
 }
@@ -124,23 +128,24 @@ body{
   transform:translateY(-100%);
   opacity:0;
   transition:0.9s ease;
+  color:var(--ttk-white);
 }
 .invite.show{
   transform:translateY(0);
   opacity:1;
 }
 .invite.active{
-  background:var(--pink-soft);
-  box-shadow:inset 0 0 0 2px var(--pink);
+  background:#1a1a1a;
+  box-shadow:inset 0 0 0 2px var(--ttk-accent-red);
 }
 
 /* SECCIÓN */
 .section{padding:14px}
-.section strong{font-size:16px}
+.section strong{font-size:16px;color:var(--ttk-white);}
 .note{
   margin-top:6px;
   font-size:13px;
-  color:#ff3b30;
+  color:var(--ttk-accent-red);
 }
 
 /* GRID */
@@ -151,11 +156,12 @@ body{
   gap:10px;
 }
 .card{
-  background:#f3f3f4;
+  background:#1a1a1a;
   border-radius:12px;
   padding:14px 6px;
   text-align:center;
   cursor:pointer;
+  color:var(--ttk-white);
 }
 .card span{
   font-size:18px;
@@ -164,19 +170,20 @@ body{
 .card small{
   display:block;
   font-size:13px;
-  color:var(--gray);
+  color:var(--ttk-gray-mid);
   margin-top:4px;
 }
 .card.active{
-  background:var(--pink-soft);
-  box-shadow:inset 0 0 0 2px var(--pink);
+  background:var(--ttk-accent-red);
+  box-shadow:0 0 8px var(--ttk-accent-cyan);
+  color:var(--ttk-white);
 }
 
 /* INFO */
 .info{
   margin:14px;
   padding:14px;
-  border:1px solid var(--border);
+  border:1px solid var(--ttk-gray-mid);
   border-radius:14px;
   display:flex;
   gap:12px;
@@ -187,7 +194,6 @@ body{
   width:42px;
   height:42px;
   border-radius:10px;
-  background:linear-gradient(135deg,#e0e7ff,#fce7f3);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -206,8 +212,8 @@ body{
   left:50%;
   transform:translateX(-50%);
   width:390px;
-  background:#fff;
-  border-top:1px solid var(--border);
+  background:#1a1a1a;
+  border-top:1px solid var(--ttk-gray-mid);
 }
 .payments{
   display:flex;
@@ -218,9 +224,10 @@ body{
 .pay{
   font-size:11px;
   font-weight:700;
-  background:#ededf0;
+  background:#292929;
   padding:3px 8px;
   border-radius:6px;
+  color:var(--ttk-white);
 }
 .buy{
   margin:10px 14px 14px;
@@ -228,7 +235,7 @@ body{
   padding:16px;
   border:none;
   border-radius:14px;
-  background:var(--pink);
+  background:var(--ttk-accent-gradient);
   color:#fff;
   font-size:18px;
   font-weight:800;
@@ -245,18 +252,19 @@ body{
 }
 .modal.show{display:flex}
 .box{
-  background:#fff;
+  background:#1a1a1a;
   width:260px;
   padding:20px;
   border-radius:18px;
   text-align:center;
+  color:var(--ttk-white);
 }
 .loader{
   width:30px;
   height:30px;
   border-radius:50%;
-  border:4px solid #eee;
-  border-top:4px solid var(--pink);
+  border:4px solid #333;
+  border-top:4px solid var(--ttk-accent-red);
   margin:14px auto;
   animation:spin 1s linear infinite;
 }
@@ -279,7 +287,7 @@ body{
 
 <div class="user">
   <div class="avatar" onclick="file.click()">
-    <img id="pic" src="https://i.pravatar.cc/46?u=JTN">
+    <img id="pic" src="https://cdn3d.iconscout.com/3d/free/preview/free-tiktok-coin-with-blink-star-3d-icon-png-download-6220600.png">
   </div>
   <input type="file" id="file" hidden onchange="updatePic(this)">
   <div class="user-info">
@@ -317,7 +325,7 @@ body{
 </div>
 
 <div class="info">
-  <div class="illu"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828465.png"></div>
+  <div class="illu"><img src="https://ppc.land/content/images/2024/10/TikTok-Coins-3.webp"></div>
   <div>
     <strong>Pago seguro</strong><br>
     Protección de pagos y datos
@@ -345,7 +353,6 @@ body{
 let coins=0, selected=400;
 setTimeout(()=>invite.classList.add('show'),500);
 
-// Selección de tarjeta
 document.querySelectorAll('.card').forEach(card=>{
   card.onclick=()=>{
     document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
@@ -354,7 +361,6 @@ document.querySelectorAll('.card').forEach(card=>{
   }
 });
 
-// Compra
 function buy(){
   modal.classList.add('show');
   box.innerHTML='Procesando compra<div class="loader"></div>';
@@ -367,7 +373,6 @@ function buy(){
   },1400);
 }
 
-// Edición de usuario
 function editUser(){
   const u=document.querySelector('.username');
   const i=document.createElement('input');
@@ -385,7 +390,6 @@ function editUser(){
   }
 }
 
-// Cambiar imagen según primera letra y reiniciar contador
 function resetUser(name){
   coins=0;
   count.textContent=coins;
@@ -393,7 +397,6 @@ function resetUser(name){
   pic.src=`https://i.pravatar.cc/46?u=${first}`;
 }
 
-// Cambiar imagen con archivo local
 function updatePic(input){
   if(input.files && input.files[0]){
     pic.src=URL.createObjectURL(input.files[0]);
