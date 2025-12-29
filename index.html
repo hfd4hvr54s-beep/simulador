@@ -7,26 +7,27 @@
 
 <style>
 :root{
-  --red:#FE2C55;
-  --bg:#F5F5F7;
-  --card:#FAFAFA;
-  --text:#0B0B0B;
-  --sub:#6E6E73;
-  --line:#E5E5EA;
+  --pink:#ff2f5b;
+  --black:#0f0f0f;
+  --gray:#6f6f6f;
+  --light:#f6f6f7;
 }
+
 *{
   box-sizing:border-box;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
 }
+
 body{
   margin:0;
-  background:#000;
+  background:#e5e5ea;
 }
+
 .app{
-  width:390px;
-  min-height:100vh;
+  max-width:390px;
   margin:auto;
   background:#fff;
+  min-height:100vh;
 }
 
 /* HEADER */
@@ -35,60 +36,47 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  border-bottom:1px solid var(--line);
-  position:relative;
-}
-.header-title{
+  border-bottom:1px solid #eee;
   font-size:17px;
   font-weight:700;
-  color:var(--text);
-}
-.balance{
-  position:absolute;
-  right:14px;
-  font-size:12px;
-  font-weight:600;
-  padding:4px 10px;
-  border-radius:12px;
-  background:#000;
-  color:#fff;
+  letter-spacing:.2px;
 }
 
 /* USER */
 .user{
-  padding:16px 14px 12px;
+  padding:14px;
 }
 .user input{
   width:100%;
   border:none;
-  border-bottom:1px solid var(--line);
-  padding:6px 0;
+  border-bottom:1px solid #ccc;
   font-size:15px;
   font-weight:600;
-  color:var(--text);
+  padding:8px 2px;
   outline:none;
 }
 .invalid{
-  margin-top:4px;
   font-size:11px;
-  color:#D93025;
+  color:#d93025;
+  margin-top:4px;
   display:none;
 }
 
 /* INVITE */
 .invite{
-  background:var(--bg);
+  margin:12px;
   padding:12px 14px;
-  font-size:14px;
-  font-weight:400;
+  background:var(--light);
+  border-radius:12px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  font-size:14px;
 }
 
 /* SECTION */
 .section{
-  padding:14px;
+  padding:12px 14px;
 }
 .section h3{
   margin:0;
@@ -98,91 +86,85 @@ body{
 .note{
   margin-top:4px;
   font-size:12px;
-  font-weight:400;
-  color:var(--sub);
+  color:var(--gray);
 }
 
 /* GRID */
 .grid{
-  margin-top:12px;
+  margin-top:14px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:12px;
 }
 .card{
-  background:var(--card);
-  border-radius:12px;
-  padding:9px 4px;
+  background:#fafafa;
+  border-radius:14px;
+  padding:12px 6px;
   text-align:center;
-  font-size:15px;
   font-weight:700;
-  box-shadow:0 1px 4px rgba(0,0,0,.08);
+  font-size:15px;
   cursor:pointer;
-  position:relative;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
 }
 .card small{
   display:block;
-  margin-top:2px;
+  margin-top:4px;
   font-size:12px;
-  font-weight:400;
-  color:var(--sub);
+  color:var(--gray);
+  font-weight:500;
 }
 .card.active{
-  outline:2px solid var(--red);
+  outline:2px solid var(--pink);
   background:#fff;
-}
-.badge{
-  position:absolute;
-  top:-7px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--red);
-  color:#fff;
-  font-size:10px;
-  font-weight:600;
-  padding:2px 6px;
-  border-radius:8px;
 }
 
 /* NOTIFY */
 .notify{
-  margin:14px;
+  margin:12px;
   padding:14px;
-  background:var(--bg);
+  background:#f7f7f8;
   border-radius:14px;
-  font-size:14px;
-  font-weight:400;
+  font-size:13px;
+}
+.notify button{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:var(--black);
+  color:#fff;
+  font-weight:600;
 }
 
-/* PAYMENTS */
+/* PAY */
 .payments{
   display:flex;
   gap:10px;
-  padding:0 14px 14px;
+  padding:0 12px;
 }
 .pay{
   flex:1;
-  border:1px solid var(--line);
+  border:1px solid #ddd;
   border-radius:12px;
   padding:10px;
   text-align:center;
-  font-size:14px;
-  font-weight:600;
-  color:#444;
+  font-size:13px;
+  font-weight:700;
 }
 
-/* FOOTER */
+/* BUY */
 .footer{
   padding:14px;
 }
 .buy{
   width:100%;
-  height:50px;
+  padding:16px;
   border:none;
-  border-radius:25px;
-  background:var(--red);
+  border-radius:20px;
+  background:var(--pink);
   color:#fff;
-  font-size:16px;
+  font-size:17px;
   font-weight:700;
 }
 
@@ -190,41 +172,31 @@ body{
 .modal{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.55);
+  background:rgba(0,0,0,.5);
   display:flex;
   align-items:center;
   justify-content:center;
   opacity:0;
   pointer-events:none;
-  transition:.25s;
+  transition:.3s;
 }
 .modal.show{
   opacity:1;
   pointer-events:auto;
 }
 .box{
-  width:260px;
+  width:280px;
   background:#fff;
-  border-radius:22px;
-  padding:22px;
+  border-radius:20px;
+  padding:20px;
   text-align:center;
 }
-.box strong{
-  font-size:16px;
-  font-weight:700;
-}
-.box p{
-  font-size:14px;
-  font-weight:400;
-}
-
-/* LOADER */
 .loader{
   width:40px;
   height:40px;
   border-radius:50%;
   border:4px solid #eee;
-  border-top:4px solid var(--red);
+  border-top:4px solid var(--pink);
   margin:16px auto;
   animation:spin 1s linear infinite;
 }
@@ -236,10 +208,7 @@ body{
 
 <div class="app">
 
-  <div class="header">
-    <div class="header-title">TikTok Coins</div>
-    <div class="balance" id="balance">0</div>
-  </div>
+  <div class="header">TikTok Coins</div>
 
   <div class="user">
     <input id="user" placeholder="@usuario">
@@ -259,28 +228,20 @@ body{
       <div class="card" data-c="30" data-p="0.33">30<small>EUR 0.33</small></div>
       <div class="card" data-c="60" data-p="0.65">60<small>EUR 0.65</small></div>
       <div class="card" data-c="80" data-p="0.87">80<small>EUR 0.87</small></div>
-
-      <div class="card active" data-c="400" data-p="4.32">
-        <div class="badge">Compra más reciente</div>
-        400<small>EUR 4.32</small>
-      </div>
-
-      <div class="card" data-c="1000" data-p="10.8">
-        <div class="badge">Favorita</div>
-        1,000<small>EUR 10.8</small>
-      </div>
-
-      <div class="card" data-c="0" data-p="0">Personalizar</div>
+      <div class="card active" data-c="400" data-p="4.32">400<small>EUR 4.32</small></div>
+      <div class="card" data-c="1000" data-p="10.8">1,000<small>EUR 10.8</small></div>
+      <div class="card">Personalizar</div>
     </div>
   </div>
 
   <div class="notify">
-    Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
+    Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles.
+    <button>Activar</button>
   </div>
 
   <div class="payments">
     <div class="pay">VISA</div>
-    <div class="pay">Pay</div>
+    <div class="pay"> Pay</div>
   </div>
 
   <div class="footer">
@@ -294,55 +255,33 @@ body{
 </div>
 
 <script>
-const balanceEl = document.getElementById("balance");
-const buyBtn = document.getElementById("buy");
-const modal = document.getElementById("modal");
-const box = document.getElementById("box");
-const userInput = document.getElementById("user");
-const invalid = document.getElementById("invalid");
+let selected={coins:400,price:"4.32"};
 
-let selected = { coins:400, price:"4.32" };
-let balance = Number(localStorage.getItem("demo_balance") || 0);
-balanceEl.textContent = balance;
-
-document.querySelectorAll(".card").forEach(card=>{
-  card.addEventListener("click", ()=>{
-    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-    card.classList.add("active");
-    selected.coins = Number(card.dataset.c);
-    selected.price = card.dataset.p;
-    buyBtn.textContent = selected.price > 0
-      ? `Comprar por €${selected.price}`
-      : "Personalizar";
-  });
-});
-
-buyBtn.addEventListener("click", ()=>{
-  const u = userInput.value.trim();
-  if(!(u.startsWith("@") && u.length > 1)){
-    invalid.style.display = "block";
-    return;
+document.querySelectorAll('.card').forEach(c=>{
+  c.onclick=()=>{
+    document.querySelectorAll('.card').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    selected.coins=c.dataset.c;
+    selected.price=c.dataset.p;
+    if(selected.price){
+      buy.textContent=`Comprar por €${selected.price}`;
+    }
   }
-  invalid.style.display = "none";
-
-  modal.classList.add("show");
-  box.innerHTML = `<strong>Procesando compra</strong><div class="loader"></div>`;
-
-  setTimeout(()=>{
-    balance += selected.coins;
-    localStorage.setItem("demo_balance", balance);
-    balanceEl.textContent = balance;
-
-    box.innerHTML = `
-      <strong>Compra confirmada</strong>
-      <p>${selected.coins} monedas añadidas</p>
-      <button onclick="document.getElementById('modal').classList.remove('show')"
-        style="margin-top:12px;width:100%;height:44px;border:none;border-radius:22px;
-        background:#000;color:#fff;font-size:15px;font-weight:600">
-        Aceptar
-      </button>`;
-  }, 1800);
 });
+
+buy.onclick=()=>{
+  const u=user.value.trim();
+  if(!/^@[\w.]{3,}$/.test(u)){
+    invalid.style.display="block";return;
+  }
+  invalid.style.display="none";
+  modal.classList.add('show');
+  box.innerHTML=`<strong>Procesando compra</strong><div class="loader"></div>`;
+  setTimeout(()=>{
+    box.innerHTML=`<strong>Compra confirmada</strong><p>${selected.coins} monedas añadidas a<br><b>${u}</b></p>
+    <button onclick="modal.classList.remove('show')" style="margin-top:12px;padding:10px;width:100%;border:none;border-radius:12px;background:#000;color:#fff;font-weight:600">Aceptar</button>`;
+  },2000);
+};
 </script>
 
 </body>
