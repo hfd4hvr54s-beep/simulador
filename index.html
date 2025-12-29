@@ -3,129 +3,223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TikTok Coins - Demo</title>
+<title>TikTok Dashboard PRO+</title>
+
 <style>
 :root{
-  --bg:#000;
-  --card:#1c1c1e;
-  --field:#2c2c2e;
-  --pink:#ff0050;
-  --text:#fff;
-  --muted:#9b9b9b;
+  --bg:#000; --card:#1c1c1e; --field:#2c2c2e;
+  --pink:#ff0050; --text:#fff; --muted:#9b9b9b;
+  --ok:#2ecc71; --warn:#f1c40f;
 }
 *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif}
 body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center}
-.app{width:100%;max-width:420px;padding:16px}
-.header{text-align:center;font-size:22px;font-weight:700;margin:10px 0 20px}
-.card{background:var(--card);border-radius:22px;padding:18px}
-.user{display:flex;gap:12px}
-.avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700}
-.user input{flex:1;background:var(--field);border:none;border-radius:14px;color:#fff;padding:14px;font-size:16px}
-
-.balance{text-align:center;margin:24px 0}
-.balance .coins{font-size:40px;font-weight:800}
-
-.packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pkg{background:var(--field);border-radius:18px;padding:16px;text-align:center;cursor:pointer}
-.pkg:active{transform:scale(.96)}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
-.modal{background:var(--card);border-radius:22px;padding:22px;width:260px;text-align:center;animation:up .3s}
-@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:600;margin-top:10px}
-.confirm{background:var(--pink);color:#fff}
-.cancel{background:var(--field);color:#fff}
-
-.check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 12px;
-display:flex;align-items:center;justify-content:center;font-size:44px}
+.app{width:100%;max-width:430px;padding:14px}
+.header{text-align:center;font-size:22px;font-weight:800;margin:8px 0 12px}
+.card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700}
+input,select{background:var(--field);border:none;border-radius:14px;color:#fff;padding:12px;font-size:15px;width:100%}
+small{color:var(--muted)}
+.balance{text-align:center}
+.balance .coins{font-size:38px;font-weight:900}
+.bar{height:10px;background:#111;border-radius:999px;overflow:hidden}
+.bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),#ff6a88);transition:width .3s}
+.btn{padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer}
+.primary{background:var(--pink);color:#fff}
+.secondary{background:var(--field);color:#fff}
+.ok{background:var(--ok);color:#000}
+.warn{background:var(--warn);color:#000}
+.item{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid #2a2a2a}
+.tag{background:#111;border:1px solid #2a2a2a;border-radius:999px;padding:4px 10px;font-size:12px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:99}
+.modal{background:var(--card);border-radius:22px;padding:20px;width:280px;text-align:center;animation:up .25s}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.check{width:76px;height:76px;border-radius:50%;background:var(--ok);margin:0 auto 8px;
+display:flex;align-items:center;justify-content:center;font-size:40px}
+.hide{display:none}
+.record .card:not(.keep){display:none}
 </style>
 </head>
 
 <body>
-<div class="app">
-  <div class="header">TikTok</div>
+<div class="app" id="app">
+  <div class="header">TikTok • Dashboard PRO+</div>
 
-  <div class="card">
-    <div class="user">
+  <!-- PERFIL / MULTIUSUARIO -->
+  <div class="card keep">
+    <div class="row">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario" oninput="avatar.textContent=this.value[1]?.toUpperCase()||'U'">
+      <input id="user" placeholder="@usuario">
     </div>
-
-    <div class="balance">
-      <div class="coins" id="saldo">0</div>
-      <div style="color:var(--muted)">Monedas</div>
+    <div class="row" style="margin-top:8px">
+      <select id="profiles"></select>
+      <button class="btn secondary" onclick="saveProfile()">Guardar</button>
+      <button class="btn secondary" onclick="deleteProfile()">Borrar</button>
     </div>
+    <small>Perfiles locales</small>
+  </div>
 
-    <div class="packages">
-      <div class="pkg" onclick="comprar(70)">70 Monedas</div>
-      <div class="pkg" onclick="comprar(350)">350 Monedas</div>
-      <div class="pkg" onclick="comprar(700)">700 Monedas</div>
-      <div class="pkg" onclick="comprar(1400)">1400 Monedas</div>
+  <!-- SALDO -->
+  <div class="card balance keep">
+    <div class="coins" id="saldo">0</div>
+    <small>Monedas internas</small>
+  </div>
+
+  <!-- META -->
+  <div class="card">
+    <div class="row">
+      <input id="goal" type="number" min="1" placeholder="Meta LIVE">
+      <button class="btn secondary" onclick="setGoal()">Fijar</button>
+    </div>
+    <div style="margin:10px 0" class="bar"><div id="progress"></div></div>
+    <div class="row" style="justify-content:space-between">
+      <small id="goalText">Meta: —</small>
+      <span class="tag" id="pct">0%</span>
+    </div>
+  </div>
+
+  <!-- REGALOS -->
+  <div class="card">
+    <div class="grid">
+      <button class="btn secondary" onclick="addGift(10)">+10 Cofre</button>
+      <button class="btn secondary" onclick="addGift(50)">+50 Regalo</button>
+      <button class="btn secondary" onclick="addGift(100)">+100 Regalo</button>
+      <button class="btn primary" onclick="customGift()">Ingresar</button>
+    </div>
+    <small>Registro manual / demo</small>
+  </div>
+
+  <!-- SPONSORS -->
+  <div class="card">
+    <strong>Sponsors</strong>
+    <div class="row" style="margin-top:8px">
+      <input id="sponsor" placeholder="Nombre sponsor">
+      <button class="btn secondary" onclick="addSponsor()">Agregar</button>
+    </div>
+    <div id="sponsors"></div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="card">
+    <strong>Historial</strong>
+    <div id="hist"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn secondary" onclick="exportCSV()">Exportar CSV</button>
+      <button class="btn warn" onclick="toggleRecord()">Modo Grabación</button>
     </div>
   </div>
 </div>
 
+<audio id="snd" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA="></audio>
+
 <script>
-let saldo = 0;
+/* ---------------- UTIL ---------------- */
+const vib=()=>navigator.vibrate&&navigator.vibrate(10);
+const snd=()=>document.getElementById("snd").play().catch(()=>{});
 
-function comprar(c){
-  mostrarConfirmacion(c);
-}
+/* ---------------- STATE ---------------- */
+let data = JSON.parse(localStorage.getItem("PROPLUS")||"{}");
+let profiles = data.profiles||{};
+let current = data.current||"";
+let saldo = 0, goal = 0, hist = [], sponsors=[];
 
-function mostrarConfirmacion(c){
-  const o=document.createElement("div");
-  o.className="overlay";
-  o.innerHTML=`
-    <div class="modal">
-      <div style="margin-bottom:6px">Confirmar compra</div>
-      <strong style="font-size:22px">${c} monedas</strong>
-      <button class="btn confirm" onclick="confirmarCompra(${c})">Confirmar</button>
-      <button class="btn cancel" onclick="o.remove()">Cancelar</button>
-    </div>`;
-  document.body.appendChild(o);
-}
+/* ---------------- UI REFS ---------------- */
+const saldoEl=saldo=>document.getElementById("saldo").textContent=saldo;
+const progressEl=document.getElementById("progress");
+const goalText=document.getElementById("goalText");
+const pctEl=document.getElementById("pct");
+const histEl=document.getElementById("hist");
+const avatar=document.getElementById("avatar");
+const user=document.getElementById("user");
+const profilesEl=document.getElementById("profiles");
+const sponsorsEl=document.getElementById("sponsors");
+const app=document.getElementById("app");
 
-function confirmarCompra(c){
-  saldo += c;
-  document.getElementById("saldo").textContent = saldo;
-
-  const o=document.createElement("div");
-  o.className="overlay";
-  o.innerHTML=`
-    <div class="modal">
-      <div class="check">✓</div>
-      <div>Compra confirmada</div>
-    </div>`;
-  document.body.appendChild(o);
-  setTimeout(()=>o.remove(),1200);
-
-  // Guarda historial local (opcional)
-  const h = JSON.parse(localStorage.getItem("historial")||"[]");
-  h.unshift({c:c,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
-  localStorage.setItem("historial", JSON.stringify(h.slice(0,5)));
-  renderHist();
-}
-
-function renderHist(){
-  const histEl = document.getElementById("hist");
-  if(!histEl) return;
-  histEl.innerHTML = "";
-  const h = JSON.parse(localStorage.getItem("historial")||"[]");
-  h.forEach(item=>{
+/* ---------------- RENDER ---------------- */
+function render(){
+  saldoEl(saldo);
+  const p = goal?Math.min(100,Math.round((saldo/goal)*100)):0;
+  progressEl.style.width=p+"%";
+  pctEl.textContent=p+"%";
+  goalText.textContent=goal?`Meta: ${goal}`:"Meta: —";
+  histEl.innerHTML="";
+  hist.slice(0,8).forEach(h=>{
     const d=document.createElement("div");
     d.className="item";
-    d.innerHTML=`<span>+${item.c}</span><span>${item.time}</span>`;
+    d.innerHTML=`<span>+${h.v}</span><span>${h.t}</span>`;
     histEl.appendChild(d);
-    setTimeout(()=>{d.style.opacity=1;d.style.transform="translateY(0)"},40);
   });
+  sponsorsEl.innerHTML="";
+  sponsors.forEach(s=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`<span>${s}</span><span>✔</span>`;
+    sponsorsEl.appendChild(d);
+  });
+  avatar.textContent=user.value?.[1]?.toUpperCase()||"U";
+  save();
 }
 
-// Inicializar historial
-const divHist=document.createElement("div");
-divHist.id="hist";
-document.querySelector(".card").appendChild(divHist);
-renderHist();
+/* ---------------- PROFILES ---------------- */
+function loadProfiles(){
+  profilesEl.innerHTML="";
+  Object.keys(profiles).forEach(k=>{
+    const o=document.createElement("option");
+    o.value=k;o.textContent=k;
+    profilesEl.appendChild(o);
+  });
+  if(current){profilesEl.value=current;loadProfile();}
+}
+function saveProfile(){
+  const u=user.value||"@usuario";
+  profiles[u]={saldo,goal,hist,sponsors};
+  current=u; data.current=u; save(); loadProfiles(); flash("Perfil guardado");
+}
+function loadProfile(){
+  const u=profilesEl.value;
+  if(!profiles[u])return;
+  ({saldo,goal,hist,sponsors}=profiles[u]);
+  user.value=u; current=u; render();
+}
+function deleteProfile(){
+  const u=profilesEl.value;
+  if(!u)return;
+  delete profiles[u]; current=""; save(); loadProfiles(); flash("Perfil borrado");
+}
+profilesEl.onchange=loadProfile;
+
+/* ---------------- ACTIONS ---------------- */
+function setGoal(){ const g=+goalInput().value; if(g>0){goal=g; vib(); render();}}
+function addGift(v){
+  saldo+=v; hist.unshift({v,t:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
+  vib(); snd(); flash("Registro agregado"); render();
+}
+function customGift(){ const v=+prompt("Monto"); if(v>0)addGift(v); }
+function addSponsor(){ const s=document.getElementById("sponsor").value; if(s){sponsors.push(s); render();}}
+function exportCSV(){
+  let csv="valor,hora\n"+hist.map(h=>`${h.v},${h.t}`).join("\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="historial.csv"; a.click();
+}
+function toggleRecord(){ app.classList.toggle("record"); }
+
+/* ---------------- HELPERS ---------------- */
+function goalInput(){return document.getElementById("goal");}
+function flash(txt){
+  const o=document.createElement("div");
+  o.className="overlay";
+  o.innerHTML=`<div class="modal"><div class="check">✓</div><div>${txt}</div></div>`;
+  document.body.appendChild(o); setTimeout(()=>o.remove(),900);
+}
+function save(){
+  localStorage.setItem("PROPLUS", JSON.stringify({profiles, current}));
+}
+
+/* ---------------- INIT ---------------- */
+loadProfiles();
+render();
 </script>
 </body>
 </html>
