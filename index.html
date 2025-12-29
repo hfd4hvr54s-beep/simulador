@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coins Demo</title>
+<title>TikTok Coins – Demo</title>
 
 <style>
 *{
@@ -15,45 +15,52 @@ body{margin:0;background:#f2f2f5}
 
 /* HEADER */
 .header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px;border-bottom:1px solid #eee
+  padding:14px;
+  border-bottom:1px solid #eee;
 }
-.header-left{display:flex;align-items:center;gap:8px}
-.coin-icon{
-  width:26px;height:26px;border-radius:50%;
-  background:linear-gradient(135deg,#ff2f5b,#ff8fab);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:14px
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
 }
 .header-title{
-  font-size:17px;font-weight:800;letter-spacing:.2px
+  font-size:18px;font-weight:800;letter-spacing:.2px;
 }
+.menu{font-size:20px}
 
-/* USER */
-.user{display:flex;align-items:center;gap:12px;padding:14px}
-.avatar{
-  width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,#ff2f5b,#ff7a95);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:22px;font-weight:700
+/* PROFILE */
+.profile{
+  display:flex;align-items:center;gap:12px;
+  margin-top:12px;
 }
-.user-info{flex:1}
-.user-info input{
+.avatar{
+  width:56px;height:56px;border-radius:50%;
+  background:#ddd;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar span{font-size:22px;font-weight:700;color:#777}
+.profile-info{flex:1}
+.profile-info input{
   width:100%;border:none;border-bottom:1px solid #ccc;
   font-size:15px;font-weight:600;outline:none;padding:4px
 }
 .invalid{font-size:11px;color:#d93025;display:none}
+.upload{
+  font-size:11px;color:#555;margin-top:4px;
+}
 
 /* INVITE */
 .invite{
-  padding:14px;background:#f6f6f6;
-  display:flex;justify-content:space-between;
-  font-size:14px
+  margin-top:14px;
+  padding:14px;
+  background:#f6f6f6;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:14px;
 }
 
 /* SECTION */
 .section{padding:14px}
-.note{font-size:12px;color:#555;margin-top:4px}
+.section h3{margin:0 0 4px;font-size:16px}
+.note{font-size:12px;color:#555}
 
 /* GRID */
 .grid{
@@ -62,21 +69,20 @@ body{margin:0;background:#f2f2f5}
 }
 .card{
   background:#fafafa;border-radius:16px;padding:12px;
-  text-align:center;font-weight:700;cursor:pointer;
+  text-align:center;font-weight:700;
   box-shadow:0 3px 8px rgba(0,0,0,.08);
-  position:relative
+  cursor:pointer;position:relative
 }
 .card small{display:block;font-weight:400;color:#666;margin-top:4px}
 .card.active{
   outline:2px solid #ff2f5b;
   background:#fff0f4
 }
-.badge-mini{
+.badge{
   position:absolute;top:-8px;left:50%;
   transform:translateX(-50%);
   background:#ff2f5b;color:#fff;
-  font-size:10px;padding:2px 6px;
-  border-radius:8px
+  font-size:10px;padding:2px 6px;border-radius:8px
 }
 
 /* NOTIFY */
@@ -96,17 +102,16 @@ body{margin:0;background:#f2f2f5}
   display:flex;gap:12px;padding:14px
 }
 .pay{
-  flex:1;border:1px solid #ddd;
-  border-radius:12px;padding:10px;
-  text-align:center;font-weight:700;color:#444
+  flex:1;border:1px solid #ddd;border-radius:12px;
+  padding:10px;text-align:center;font-weight:700;color:#444
 }
 
 /* FOOTER */
 .footer{padding:14px}
 .buy{
-  width:100%;padding:16px;border:none;
-  border-radius:20px;background:#ff2f5b;
-  color:#fff;font-size:17px;font-weight:700
+  width:100%;padding:16px;border:none;border-radius:20px;
+  background:#ff2f5b;color:#fff;
+  font-size:17px;font-weight:700
 }
 
 /* MODAL */
@@ -114,14 +119,13 @@ body{margin:0;background:#f2f2f5}
   position:fixed;inset:0;background:rgba(0,0,0,.55);
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
-  transition:.3s;z-index:20
+  transition:.3s;z-index:30
 }
 .modal.show{opacity:1;pointer-events:auto}
 .box{
   width:280px;background:#fff;border-radius:22px;
   padding:22px;text-align:center;
-  transform:scale(.8);opacity:0;
-  transition:.3s
+  transform:scale(.85);opacity:0;transition:.3s
 }
 .modal.show .box{transform:scale(1);opacity:1}
 
@@ -133,14 +137,9 @@ body{margin:0;background:#f2f2f5}
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* COINS ANIMATION */
-.coins{
-  font-size:28px;animation:fall .8s ease-out
-}
-@keyframes fall{
-  0%{transform:translateY(-20px);opacity:0}
-  100%{transform:translateY(0);opacity:1}
-}
+/* CONFIRM */
+.coins{font-size:30px;margin:10px 0;animation:pop .4s}
+@keyframes pop{from{transform:scale(.6)}to{transform:scale(1)}}
 </style>
 </head>
 
@@ -150,19 +149,24 @@ body{margin:0;background:#f2f2f5}
 
   <!-- HEADER -->
   <div class="header">
-    <div class="header-left">
-      <div class="coin-icon">¢</div>
+    <div class="header-top">
       <div class="header-title">TikTok Coins</div>
+      <div class="menu">⋮</div>
     </div>
-    <div>⋮</div>
-  </div>
 
-  <!-- USER -->
-  <div class="user">
-    <div class="avatar" id="avatar">◎</div>
-    <div class="user-info">
-      <input id="user" placeholder="@usuario">
-      <div class="invalid" id="invalid">Usuario inválido</div>
+    <!-- PROFILE -->
+    <div class="profile">
+      <div class="avatar" id="avatar">
+        <span>◎</span>
+      </div>
+      <div class="profile-info">
+        <input id="user" placeholder="@usuario">
+        <div class="invalid" id="invalid">Usuario inválido</div>
+        <div class="upload">
+          Foto de perfil:
+          <input type="file" accept="image/*" onchange="loadPhoto(event)">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -183,14 +187,17 @@ body{margin:0;background:#f2f2f5}
       <div class="card" data-c="30" data-p="0.33">30<small>EUR 0.33</small></div>
       <div class="card" data-c="60" data-p="0.65">60<small>EUR 0.65</small></div>
       <div class="card" data-c="80" data-p="0.87">80<small>EUR 0.87</small></div>
+
       <div class="card active" data-c="400" data-p="4.32">
-        <div class="badge-mini">Reciente</div>
+        <div class="badge">Compra más reciente</div>
         400<small>EUR 4.32</small>
       </div>
-      <div class="card" data-c="1000" data-p="10.80">
-        <div class="badge-mini">Favorita</div>
-        1,000<small>EUR 10.80</small>
+
+      <div class="card" data-c="1000" data-p="10.8">
+        <div class="badge">Favorita</div>
+        1,000<small>EUR 10.8</small>
       </div>
+
       <div class="card" data-c="custom" data-p="0">Personalizar</div>
     </div>
   </div>
@@ -204,7 +211,7 @@ body{margin:0;background:#f2f2f5}
   <!-- PAYMENTS -->
   <div class="payments">
     <div class="pay">VISA</div>
-    <div class="pay"> Pay</div>
+    <div class="pay">Pay</div>
   </div>
 
   <!-- FOOTER -->
@@ -233,12 +240,6 @@ document.querySelectorAll('.card').forEach(card=>{
       selected.price>0?`Comprar por €${selected.price}`:"Personalizar";
   };
 });
-
-document.getElementById('user').oninput=e=>{
-  const v=e.target.value;
-  document.getElementById('avatar').textContent=
-    v.startsWith('@')?v[1]?.toUpperCase()||'◎':'◎';
-};
 
 document.getElementById('buy').onclick=()=>{
   if(busy)return;
@@ -276,6 +277,16 @@ document.getElementById('buy').onclick=()=>{
 
 function closeModal(){
   document.getElementById('modal').classList.remove('show');
+}
+
+function loadPhoto(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const img=document.createElement('img');
+  img.src=URL.createObjectURL(file);
+  const avatar=document.getElementById('avatar');
+  avatar.innerHTML='';
+  avatar.appendChild(img);
 }
 </script>
 
