@@ -2,148 +2,117 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TikTok Demo Online</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TikTok Coins</title>
 
 <style>
 :root{
-  --bg:#000; --card:#1C1C1E; --field:#2C2C2E;
-  --pink:#FF0050; --text:#FFF; --muted:#A1A1A1;
+  --bg:#000;
+  --card:#1c1c1e;
+  --field:#2c2c2e;
+  --pink:#ff0050;
+  --text:#fff;
+  --muted:#9b9b9b;
 }
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif}
 body{margin:0;background:var(--bg);color:var(--text);display:flex;justify-content:center}
-.app{width:100%;max-width:430px;min-height:100vh;padding:16px}
-.header{text-align:center;font-weight:700;font-size:22px;margin:12px 0 20px}
-.card{background:var(--card);border-radius:24px;padding:18px}
-.user{display:flex;gap:12px;align-items:center}
+.app{width:100%;max-width:420px;padding:16px}
+.header{text-align:center;font-size:22px;font-weight:700;margin:10px 0 20px}
+.card{background:var(--card);border-radius:22px;padding:18px}
+.user{display:flex;gap:12px}
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700}
-.user input{flex:1;background:var(--field);border:none;color:white;padding:13px;border-radius:14px}
+.user input{flex:1;background:var(--field);border:none;border-radius:14px;color:#fff;padding:14px;font-size:16px}
 
 .balance{text-align:center;margin:24px 0}
 .balance .coins{font-size:40px;font-weight:800}
-.balance span{font-size:14px;color:var(--muted)}
 
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .pkg{background:var(--field);border-radius:18px;padding:16px;text-align:center;cursor:pointer}
 .pkg:active{transform:scale(.96)}
 
-.history{margin-top:16px;border-top:1px solid #2C2C2E;padding-top:10px}
-.item{display:flex;justify-content:space-between;font-size:14px;opacity:0;transform:translateY(-8px);transition:.3s}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.modal{background:var(--card);border-radius:22px;padding:22px;width:260px;text-align:center;animation:up .3s}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
-.modal{background:var(--card);border-radius:22px;padding:22px;width:270px;text-align:center}
-.confirm{background:var(--pink);border:none;color:white;padding:14px;border-radius:14px;width:100%}
-.cancel{background:var(--field);border:none;color:white;padding:14px;border-radius:14px;width:100%;margin-top:8px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:600;margin-top:10px}
+.confirm{background:var(--pink);color:#fff}
+.cancel{background:var(--field);color:#fff}
 
 .check{width:90px;height:90px;border-radius:50%;background:var(--pink);margin:0 auto 12px;
-display:flex;align-items:center;justify-content:center;font-size:42px}
+display:flex;align-items:center;justify-content:center;font-size:44px}
 </style>
 </head>
 
 <body>
 <div class="app">
   <div class="header">TikTok</div>
-  <div class="card">
 
+  <div class="card">
     <div class="user">
       <div class="avatar" id="avatar">U</div>
-      <input id="user" placeholder="@usuario">
+      <input id="user" placeholder="@usuario" oninput="avatar.textContent=this.value[1]?.toUpperCase()||'U'">
     </div>
 
     <div class="balance">
       <div class="coins" id="saldo">0</div>
-      <span>Monedas</span>
+      <div style="color:var(--muted)">Monedas</div>
     </div>
 
     <div class="packages">
-      <div class="pkg" onclick="confirmar(this,70)">70</div>
-      <div class="pkg" onclick="confirmar(this,350)">350</div>
-      <div class="pkg" onclick="confirmar(this,700)">700</div>
-      <div class="pkg" onclick="confirmar(this,1400)">1400</div>
+      <div class="pkg" onclick="comprar(70)">70 Monedas</div>
+      <div class="pkg" onclick="comprar(350)">350 Monedas</div>
+      <div class="pkg" onclick="comprar(700)">700 Monedas</div>
+      <div class="pkg" onclick="comprar(1400)">1400 Monedas</div>
     </div>
-
-    <div class="history">
-      <div id="hist"></div>
-    </div>
-
   </div>
 </div>
 
 <script>
-// ======================
-// URL DEL SERVIDOR (YA INTEGRADA)
-// ======================
-const API_BASE = "https://tu-api.onrender.com"; 
-// ⬆️ Reemplaza SOLO esto por tu URL real
+let saldo = 0;
+let paquetePendiente = 0;
 
-const saldo = document.getElementById("saldo");
-const hist = document.getElementById("hist");
-const avatar = document.getElementById("avatar");
-const userInput = document.getElementById("user");
-
-let currentUser = "@anonimo";
-
-// cargar datos
-userInput.oninput = cargarUsuario;
-
-async function cargarUsuario(){
-  currentUser = userInput.value.trim() || "@anonimo";
-  avatar.textContent = currentUser[1]?.toUpperCase() || "U";
-  const r = await fetch(`${API_BASE}/saldo/${encodeURIComponent(currentUser)}`);
-  const d = await r.json();
-  saldo.textContent = d.saldo;
-  renderHistorial(d.historial);
+function comprar(c){
+  paquetePendiente = c;
+  mostrarConfirmacion(c);
 }
 
-// pagar
-async function pagar(coins){
-  const r = await fetch(`${API_BASE}/pagar`,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ user: currentUser, coins })
-  });
-  const d = await r.json();
-  saldo.textContent = d.saldo;
-  renderHistorial(d.historial);
-}
-
-// confirmar
-function confirmar(el, coins){
-  const o = document.createElement("div");
+function mostrarConfirmacion(c){
+  const o=document.createElement("div");
   o.className="overlay";
   o.innerHTML=`
     <div class="modal">
-      <strong>${coins} monedas</strong>
-      <button class="confirm" id="ok">Confirmar</button>
-      <button class="cancel" id="no">Cancelar</button>
+      <div style="margin-bottom:6px">Confirmar compra</div>
+      <strong style="font-size:22px">${c} monedas</strong>
+      <button class="btn confirm" onclick="irATikTok()">Continuar</button>
+      <button class="btn cancel" onclick="o.remove()">Cancelar</button>
     </div>`;
   document.body.appendChild(o);
-
-  document.getElementById("no").onclick=()=>o.remove();
-  document.getElementById("ok").onclick=async()=>{
-    await pagar(coins);
-    o.remove();
-    confirmado();
-  };
 }
 
-// historial
-function renderHistorial(arr){
-  hist.innerHTML="";
-  arr.forEach(h=>{
-    const d=document.createElement("div");
-    d.className="item";
-    d.innerHTML=`<span>+${h.c}</span><span>${h.t}</span>`;
-    hist.appendChild(d);
-    setTimeout(()=>{d.style.opacity=1;d.style.transform="translateY(0)"},50);
-  });
+function irATikTok(){
+  localStorage.setItem("pendingCoins", paquetePendiente);
+  window.location.href = "https://www.tiktok.com/coin";
 }
 
-// check
-function confirmado(){
+window.addEventListener("focus", ()=>{
+  const p = localStorage.getItem("pendingCoins");
+  if(p){
+    localStorage.removeItem("pendingCoins");
+    confirmarCompra(Number(p));
+  }
+});
+
+function confirmarCompra(c){
+  saldo += c;
+  document.getElementById("saldo").textContent = saldo;
+
   const o=document.createElement("div");
   o.className="overlay";
-  o.innerHTML=`<div class="modal"><div class="check">✓</div>Pago confirmado</div>`;
+  o.innerHTML=`
+    <div class="modal">
+      <div class="check">✓</div>
+      <div>Compra confirmada</div>
+    </div>`;
   document.body.appendChild(o);
   setTimeout(()=>o.remove(),1200);
 }
