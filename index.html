@@ -3,16 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coin Store Demo</title>
+<title>Coins Demo</title>
 
 <style>
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+*{
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+}
 body{margin:0;background:#f2f2f5}
 .app{max-width:390px;margin:auto;background:#fff;min-height:100vh}
 
 /* HEADER */
-.header{display:flex;justify-content:space-between;align-items:center;padding:14px;font-weight:600}
-.badge{background:#000;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px}
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px;border-bottom:1px solid #eee
+}
+.header-left{display:flex;align-items:center;gap:8px}
+.coin-icon{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,#ff2f5b,#ff8fab);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:14px
+}
+.header-title{
+  font-size:17px;font-weight:800;letter-spacing:.2px
+}
 
 /* USER */
 .user{display:flex;align-items:center;gap:12px;padding:14px}
@@ -30,55 +45,102 @@ body{margin:0;background:#f2f2f5}
 .invalid{font-size:11px;color:#d93025;display:none}
 
 /* INVITE */
-.invite{padding:14px;background:#f6f6f6;
-display:flex;justify-content:space-between;font-size:14px}
+.invite{
+  padding:14px;background:#f6f6f6;
+  display:flex;justify-content:space-between;
+  font-size:14px
+}
 
 /* SECTION */
 .section{padding:14px}
 .note{font-size:12px;color:#555;margin-top:4px}
 
 /* GRID */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:14px
+}
 .card{
   background:#fafafa;border-radius:16px;padding:12px;
   text-align:center;font-weight:700;cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.08)
+  box-shadow:0 3px 8px rgba(0,0,0,.08);
+  position:relative
 }
 .card small{display:block;font-weight:400;color:#666;margin-top:4px}
-.card.active{outline:2px solid #ff2f5b;background:#fff0f4}
+.card.active{
+  outline:2px solid #ff2f5b;
+  background:#fff0f4
+}
+.badge-mini{
+  position:absolute;top:-8px;left:50%;
+  transform:translateX(-50%);
+  background:#ff2f5b;color:#fff;
+  font-size:10px;padding:2px 6px;
+  border-radius:8px
+}
 
 /* NOTIFY */
-.notify{margin:14px;padding:14px;background:#f9f9f9;border-radius:16px;font-size:14px}
+.notify{
+  margin:14px;padding:14px;
+  background:#f9f9f9;border-radius:16px;
+  font-size:14px
+}
 .notify button{
-  width:100%;margin-top:8px;padding:10px;border:none;
-  border-radius:12px;background:#000;color:#fff;font-weight:600
+  width:100%;margin-top:8px;padding:10px;
+  border:none;border-radius:12px;
+  background:#000;color:#fff;font-weight:600
 }
 
 /* PAYMENTS */
-.payments{display:flex;gap:14px;padding:14px;font-weight:600;color:#444}
+.payments{
+  display:flex;gap:12px;padding:14px
+}
+.pay{
+  flex:1;border:1px solid #ddd;
+  border-radius:12px;padding:10px;
+  text-align:center;font-weight:700;color:#444
+}
 
 /* FOOTER */
 .footer{padding:14px}
 .buy{
-  width:100%;padding:16px;border:none;border-radius:20px;
-  background:#ff2f5b;color:#fff;font-size:17px;font-weight:700
+  width:100%;padding:16px;border:none;
+  border-radius:20px;background:#ff2f5b;
+  color:#fff;font-size:17px;font-weight:700
 }
 
 /* MODAL */
 .modal{
   position:fixed;inset:0;background:rgba(0,0,0,.55);
-  display:none;align-items:center;justify-content:center;z-index:10
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:.3s;z-index:20
 }
+.modal.show{opacity:1;pointer-events:auto}
 .box{
-  width:280px;background:#fff;border-radius:20px;
-  padding:22px;text-align:center
+  width:280px;background:#fff;border-radius:22px;
+  padding:22px;text-align:center;
+  transform:scale(.8);opacity:0;
+  transition:.3s
 }
+.modal.show .box{transform:scale(1);opacity:1}
+
+/* LOADER */
 .loader{
   width:44px;height:44px;border-radius:50%;
   border:4px solid #eee;border-top:4px solid #ff2f5b;
   margin:18px auto;animation:spin 1s linear infinite
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* COINS ANIMATION */
+.coins{
+  font-size:28px;animation:fall .8s ease-out
+}
+@keyframes fall{
+  0%{transform:translateY(-20px);opacity:0}
+  100%{transform:translateY(0);opacity:1}
+}
 </style>
 </head>
 
@@ -88,8 +150,10 @@ display:flex;justify-content:space-between;font-size:14px}
 
   <!-- HEADER -->
   <div class="header">
-    <div class="badge">0</div>
-    <div>4HJJV98</div>
+    <div class="header-left">
+      <div class="coin-icon">¢</div>
+      <div class="header-title">TikTok Coins</div>
+    </div>
     <div>⋮</div>
   </div>
 
@@ -108,7 +172,7 @@ display:flex;justify-content:space-between;font-size:14px}
     <strong>USD 3.35 ›</strong>
   </div>
 
-  <!-- RECHARGE -->
+  <!-- RECARGA -->
   <div class="section">
     <h3>Recargar</h3>
     <div class="note">
@@ -120,11 +184,11 @@ display:flex;justify-content:space-between;font-size:14px}
       <div class="card" data-c="60" data-p="0.65">60<small>EUR 0.65</small></div>
       <div class="card" data-c="80" data-p="0.87">80<small>EUR 0.87</small></div>
       <div class="card active" data-c="400" data-p="4.32">
-        <small>Compra más reciente</small>
+        <div class="badge-mini">Reciente</div>
         400<small>EUR 4.32</small>
       </div>
       <div class="card" data-c="1000" data-p="10.80">
-        <small>Favorita</small>
+        <div class="badge-mini">Favorita</div>
         1,000<small>EUR 10.80</small>
       </div>
       <div class="card" data-c="custom" data-p="0">Personalizar</div>
@@ -139,8 +203,8 @@ display:flex;justify-content:space-between;font-size:14px}
 
   <!-- PAYMENTS -->
   <div class="payments">
-    <span>VISA</span>
-    <span> Pay</span>
+    <div class="pay">VISA</div>
+    <div class="pay"> Pay</div>
   </div>
 
   <!-- FOOTER -->
@@ -157,6 +221,7 @@ display:flex;justify-content:space-between;font-size:14px}
 
 <script>
 let selected={coins:400,price:"4.32"};
+let busy=false;
 
 document.querySelectorAll('.card').forEach(card=>{
   card.onclick=()=>{
@@ -171,23 +236,24 @@ document.querySelectorAll('.card').forEach(card=>{
 
 document.getElementById('user').oninput=e=>{
   const v=e.target.value;
-  document.getElementById('avatar').textContent=v.startsWith('@')?v[1]?.toUpperCase()||'◎':'◎';
+  document.getElementById('avatar').textContent=
+    v.startsWith('@')?v[1]?.toUpperCase()||'◎':'◎';
 };
 
 document.getElementById('buy').onclick=()=>{
+  if(busy)return;
   const user=document.getElementById('user').value.trim();
   const invalid=document.getElementById('invalid');
-
   if(!/^@[\w.]{3,}$/.test(user)){
-    invalid.style.display="block";
-    return;
+    invalid.style.display="block";return;
   }
   invalid.style.display="none";
+  busy=true;
 
   const modal=document.getElementById('modal');
   const box=document.getElementById('box');
+  modal.classList.add('show');
 
-  modal.style.display="flex";
   box.innerHTML=`
     <strong>Procesando compra</strong>
     <div class="loader"></div>
@@ -196,16 +262,21 @@ document.getElementById('buy').onclick=()=>{
 
   setTimeout(()=>{
     box.innerHTML=`
-      <strong>Compra completada</strong>
+      <div class="coins">🪙🪙🪙</div>
+      <strong>Compra confirmada</strong>
       <p>${selected.coins} monedas añadidas a<br><b>${user}</b></p>
-      <button onclick="document.getElementById('modal').style.display='none'"
-      style="margin-top:14px;width:100%;padding:12px;border:none;
-      border-radius:14px;background:#000;color:#fff;font-weight:600">
-      Aceptar
-      </button>
+      <button onclick="closeModal()"
+        style="margin-top:14px;width:100%;padding:12px;
+        border:none;border-radius:14px;background:#000;
+        color:#fff;font-weight:600">Aceptar</button>
     `;
-  },2400);
+    busy=false;
+  },2200);
 };
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+}
 </script>
 
 </body>
