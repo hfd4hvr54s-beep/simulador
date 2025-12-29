@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TikTok Coins</title>
-
+<title>TikTok Coins - Demo</title>
 <style>
 :root{
   --bg:#000;
@@ -69,10 +68,8 @@ display:flex;align-items:center;justify-content:center;font-size:44px}
 
 <script>
 let saldo = 0;
-let paquetePendiente = 0;
 
 function comprar(c){
-  paquetePendiente = c;
   mostrarConfirmacion(c);
 }
 
@@ -83,24 +80,11 @@ function mostrarConfirmacion(c){
     <div class="modal">
       <div style="margin-bottom:6px">Confirmar compra</div>
       <strong style="font-size:22px">${c} monedas</strong>
-      <button class="btn confirm" onclick="irATikTok()">Continuar</button>
+      <button class="btn confirm" onclick="confirmarCompra(${c})">Confirmar</button>
       <button class="btn cancel" onclick="o.remove()">Cancelar</button>
     </div>`;
   document.body.appendChild(o);
 }
-
-function irATikTok(){
-  localStorage.setItem("pendingCoins", paquetePendiente);
-  window.location.href = "https://www.tiktok.com/coin";
-}
-
-window.addEventListener("focus", ()=>{
-  const p = localStorage.getItem("pendingCoins");
-  if(p){
-    localStorage.removeItem("pendingCoins");
-    confirmarCompra(Number(p));
-  }
-});
 
 function confirmarCompra(c){
   saldo += c;
@@ -115,7 +99,33 @@ function confirmarCompra(c){
     </div>`;
   document.body.appendChild(o);
   setTimeout(()=>o.remove(),1200);
+
+  // Guarda historial local (opcional)
+  const h = JSON.parse(localStorage.getItem("historial")||"[]");
+  h.unshift({c:c,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});
+  localStorage.setItem("historial", JSON.stringify(h.slice(0,5)));
+  renderHist();
 }
+
+function renderHist(){
+  const histEl = document.getElementById("hist");
+  if(!histEl) return;
+  histEl.innerHTML = "";
+  const h = JSON.parse(localStorage.getItem("historial")||"[]");
+  h.forEach(item=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`<span>+${item.c}</span><span>${item.time}</span>`;
+    histEl.appendChild(d);
+    setTimeout(()=>{d.style.opacity=1;d.style.transform="translateY(0)"},40);
+  });
+}
+
+// Inicializar historial
+const divHist=document.createElement("div");
+divHist.id="hist";
+document.querySelector(".card").appendChild(divHist);
+renderHist();
 </script>
 </body>
 </html>
