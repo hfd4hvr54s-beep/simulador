@@ -3,15 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TikTok Coins</title>
+<title>Monedas de TikTok</title>
 
 <style>
 :root{
   --pink:#ff2f5b;
-  --black:#0b0b0b;
-  --gray:#6e6e73;
+  --pink-soft:#fff1f4;
+  --red:#ff3b30;
+  --text:#111;
+  --sub:#6e6e73;
   --bg:#f2f2f7;
-  --card:#fafafa;
+  --card:#f6f6f7;
+  --border:#e5e5ea;
+  --shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
 *{
@@ -19,10 +23,7 @@
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
 }
 
-body{
-  margin:0;
-  background:var(--bg);
-}
+body{margin:0;background:var(--bg);color:var(--text);}
 
 .app{
   width:390px;
@@ -31,177 +32,152 @@ body{
   background:#fff;
 }
 
-/* HEADER */
+/* ===== TOP BAR ===== */
 .header{
   height:56px;
   display:flex;
   align-items:center;
   justify-content:center;
+  border-bottom:1px solid var(--border);
   font-size:17px;
   font-weight:700;
-  border-bottom:1px solid #e5e5ea;
-  letter-spacing:.2px;
+}
+.header .icons{
+  position:absolute; right:12px; display:flex; gap:12px;
+}
+.icon{
+  width:22px;height:22px;border-radius:6px;
+  border:1px solid var(--border);
+  display:grid;place-items:center;font-size:13px;color:#444;
 }
 
-/* USER */
+/* ===== USER ===== */
 .user{
   padding:14px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border);
 }
-.user input{
-  width:100%;
-  font-size:15px;
-  font-weight:600;
-  border:none;
-  border-bottom:1px solid #d1d1d6;
-  padding:8px 2px;
-  outline:none;
+.avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#cfcfcf,#9f9f9f);
 }
-.invalid{
-  font-size:11px;
-  color:#d93025;
-  margin-top:4px;
-  display:none;
+.userinfo{flex:1}
+.userinfo strong{font-size:15px}
+.userinfo .sub{
+  margin-top:2px;font-size:12px;color:var(--sub);
+  display:flex;align-items:center;gap:6px;
+}
+.coin-dot{
+  width:14px;height:14px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd36a,#f5b400);
 }
 
-/* INVITE */
-.invite{
+/* ===== BLOCKS ===== */
+.block{
   margin:12px;
-  padding:12px 14px;
-  background:#f6f6f7;
-  border-radius:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:14px;
-  font-weight:500;
+  background:#fff;
+  border-radius:14px;
+  border:1px solid var(--border);
+  overflow:hidden;
 }
+.row{
+  padding:14px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.row + .row{border-top:1px solid var(--border);}
+.row .left{display:flex;align-items:center;gap:10px}
+.arrow{color:var(--sub);font-size:18px}
 
-/* SECTION */
-.section{
-  padding:12px 14px;
-}
-.section h3{
-  margin:0;
-  font-size:16px;
-  font-weight:700;
-}
+/* ===== SECTION ===== */
+.section{padding:12px 14px}
+.section h3{margin:0;font-size:17px;font-weight:700}
 .note{
-  margin-top:4px;
-  font-size:12px;
-  color:var(--gray);
+  margin-top:6px;font-size:13px;color:var(--red);
+  display:flex;align-items:center;gap:6px;
+}
+.note .i{
+  width:16px;height:16px;border-radius:50%;
+  border:1px solid var(--red);display:grid;place-items:center;font-size:11px;
 }
 
-/* GRID */
+/* ===== GRID ===== */
 .grid{
   margin-top:14px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
 }
 .card{
+  position:relative;
   background:var(--card);
-  border-radius:14px;
-  padding:14px 6px;
+  border-radius:12px;
+  padding:14px 8px;
   text-align:center;
-  font-size:15px;
   font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  font-size:18px;
+  box-shadow:var(--shadow);
   cursor:pointer;
+  transition:background .15s ease, outline .15s ease, transform .1s ease;
 }
+.card:hover{transform:translateY(-1px)}
 .card small{
-  display:block;
-  margin-top:4px;
-  font-size:12px;
-  color:var(--gray);
-  font-weight:500;
+  display:block;margin-top:4px;font-size:13px;color:var(--sub);font-weight:500;
 }
 .card.active{
+  background:var(--pink-soft);
   outline:2px solid var(--pink);
-  background:#fff;
 }
+.badge{
+  position:absolute;top:-8px;left:8px;
+  background:var(--red);color:#fff;
+  font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:10px;
+}
+.badge.gray{background:#d1d1d6;color:#555}
 
-/* NOTIFY */
+/* ===== NOTIFY ===== */
 .notify{
-  margin:12px;
-  padding:14px;
-  background:#f7f7f8;
-  border-radius:14px;
-  font-size:13px;
-  line-height:1.4;
+  margin:12px;padding:14px;
+  background:#fff;border-radius:14px;border:1px solid var(--border);
+  display:flex;gap:12px;align-items:center;
 }
+.notify .img{
+  width:52px;height:40px;border-radius:8px;
+  background:linear-gradient(135deg,#cfe8ff,#e8f2ff);
+}
+.notify p{margin:0;font-size:14px;line-height:1.3}
 .notify button{
-  margin-top:10px;
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:12px;
-  background:var(--black);
-  color:#fff;
-  font-weight:600;
+  margin-left:auto;border:none;border-radius:18px;
+  padding:8px 14px;background:#f0f0f0;font-weight:600;
 }
 
-/* PAYMENTS */
-.payments{
-  display:flex;
-  gap:10px;
-  padding:0 12px;
-}
+/* ===== PAYMENTS (SVGs inspirados) ===== */
 .pay{
-  flex:1;
-  border:1px solid #d1d1d6;
-  border-radius:12px;
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-  font-weight:700;
+  margin:12px;text-align:center;
 }
+.pay svg{height:22px;margin:0 6px;opacity:.9}
 
-/* BUY */
-.footer{
-  padding:14px;
-}
+/* ===== BUY ===== */
+.footer{padding:14px}
 .buy{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:22px;
-  background:var(--pink);
-  color:#fff;
-  font-size:17px;
-  font-weight:700;
+  width:100%;padding:16px;border:none;border-radius:14px;
+  background:var(--pink);color:#fff;
+  font-size:18px;font-weight:800;
 }
 
-/* MODAL */
+/* ===== MODAL ===== */
 .modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:.2s;
 }
-.modal.show{
-  opacity:1;
-  pointer-events:auto;
-}
+.modal.show{opacity:1;pointer-events:auto}
 .box{
-  width:280px;
-  background:#fff;
-  border-radius:22px;
-  padding:22px;
-  text-align:center;
+  width:280px;background:#fff;border-radius:18px;
+  padding:20px;text-align:center;
 }
 .loader{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  border:4px solid #eee;
-  border-top:4px solid var(--pink);
-  margin:18px auto;
-  animation:spin 1s linear infinite;
+  width:36px;height:36px;border-radius:50%;
+  border:4px solid #eee;border-top:4px solid var(--pink);
+  margin:16px auto;animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
@@ -211,86 +187,121 @@ body{
 
 <div class="app">
 
-  <div class="header">TikTok Coins</div>
+  <!-- TOP BAR -->
+  <div class="header">
+    Monedas de TikTok
+    <div class="icons">
+      <div class="icon">≡</div>
+      <div class="icon">?</div>
+    </div>
+  </div>
 
+  <!-- USER -->
   <div class="user">
-    <input id="user" placeholder="@usuario">
-    <div class="invalid" id="invalid">Usuario inválido</div>
+    <div class="avatar"></div>
+    <div class="userinfo">
+      <strong>jtncruzjtn</strong>
+      <div class="sub">
+        <span class="coin-dot"></span><span>0</span> | <span>4HJGJV98</span>
+      </div>
+    </div>
+    <div class="arrow">⌃</div>
   </div>
 
-  <div class="invite">
-    <span>Invita y consigue recompensas</span>
-    <strong>USD 3.35 ›</strong>
+  <!-- INVITE -->
+  <div class="block">
+    <div class="row">
+      <div class="left">👏 <strong>Invita y consigue recompensas</strong></div>
+      <div>USD 3.35 <span class="arrow">›</span></div>
+    </div>
   </div>
 
+  <!-- RECHARGE -->
   <div class="section">
     <h3>Recargar</h3>
-    <div class="note">
-      Ahorra un 25 % con una tarifa de servicio de terceros más baja.
-    </div>
+    <div class="note">Ahorra un 25 % con una tarifa de servicio de terceros más baja. <span class="i">i</span></div>
 
     <div class="grid">
-      <div class="card" data-c="30" data-p="0.33">30<small>EUR 0.33</small></div>
-      <div class="card" data-c="60" data-p="0.65">60<small>EUR 0.65</small></div>
-      <div class="card" data-c="80" data-p="0.87">80<small>EUR 0.87</small></div>
-      <div class="card active" data-c="400" data-p="4.32">400<small>EUR 4.32</small></div>
-      <div class="card" data-c="1000" data-p="10.8">1,000<small>EUR 10.8</small></div>
+      <div class="card" data-c="30" data-p="0.33">🪙 30<small>EURO 0.33</small></div>
+      <div class="card" data-c="60" data-p="0.65">🪙 60<small>EURO 0.65</small></div>
+      <div class="card" data-c="80" data-p="0.87">🪙 80<small>EURO 0.87</small></div>
+
+      <div class="card active" data-c="400" data-p="4.32">
+        <div class="badge">Compra más reciente</div>
+        🪙 400<small>EUR 4.32</small>
+      </div>
+
+      <div class="card" data-c="1000" data-p="10.8">
+        <div class="badge gray">Favorita</div>
+        🪙 1,000<small>EUR 10.8</small>
+      </div>
+
       <div class="card">Personalizar</div>
     </div>
   </div>
 
+  <!-- NOTIFY -->
   <div class="notify">
-    Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
+    <div class="img"></div>
+    <p><strong>Activa las notificaciones push</strong><br>
+      para mantenerte al tanto de las ofertas disponibles solo en el sitio web.</p>
     <button>Activar</button>
   </div>
 
-  <div class="payments">
-    <div class="pay">VISA</div>
-    <div class="pay"> Pay</div>
+  <!-- INVITE AGAIN -->
+  <div class="block">
+    <div class="row">
+      <div class="left">👏
+        <div>
+          <strong>Invita y consigue recompensas</strong><br>
+          <small style="color:var(--sub)">¡Echa un vistazo a esta nueva función!</small>
+        </div>
+      </div>
+      <span class="arrow">›</span>
+    </div>
   </div>
 
+  <!-- PAYMENTS (SVG inspirados) -->
+  <div class="pay">
+    <svg viewBox="0 0 48 16"><rect width="48" height="16" rx="4" fill="#1a1f71"/><text x="24" y="12" text-anchor="middle" fill="#fff" font-size="10">VISA</text></svg>
+    <svg viewBox="0 0 48 16"><circle cx="20" cy="8" r="7" fill="#eb001b"/><circle cx="28" cy="8" r="7" fill="#f79e1b"/></svg>
+    <svg viewBox="0 0 48 16"><rect width="48" height="16" rx="4" fill="#003087"/><text x="24" y="12" text-anchor="middle" fill="#fff" font-size="10">Pay</text></svg>
+    <svg viewBox="0 0 48 16"><rect width="48" height="16" rx="4" fill="#000"/><text x="24" y="12" text-anchor="middle" fill="#fff" font-size="10">Pay</text></svg>
+  </div>
+
+  <!-- BUY -->
   <div class="footer">
-    <button class="buy" id="buy">Comprar por €4.32</button>
+    <button class="buy" id="buy">🪙 Comprar por EUR 4.32</button>
   </div>
 
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="box" id="box"></div>
 </div>
 
 <script>
 let selected={coins:400,price:"4.32"};
-
 document.querySelectorAll('.card').forEach(c=>{
   c.onclick=()=>{
     document.querySelectorAll('.card').forEach(x=>x.classList.remove('active'));
     c.classList.add('active');
-    selected.coins=c.dataset.c;
-    selected.price=c.dataset.p;
-    if(selected.price){
-      buy.textContent=`Comprar por €${selected.price}`;
+    if(c.dataset.p){
+      selected.coins=c.dataset.c;
+      selected.price=c.dataset.p;
+      buy.textContent=`🪙 Comprar por EUR ${selected.price}`;
     }
   }
 });
-
 buy.onclick=()=>{
-  const u=user.value.trim();
-  if(!/^@[\w.]{3,}$/.test(u)){
-    invalid.style.display="block";return;
-  }
-  invalid.style.display="none";
   modal.classList.add('show');
   box.innerHTML=`<strong>Procesando compra</strong><div class="loader"></div>`;
   setTimeout(()=>{
-    box.innerHTML=`
-      <strong>Compra confirmada</strong>
-      <p>${selected.coins} monedas añadidas a<br><b>${u}</b></p>
-      <button onclick="modal.classList.remove('show')"
-      style="margin-top:12px;padding:10px;width:100%;
-      border:none;border-radius:12px;
-      background:#000;color:#fff;font-weight:600">
-      Aceptar</button>`;
+    box.innerHTML=`<strong>Compra confirmada</strong><p>${selected.coins} monedas añadidas</p>
+    <button onclick="modal.classList.remove('show')"
+    style="margin-top:12px;padding:10px;width:100%;border:none;border-radius:12px;background:#000;color:#fff;font-weight:600">
+    Aceptar</button>`;
   },2000);
 };
 </script>
