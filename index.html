@@ -325,7 +325,6 @@ body{
       <div class="coin"></div>
       <span id="count">0</span>
       <span id="anim"></span>
-      <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" style="width:20px;position:absolute;top:-10px;left:50%;transform:translateX(-50%);">
     </div>
   </div>
 </div>
@@ -401,9 +400,10 @@ function buy(){
     count.textContent=coins;
     anim.innerHTML=`<span class="plus">+${selected}</span>`;
     
+    // GIF monedas animadas
     for(let i=0;i<5;i++){
       const gif=document.createElement('img');
-      gif.src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
+      gif.src='https://i.gifer.com/embedded/download/3oEjI6SIIHBdRxXI40/200w.gif';
       gif.className='coin-gif';
       coinsContainer.appendChild(gif);
       setTimeout(()=>gif.remove(),1000);
