@@ -7,24 +7,26 @@
 
 <style>
 :root{
-  --pink:#ff2d55;
-  --pink-soft:#fff1f5;
-  --green:#1fbf75;
-  --gray:#8e8e93;
-  --border:#e5e5ea;
-  --bg:#f2f2f7;
+  --ttk-black:#010101;
+  --ttk-gray-dark:#292929;
+  --ttk-gray-mid:#5f5f5f;
+  --ttk-white:#ffffff;
+  --ttk-accent-red:#fe2c55;
+  --ttk-accent-cyan:#25f4ee;
+  --ttk-accent-gradient:linear-gradient(135deg,#fe2c55,#25f4ee);
 }
-*{box-sizing:border-box;margin:0;padding:0;}
+
+*{box-sizing:border-box}
 body{
-  background:var(--bg);
+  margin:0;
+  background:var(--ttk-black);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,Arial;
-  color:#000;
+  color:var(--ttk-white);
 }
 .app{
-  width:100%;
-  max-width:420px;
+  width:390px;
   margin:auto;
-  background:#fff;
+  background:var(--ttk-gray-dark);
   min-height:100vh;
 }
 
@@ -34,15 +36,15 @@ body{
   top:0;
   left:50%;
   transform:translateX(-50%);
-  background:transparent;
-  color:#fff;
+  background:#1a1a1a;
+  border:2px solid var(--ttk-accent-cyan);
+  border-radius:8px;
+  padding:4px 10px;
   font-size:12px;
   font-weight:600;
-  padding:4px 10px;
-  border-top:4px solid var(--green);
-  border-radius:4px;
+  color:var(--ttk-white);
+  text-align:center;
   display:inline-block;
-  clip-path:polygon(10% 0%,90% 0%,100% 100%,0% 100%);
   z-index:1000;
 }
 
@@ -51,50 +53,79 @@ body{
   margin-top:44px;
   padding:14px;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--border);
-}
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.tiktok-logo{
-  width:20px;
-  height:20px;
-}
-.header-text{
-  font-size:17px;
-  font-weight:700;
-}
-.header-right{
-  display:flex;
   align-items:center;
   gap:10px;
+  font-size:17px;
+  font-weight:700;
+  border-bottom:1px solid var(--ttk-gray-mid);
+  color:var(--ttk-white);
 }
-.header-icon{
-  width:20px;
-  height:20px;
-  cursor:pointer;
+.logo{
+  width:22px;height:22px;
+  border-radius:6px;
+  background:var(--ttk-accent-gradient);
 }
 
-/* USUARIO */
+/* USUARIO (perfil TikTok) */
+.tiktok-profile{
+  display:flex;
+  gap:12px;
+  padding:14px;
+  border-bottom:1px solid var(--ttk-gray-mid);
+  align-items:center;
+}
+.tiktok-profile .avatar{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+}
+.tiktok-profile .avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.tiktok-profile .info{
+  flex:1;
+}
+.tiktok-profile .info h2{
+  margin:0;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.tiktok-profile .info .username{
+  font-size:14px;
+  color:var(--ttk-gray-mid);
+}
+.tiktok-profile .stats{
+  display:flex;
+  gap:15px;
+  margin-top:6px;
+}
+.tiktok-profile .stats div{
+  font-size:13px;
+  text-align:center;
+}
+
+/* USUARIO EXISTENTE */
 .user{
   display:flex;
   gap:12px;
   padding:14px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--ttk-gray-mid);
 }
-.avatar{
+.avatar-small{
   width:46px;
   height:46px;
   border-radius:50%;
-  background:#d1d1d6;
+  background:#333;
   overflow:hidden;
   cursor:pointer;
 }
-.avatar img{
+.avatar-small img{
   width:100%;
   height:100%;
   object-fit:cover;
@@ -102,7 +133,7 @@ body{
 .user-info{
   flex:1;
 }
-.username{
+.username-old{
   font-size:15px;
   font-weight:600;
   cursor:pointer;
@@ -113,37 +144,21 @@ body{
   gap:6px;
   margin-top:6px;
   font-size:13px;
-  color:var(--gray);
-  position:relative;
+  color:var(--ttk-white);
 }
 .coin{
   width:14px;
   height:14px;
   border-radius:50%;
-  background:linear-gradient(135deg,#ffd36a,#f5b400);
+  background:var(--ttk-accent-gradient);
 }
 .plus{
-  color:var(--green);
+  color:var(--ttk-accent-cyan);
   font-weight:700;
   animation:float 1.2s ease forwards;
 }
 @keyframes float{
   to{opacity:0;transform:translateY(-14px)}
-}
-/* Animación monedas GIF */
-.coin-gif{
-  position:absolute;
-  width:20px;
-  height:20px;
-  pointer-events:none;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  animation:fall 1s linear forwards;
-  z-index:100;
-}
-@keyframes fall{
-  to{transform:translate(-50%,60px);opacity:0;}
 }
 
 /* INVITAR */
@@ -157,23 +172,24 @@ body{
   transform:translateY(-100%);
   opacity:0;
   transition:0.9s ease;
+  color:var(--ttk-white);
 }
 .invite.show{
   transform:translateY(0);
   opacity:1;
 }
 .invite.active{
-  background:var(--pink-soft);
-  box-shadow:inset 0 0 0 2px var(--pink);
+  background:#1a1a1a;
+  box-shadow:inset 0 0 0 2px var(--ttk-accent-red);
 }
 
 /* SECCIÓN */
 .section{padding:14px}
-.section strong{font-size:16px}
+.section strong{font-size:16px;color:var(--ttk-white);}
 .note{
   margin-top:6px;
   font-size:13px;
-  color:#ff3b30;
+  color:var(--ttk-accent-red);
 }
 
 /* GRID */
@@ -184,11 +200,12 @@ body{
   gap:10px;
 }
 .card{
-  background:#f3f3f4;
+  background:#1a1a1a;
   border-radius:12px;
   padding:14px 6px;
   text-align:center;
   cursor:pointer;
+  color:var(--ttk-white);
 }
 .card span{
   font-size:18px;
@@ -197,19 +214,20 @@ body{
 .card small{
   display:block;
   font-size:13px;
-  color:var(--gray);
+  color:var(--ttk-gray-mid);
   margin-top:4px;
 }
 .card.active{
-  background:var(--pink-soft);
-  box-shadow:inset 0 0 0 2px var(--pink);
+  background:var(--ttk-accent-red);
+  box-shadow:0 0 8px var(--ttk-accent-cyan);
+  color:var(--ttk-white);
 }
 
 /* INFO */
 .info{
   margin:14px;
   padding:14px;
-  border:1px solid var(--border);
+  border:1px solid var(--ttk-gray-mid);
   border-radius:14px;
   display:flex;
   gap:12px;
@@ -237,10 +255,9 @@ body{
   bottom:0;
   left:50%;
   transform:translateX(-50%);
-  width:100%;
-  max-width:420px;
-  background:#fff;
-  border-top:1px solid var(--border);
+  width:390px;
+  background:#1a1a1a;
+  border-top:1px solid var(--ttk-gray-mid);
 }
 .payments{
   display:flex;
@@ -248,9 +265,13 @@ body{
   gap:10px;
   padding:10px 0;
 }
-.pay img{
-  width:28px;  /* más pequeños y uniformes */
-  height:28px;
+.pay{
+  font-size:11px;
+  font-weight:700;
+  background:#292929;
+  padding:3px 8px;
+  border-radius:6px;
+  color:var(--ttk-white);
 }
 .buy{
   margin:10px 14px 14px;
@@ -258,7 +279,7 @@ body{
   padding:16px;
   border:none;
   border-radius:14px;
-  background:#fe2c55;
+  background:var(--ttk-accent-gradient);
   color:#fff;
   font-size:18px;
   font-weight:800;
@@ -275,18 +296,19 @@ body{
 }
 .modal.show{display:flex}
 .box{
-  background:#fff;
+  background:#1a1a1a;
   width:260px;
   padding:20px;
   border-radius:18px;
   text-align:center;
+  color:var(--ttk-white);
 }
 .loader{
   width:30px;
   height:30px;
   border-radius:50%;
-  border:4px solid #eee;
-  border-top:4px solid #fe2c55;
+  border:4px solid #333;
+  border-top:4px solid var(--ttk-accent-red);
   margin:14px auto;
   animation:spin 1s linear infinite;
 }
@@ -303,23 +325,35 @@ body{
 <div class="app">
 
 <div class="header">
-  <div class="header-left">
-    <img class="tiktok-logo" src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok Logo">
-    <div class="header-text">TikTok Coins</div>
+  <div class="logo"></div>
+  <div>Monedas</div>
+</div>
+
+<!-- PERFIL TIKTOK FUNCIONAL -->
+<div class="tiktok-profile">
+  <div class="avatar">
+    <img id="tt-avatar" src="">
   </div>
-  <div class="header-right">
-    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/753/753345.png" alt="Incognito">
-    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/329/329455.png" alt="Documento">
+  <div class="info">
+    <h2 id="tt-name">Nombre</h2><span id="tt-verified"></span>
+    <div class="username" id="tt-username">@username</div>
+    <div class="stats">
+      <div><strong id="tt-followers">0</strong><br>Seguidores</div>
+      <div><strong id="tt-following">0</strong><br>Siguiendo</div>
+      <div><strong id="tt-videos">0</strong><br>Videos</div>
+      <div><strong id="tt-likes">0</strong><br>Likes</div>
+    </div>
   </div>
 </div>
 
+<!-- USUARIO EXISTENTE -->
 <div class="user">
-  <div class="avatar" onclick="file.click()">
-    <img id="pic" src="https://i.pravatar.cc/46?u=JTN">
+  <div class="avatar-small" onclick="file.click()">
+    <img id="pic" src="https://cdn3d.iconscout.com/3d/free/preview/free-tiktok-coin-with-blink-star-3d-icon-png-download-6220600.png">
   </div>
   <input type="file" id="file" hidden onchange="updatePic(this)">
   <div class="user-info">
-    <div class="username" onclick="editUser()">JTN Cruz</div>
+    <div class="username-old" onclick="editUser()">JTN Cruz</div>
     <div class="coins">
       <div class="coin"></div>
       <span id="count">0</span>
@@ -353,7 +387,7 @@ body{
 </div>
 
 <div class="info">
-  <div class="illu"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Green_shield_icon.svg/512px-Green_shield_icon.svg.png" alt="Pago Seguro"></div>
+  <div class="illu"><img src="https://ppc.land/content/images/2024/10/TikTok-Coins-3.webp"></div>
   <div>
     <strong>Pago seguro</strong><br>
     Protección de pagos y datos
@@ -366,9 +400,9 @@ body{
 
 <div class="footer">
   <div class="payments">
-    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA"></div>
-    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Pay"></div>
-    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal"></div>
+    <div class="pay">VISA</div>
+    <div class="pay"> Pay</div>
+    <div class="pay">PayPal</div>
   </div>
   <button class="buy" onclick="buy()">Comprar</button>
 </div>
@@ -389,8 +423,6 @@ document.querySelectorAll('.card').forEach(card=>{
   }
 });
 
-const coinsContainer=document.querySelector('.coins');
-
 function buy(){
   modal.classList.add('show');
   box.innerHTML='Procesando compra<div class="loader"></div>';
@@ -398,23 +430,13 @@ function buy(){
     coins+=selected;
     count.textContent=coins;
     anim.innerHTML=`<span class="plus">+${selected}</span>`;
-    
-    // GIF monedas animadas
-    for(let i=0;i<5;i++){
-      const gif=document.createElement('img');
-      gif.src='https://i.gifer.com/embedded/download/3oEjI6SIIHBdRxXI40/200w.gif';
-      gif.className='coin-gif';
-      coinsContainer.appendChild(gif);
-      setTimeout(()=>gif.remove(),1000);
-    }
-
     box.innerHTML=`Compra completada<br><strong>${selected} monedas</strong><br>
     <button onclick="modal.classList.remove('show')" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:12px;background:#000;color:#fff">Aceptar</button>`;
   },1400);
 }
 
 function editUser(){
-  const u=document.querySelector('.username');
+  const u=document.querySelector('.username-old');
   const i=document.createElement('input');
   i.value=u.textContent;
   i.style.fontSize='15px';
@@ -443,6 +465,37 @@ function updatePic(input){
     coins=0;
     count.textContent=coins;
   }
+}
+
+// JSON de TikTok (simulado)
+const response = {
+    "data": {
+        "username": "example_username",
+        "video_count": 64,
+        "avatar_url": "https://my-awesome-avatar",
+        "display_name": "joe 1234567",
+        "follower_count": 111,
+        "likes_count": 4146,
+        "bio_description": "joe joe",
+        "following_count": 103,
+        "is_verified": false
+    }
+};
+
+// Rellenar perfil TikTok
+document.getElementById('tt-avatar').src = response.data.avatar_url;
+document.getElementById('tt-name').textContent = response.data.display_name;
+document.getElementById('tt-username').textContent = '@' + response.data.username;
+document.getElementById('tt-followers').textContent = response.data.follower_count;
+document.getElementById('tt-following').textContent = response.data.following_count;
+document.getElementById('tt-videos').textContent = response.data.video_count;
+document.getElementById('tt-likes').textContent = response.data.likes_count;
+
+const verifiedBadge = document.getElementById('tt-verified');
+if(response.data.is_verified){
+    verifiedBadge.textContent = "✔ Verificado";
+} else {
+    verifiedBadge.textContent = "";
 }
 </script>
 
