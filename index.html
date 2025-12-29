@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,7 +12,7 @@
 }
 body{
   margin:0;
-  background:#e6e6e6;
+  background:#e7e7e7;
 }
 .app{
   width:390px;
@@ -35,11 +34,11 @@ body{
   align-items:center;
   gap:8px;
 }
-.time{
+.badge{
   background:#000;
   color:#fff;
-  padding:3px 10px;
-  border-radius:12px;
+  padding:2px 8px;
+  border-radius:10px;
   font-size:12px;
 }
 
@@ -51,31 +50,36 @@ body{
   padding:14px;
 }
 .avatar{
-  width:50px;
-  height:50px;
+  width:48px;
+  height:48px;
   border-radius:50%;
   background:linear-gradient(135deg,#ff2f5b,#ff7a95);
   display:flex;
   align-items:center;
   justify-content:center;
   color:#fff;
-  font-size:20px;
   font-weight:700;
 }
 .user-info{
   display:flex;
   flex-direction:column;
 }
-.user-info input{
-  border:none;
+.user-info strong{
   font-size:15px;
-  font-weight:600;
-  outline:none;
 }
-.invalid{
-  font-size:11px;
-  color:#d93025;
-  display:none;
+.user-info small{
+  color:#666;
+  font-size:12px;
+}
+
+/* INVITE */
+.invite{
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#f6f6f6;
+  font-size:14px;
 }
 
 /* SECTION */
@@ -83,32 +87,85 @@ body{
   padding:14px;
 }
 .section h3{
-  margin:0 0 10px;
+  margin:0 0 6px;
 }
+.note{
+  font-size:12px;
+  color:#d93025;
+}
+
+/* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:12px;
+  margin-top:12px;
 }
 .card{
-  border-radius:16px;
-  padding:14px 6px;
+  background:#fafafa;
+  border-radius:14px;
+  padding:12px 6px;
   text-align:center;
   font-weight:700;
-  background:#fafafa;
-  box-shadow:0 3px 8px rgba(0,0,0,.08);
-  cursor:pointer;
-  transition:.15s ease;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 .card small{
   display:block;
   font-weight:400;
   color:#666;
+  margin-top:4px;
 }
-.card.active{
+.card.highlight{
   outline:2px solid #ff2f5b;
   background:#fff0f4;
-  transform:scale(1.04);
+}
+
+/* LABELS */
+.label{
+  font-size:11px;
+  color:#ff2f5b;
+  margin-bottom:4px;
+}
+
+/* NOTIFY */
+.notify{
+  margin:14px;
+  padding:14px;
+  background:#f9f9f9;
+  border-radius:14px;
+  font-size:14px;
+}
+.notify button{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:#000;
+  color:#fff;
+  font-weight:600;
+}
+
+/* EXTRA */
+.extra{
+  padding:14px;
+}
+.extra .row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 0;
+  font-size:14px;
+}
+
+/* PAYMENTS */
+.payments{
+  padding:14px;
+  display:flex;
+  gap:12px;
+  font-weight:600;
+  font-size:14px;
+  color:#444;
 }
 
 /* FOOTER */
@@ -125,38 +182,6 @@ body{
   font-size:17px;
   font-weight:700;
 }
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:100;
-}
-.box{
-  background:#fff;
-  width:280px;
-  border-radius:18px;
-  padding:22px;
-  text-align:center;
-}
-
-/* LOADER */
-.loader{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  border:4px solid #eee;
-  border-top:4px solid #ff2f5b;
-  margin:18px auto;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
 </style>
 </head>
 
@@ -167,90 +192,97 @@ body{
   <!-- HEADER -->
   <div class="header">
     <div class="left">
-      <div class="time">17:36</div>
-      <div>Monedas</div>
+      <div class="badge">0</div>
+      <div>4HJJV98</div>
     </div>
     <div>⋮</div>
   </div>
 
   <!-- USER -->
   <div class="user">
-    <div class="avatar">◎</div>
+    <div class="avatar">@</div>
     <div class="user-info">
-      <input id="user" placeholder="@usuario">
-      <span class="invalid" id="invalid">Usuario inválido</span>
+      <strong>@usuario</strong>
+      <small>ID: 4HJJV98</small>
     </div>
   </div>
 
-  <!-- RECARGA -->
+  <!-- INVITE -->
+  <div class="invite">
+    Invita y consigue recompensas
+    <strong>USD 3.35 ›</strong>
+  </div>
+
+  <!-- RECARGAR -->
   <div class="section">
     <h3>Recargar</h3>
-    <div class="grid">
-      <div class="card" data-coins="30" data-price="0.33">30<small>€0.33</small></div>
-      <div class="card" data-coins="60" data-price="0.65">60<small>€0.65</small></div>
-      <div class="card" data-coins="80" data-price="0.87">80<small>€0.87</small></div>
-      <div class="card active" data-coins="400" data-price="4.32">400<small>€4.32</small></div>
-      <div class="card" data-coins="1000" data-price="10.80">1,000<small>€10.80</small></div>
+    <div class="note">
+      Ahorra un 25 % con una tarifa de servicio de terceros más baja.
     </div>
+
+    <div class="grid">
+      <div class="card">
+        30
+        <small>EUR 0.33</small>
+      </div>
+
+      <div class="card">
+        60
+        <small>EUR 0.65</small>
+      </div>
+
+      <div class="card">
+        80
+        <small>EUR 0.87</small>
+      </div>
+
+      <div class="card highlight">
+        <div class="label">Compra más reciente</div>
+        400
+        <small>EUR 4.32</small>
+      </div>
+
+      <div class="card">
+        <div class="label">Favorita</div>
+        1,000
+        <small>EUR 10.8</small>
+      </div>
+
+      <div class="card">
+        Personalizar
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFY -->
+  <div class="notify">
+    Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
+    <button>Activar</button>
+  </div>
+
+  <!-- EXTRA -->
+  <div class="extra">
+    <div class="row">
+      <strong>Invita y consigue recompensas</strong>
+    </div>
+    <div class="row">
+      ¡Echa un vistazo a esta nueva función!
+      <strong>Canjear</strong>
+    </div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <div class="payments">
+    <div>VISA</div>
+    <div> Pay</div>
   </div>
 
   <!-- FOOTER -->
   <div class="footer">
-    <button class="buy">Comprar por €4.32</button>
+    <button class="buy">Continuar</button>
   </div>
 
 </div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="box" id="box"></div>
-</div>
-
-<script>
-let selected={coins:400,price:"4.32"};
-
-document.querySelectorAll('.card').forEach(card=>{
-  card.onclick=()=>{
-    document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-    card.classList.add('active');
-    selected.coins=card.dataset.coins;
-    selected.price=card.dataset.price;
-    document.querySelector('.buy').textContent=`Comprar por €${selected.price}`;
-  };
-});
-
-document.querySelector('.buy').onclick=()=>{
-  const user=document.getElementById('user').value.trim();
-  const invalid=document.getElementById('invalid');
-
-  if(!/^@[\w.]{3,}$/.test(user)){
-    invalid.style.display="block";
-    return;
-  }
-  invalid.style.display="none";
-
-  const modal=document.getElementById('modal');
-  const box=document.getElementById('box');
-
-  modal.style.display="flex";
-  box.innerHTML=`
-    <strong>Procesando</strong>
-    <div class="loader"></div>
-    <small>${user}<br>${selected.coins} monedas</small>
-  `;
-
-  setTimeout(()=>{
-    box.innerHTML=`
-      <strong>Compra completada</strong>
-      <p>${selected.coins} monedas añadidas a<br><b>${user}</b></p>
-      <button onclick="document.getElementById('modal').style.display='none'"
-        style="margin-top:12px;width:100%;padding:12px;border:none;border-radius:14px;background:#000;color:#fff;font-weight:600;">
-        Aceptar
-      </button>
-    `;
-  },2600);
-};
-</script>
 
 </body>
 </html>
