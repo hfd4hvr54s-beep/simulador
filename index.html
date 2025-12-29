@@ -3,185 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monedas</title>
+<title>Tienda de Monedas</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-}
-body{
-  margin:0;
-  background:#e7e7e7;
-}
-.app{
-  width:390px;
-  margin:auto;
-  background:#fff;
-  min-height:100vh;
-}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;}
+body{margin:0;background:#f2f2f5;}
+.app{max-width:390px;margin:auto;background:#fff;min-height:100vh;}
 
 /* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px;
-  font-weight:600;
-}
-.header .left{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.badge{
-  background:#000;
-  color:#fff;
-  padding:2px 8px;
-  border-radius:10px;
-  font-size:12px;
-}
+.header{display:flex;justify-content:space-between;align-items:center;padding:14px;font-weight:600;}
+.header .badge{background:#000;color:#fff;padding:3px 10px;border-radius:10px;font-size:12px;}
 
-/* USER */
-.user{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-}
-.avatar{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff2f5b,#ff7a95);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-weight:700;
-}
-.user-info{
-  display:flex;
-  flex-direction:column;
-}
-.user-info strong{
-  font-size:15px;
-}
-.user-info small{
-  color:#666;
-  font-size:12px;
-}
+/* USUARIO */
+.user{display:flex;align-items:center;gap:12px;padding:14px;}
+.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#ff2f5b,#ff7a95);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;}
+.user-info{display:flex;flex-direction:column;}
+.user-info input{border:none;font-size:15px;font-weight:600;outline:none;border-bottom:1px solid #ccc;padding:2px;}
+.invalid{font-size:11px;color:#d93025;display:none;}
 
-/* INVITE */
-.invite{
-  padding:14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#f6f6f6;
-  font-size:14px;
-}
+/* INVITA */
+.invite{padding:14px;background:#f6f6f6;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
 
-/* SECTION */
-.section{
-  padding:14px;
-}
-.section h3{
-  margin:0 0 6px;
-}
-.note{
-  font-size:12px;
-  color:#d93025;
-}
+/* SECCIONES */
+.section{padding:14px;}
+.note{font-size:12px;color:#444;margin-top:4px;}
 
 /* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:12px;
-}
-.card{
-  background:#fafafa;
-  border-radius:14px;
-  padding:12px 6px;
-  text-align:center;
-  font-weight:700;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-.card small{
-  display:block;
-  font-weight:400;
-  color:#666;
-  margin-top:4px;
-}
-.card.highlight{
-  outline:2px solid #ff2f5b;
-  background:#fff0f4;
-}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;}
+.card{background:#fafafa;border-radius:14px;padding:12px;text-align:center;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.08);}
+.card small{display:block;font-weight:400;color:#666;margin-top:4px;}
+.card.highlight{outline:2px solid #ff2f5b;background:#fff0f4;}
 
-/* LABELS */
-.label{
-  font-size:11px;
-  color:#ff2f5b;
-  margin-bottom:4px;
-}
-
-/* NOTIFY */
-.notify{
-  margin:14px;
-  padding:14px;
-  background:#f9f9f9;
-  border-radius:14px;
-  font-size:14px;
-}
-.notify button{
-  margin-top:10px;
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:12px;
-  background:#000;
-  color:#fff;
-  font-weight:600;
-}
-
-/* EXTRA */
-.extra{
-  padding:14px;
-}
-.extra .row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 0;
-  font-size:14px;
-}
+/* NOTIFICACIONES */
+.notify{padding:14px;background:#f9f9f9;border-radius:14px;margin:14px;font-size:14px;}
+.notify button{margin-top:6px;width:100%;padding:10px;border:none;border-radius:12px;background:#000;color:#fff;font-weight:600;}
 
 /* PAYMENTS */
-.payments{
-  padding:14px;
-  display:flex;
-  gap:12px;
-  font-weight:600;
-  font-size:14px;
-  color:#444;
-}
+.payments{display:flex;gap:12px;padding:14px;font-weight:600;font-size:14px;color:#444;align-items:center;}
 
 /* FOOTER */
-.footer{
-  padding:14px;
-}
-.buy{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:18px;
-  background:#ff2f5b;
-  color:#fff;
-  font-size:17px;
-  font-weight:700;
-}
+.footer{padding:14px;}
+.buy{width:100%;padding:16px;border:none;border-radius:18px;background:#ff2f5b;color:#fff;font-size:17px;font-weight:700;}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:100;}
+.box{background:#fff;width:280px;border-radius:18px;padding:22px;text-align:center;}
+.loader{width:42px;height:42px;border-radius:50%;border:4px solid #eee;border-top:4px solid #ff2f5b;margin:18px auto;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 
@@ -191,29 +59,27 @@ body{
 
   <!-- HEADER -->
   <div class="header">
-    <div class="left">
-      <div class="badge">0</div>
-      <div>4HJJV98</div>
-    </div>
+    <div class="badge">0</div>
+    <div>4HJJV98</div>
     <div>⋮</div>
   </div>
 
-  <!-- USER -->
+  <!-- USUARIO -->
   <div class="user">
-    <div class="avatar">@</div>
+    <div class="avatar">◎</div>
     <div class="user-info">
-      <strong>@usuario</strong>
-      <small>ID: 4HJJV98</small>
+      <input id="user" placeholder="@usuario">
+      <span class="invalid" id="invalid">Usuario inválido</span>
     </div>
   </div>
 
-  <!-- INVITE -->
+  <!-- INVITA -->
   <div class="invite">
-    Invita y consigue recompensas
+    <span>Invita y consigue recompensas</span>
     <strong>USD 3.35 ›</strong>
   </div>
 
-  <!-- RECARGAR -->
+  <!-- RECARGA -->
   <div class="section">
     <h3>Recargar</h3>
     <div class="note">
@@ -221,60 +87,30 @@ body{
     </div>
 
     <div class="grid">
-      <div class="card">
-        30
-        <small>EUR 0.33</small>
+      <div class="card" data-coins="30" data-price="0.33">30<small>EUR 0.33</small></div>
+      <div class="card" data-coins="60" data-price="0.65">60<small>EUR 0.65</small></div>
+      <div class="card" data-coins="80" data-price="0.87">80<small>EUR 0.87</small></div>
+      <div class="card highlight" data-coins="400" data-price="4.32">
+        <small>Compra más reciente</small>
+        400<small>EUR 4.32</small>
       </div>
-
-      <div class="card">
-        60
-        <small>EUR 0.65</small>
+      <div class="card" data-coins="1000" data-price="10.80">
+        <small>Favorita</small>
+        1,000<small>EUR 10.80</small>
       </div>
-
-      <div class="card">
-        80
-        <small>EUR 0.87</small>
-      </div>
-
-      <div class="card highlight">
-        <div class="label">Compra más reciente</div>
-        400
-        <small>EUR 4.32</small>
-      </div>
-
-      <div class="card">
-        <div class="label">Favorita</div>
-        1,000
-        <small>EUR 10.8</small>
-      </div>
-
-      <div class="card">
-        Personalizar
-      </div>
+      <div class="card" data-coins="custom" data-price="0">Personalizar</div>
     </div>
   </div>
 
-  <!-- NOTIFY -->
+  <!-- NOTIFICACIONES -->
   <div class="notify">
     Activa las notificaciones push para mantenerte al tanto de las ofertas disponibles solo en el sitio web.
     <button>Activar</button>
   </div>
 
-  <!-- EXTRA -->
-  <div class="extra">
-    <div class="row">
-      <strong>Invita y consigue recompensas</strong>
-    </div>
-    <div class="row">
-      ¡Echa un vistazo a esta nueva función!
-      <strong>Canjear</strong>
-    </div>
-  </div>
-
-  <!-- PAYMENTS -->
+  <!-- MÉTODOS DE PAGO -->
   <div class="payments">
-    <div>VISA</div>
-    <div> Pay</div>
+    <span>VISA</span><span> Pay</span>
   </div>
 
   <!-- FOOTER -->
@@ -283,6 +119,58 @@ body{
   </div>
 
 </div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="box" id="box"></div>
+</div>
+
+<script>
+let selected={coins:400,price:"4.32"};
+
+document.querySelectorAll('.card').forEach(card=>{
+  card.onclick=()=>{
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('highlight'));
+    card.classList.add('highlight');
+    selected.coins=card.dataset.coins;
+    selected.price=card.dataset.price;
+    document.querySelector('.buy').textContent =
+      selected.price > 0 ? `Comprar por €${selected.price}` : "Personalizar";
+  };
+});
+
+document.querySelector('.buy').onclick=()=>{
+  const user=document.getElementById('user').value.trim();
+  const invalid=document.getElementById('invalid');
+
+  if(!/^@[\w.]{3,}$/.test(user)){
+    invalid.style.display="block";
+    return;
+  }
+  invalid.style.display="none";
+
+  const modal=document.getElementById('modal');
+  const box=document.getElementById('box');
+
+  modal.style.display="flex";
+  box.innerHTML=`
+    <strong>Procesando compra</strong>
+    <div class="loader"></div>
+    <small>${user}<br>${selected.coins} monedas</small>
+  `;
+
+  setTimeout(()=>{
+    box.innerHTML=`
+      <strong>Compra completada</strong>
+      <p>${selected.coins} monedas añadidas a<br><b>${user}</b></p>
+      <button onclick="document.getElementById('modal').style.display='none'"
+        style="margin-top:12px;width:100%;padding:12px;border:none;border-radius:12px;background:#000;color:#fff;">
+        Aceptar
+      </button>
+    `;
+  },2600);
+};
+</script>
 
 </body>
 </html>
