@@ -41,16 +41,17 @@ body{
 .header-title{
   font-size:17px;
   font-weight:700;
+  color:var(--text);
 }
 .balance{
   position:absolute;
   right:14px;
-  background:#000;
-  color:#fff;
   font-size:12px;
+  font-weight:600;
   padding:4px 10px;
   border-radius:12px;
-  font-weight:600;
+  background:#000;
+  color:#fff;
 }
 
 /* USER */
@@ -64,12 +65,13 @@ body{
   padding:6px 0;
   font-size:15px;
   font-weight:600;
+  color:var(--text);
   outline:none;
 }
 .invalid{
-  font-size:11px;
-  color:#d93025;
   margin-top:4px;
+  font-size:11px;
+  color:#D93025;
   display:none;
 }
 
@@ -78,6 +80,7 @@ body{
   background:var(--bg);
   padding:12px 14px;
   font-size:14px;
+  font-weight:400;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -95,6 +98,7 @@ body{
 .note{
   margin-top:4px;
   font-size:12px;
+  font-weight:400;
   color:var(--sub);
 }
 
@@ -118,10 +122,10 @@ body{
 }
 .card small{
   display:block;
+  margin-top:2px;
   font-size:12px;
   font-weight:400;
   color:var(--sub);
-  margin-top:2px;
 }
 .card.active{
   outline:2px solid var(--red);
@@ -135,6 +139,7 @@ body{
   background:var(--red);
   color:#fff;
   font-size:10px;
+  font-weight:600;
   padding:2px 6px;
   border-radius:8px;
 }
@@ -146,6 +151,7 @@ body{
   background:var(--bg);
   border-radius:14px;
   font-size:14px;
+  font-weight:400;
 }
 
 /* PAYMENTS */
@@ -203,6 +209,14 @@ body{
   padding:22px;
   text-align:center;
 }
+.box strong{
+  font-size:16px;
+  font-weight:700;
+}
+.box p{
+  font-size:14px;
+  font-weight:400;
+}
 
 /* LOADER */
 .loader{
@@ -239,9 +253,7 @@ body{
 
   <div class="section">
     <h3>Recargar</h3>
-    <div class="note">
-      Ahorra un 25 % con una tarifa de servicio de terceros más baja.
-    </div>
+    <div class="note">Ahorra un 25 % con una tarifa de servicio de terceros más baja.</div>
 
     <div class="grid">
       <div class="card" data-c="30" data-p="0.33">30<small>EUR 0.33</small></div>
@@ -282,36 +294,55 @@ body{
 </div>
 
 <script>
-let selected={coins:400,price:"4.32"};
-let balance=Number(localStorage.getItem("demo_balance")||0);
-balanceEl.textContent=balance;
+const balanceEl = document.getElementById("balance");
+const buyBtn = document.getElementById("buy");
+const modal = document.getElementById("modal");
+const box = document.getElementById("box");
+const userInput = document.getElementById("user");
+const invalid = document.getElementById("invalid");
 
-document.querySelectorAll(".card").forEach(c=>{
-  c.onclick=()=>{
-    document.querySelectorAll(".card").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    selected.coins=Number(c.dataset.c);
-    selected.price=c.dataset.p;
-    buy.textContent=selected.price>0?`Comprar por €${selected.price}`:"Personalizar";
-  };
+let selected = { coins:400, price:"4.32" };
+let balance = Number(localStorage.getItem("demo_balance") || 0);
+balanceEl.textContent = balance;
+
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("click", ()=>{
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+    card.classList.add("active");
+    selected.coins = Number(card.dataset.c);
+    selected.price = card.dataset.p;
+    buyBtn.textContent = selected.price > 0
+      ? `Comprar por €${selected.price}`
+      : "Personalizar";
+  });
 });
 
-buy.onclick=()=>{
-  const u=user.value.trim();
-  invalid.style.display = u.startsWith("@") && u.length>1 ? "none" : "block";
-  if(invalid.style.display==="block") return;
+buyBtn.addEventListener("click", ()=>{
+  const u = userInput.value.trim();
+  if(!(u.startsWith("@") && u.length > 1)){
+    invalid.style.display = "block";
+    return;
+  }
+  invalid.style.display = "none";
 
   modal.classList.add("show");
-  box.innerHTML=`<strong>Procesando compra</strong><div class="loader"></div>`;
+  box.innerHTML = `<strong>Procesando compra</strong><div class="loader"></div>`;
 
   setTimeout(()=>{
-    balance+=selected.coins;
-    localStorage.setItem("demo_balance",balance);
-    balanceEl.textContent=balance;
-    box.innerHTML=`<strong>Compra confirmada</strong><p>${selected.coins} monedas añadidas</p>
-    <button onclick="modal.classList.remove('show')" style="margin-top:12px;width:100%;height:44px;border:none;border-radius:22px;background:#000;color:#fff;font-weight:600">Aceptar</button>`;
-  },2000);
-};
+    balance += selected.coins;
+    localStorage.setItem("demo_balance", balance);
+    balanceEl.textContent = balance;
+
+    box.innerHTML = `
+      <strong>Compra confirmada</strong>
+      <p>${selected.coins} monedas añadidas</p>
+      <button onclick="document.getElementById('modal').classList.remove('show')"
+        style="margin-top:12px;width:100%;height:44px;border:none;border-radius:22px;
+        background:#000;color:#fff;font-size:15px;font-weight:600">
+        Aceptar
+      </button>`;
+  }, 1800);
+});
 </script>
 
 </body>
