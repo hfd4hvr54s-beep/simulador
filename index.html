@@ -14,15 +14,15 @@
   --border:#e5e5ea;
   --bg:#f2f2f7;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0;}
 body{
-  margin:0;
   background:var(--bg);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,Arial;
   color:#000;
 }
 .app{
-  width:390px;
+  width:100%;
+  max-width:420px;
   margin:auto;
   background:#fff;
   min-height:100vh;
@@ -32,15 +32,17 @@ body{
 .secure{
   position:fixed;
   top:0;
-  left:0;
-  width:100%;
-  text-align:center;
+  left:50%;
+  transform:translateX(-50%);
+  background:transparent;
   color:#fff;
   font-size:12px;
   font-weight:600;
-  padding:6px 0;
+  padding:4px 10px;
   border-top:4px solid var(--green);
-  clip-path:polygon(5% 0%,95% 0%,100% 100%,0% 100%);
+  border-radius:4px;
+  display:inline-block;
+  clip-path:polygon(10% 0%,90% 0%,100% 100%,0% 100%);
   z-index:1000;
 }
 
@@ -49,17 +51,32 @@ body{
   margin-top:44px;
   padding:14px;
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.tiktok-logo{
+  width:24px;
+  height:24px;
+}
+.header-text{
   font-size:17px;
   font-weight:700;
-  border-bottom:1px solid var(--border);
-  color:#000;
 }
-.logo{
-  width:22px;height:22px;
-  border-radius:6px;
-  background:linear-gradient(135deg,#00f2ea,#ff0050);
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.header-icon{
+  width:22px;
+  height:22px;
+  cursor:pointer;
 }
 
 /* USUARIO */
@@ -97,6 +114,7 @@ body{
   margin-top:6px;
   font-size:13px;
   color:var(--gray);
+  position:relative;
 }
 .coin{
   width:14px;
@@ -111,6 +129,21 @@ body{
 }
 @keyframes float{
   to{opacity:0;transform:translateY(-14px)}
+}
+/* Animación monedas GIF */
+.coin-gif{
+  position:absolute;
+  width:20px;
+  height:20px;
+  pointer-events:none;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  animation:fall 1s linear forwards;
+  z-index:100;
+}
+@keyframes fall{
+  to{transform:translate(-50%,60px);opacity:0;}
 }
 
 /* INVITAR */
@@ -204,7 +237,8 @@ body{
   bottom:0;
   left:50%;
   transform:translateX(-50%);
-  width:390px;
+  width:100%;
+  max-width:420px;
   background:#fff;
   border-top:1px solid var(--border);
 }
@@ -272,8 +306,14 @@ body{
 <div class="app">
 
 <div class="header">
-  <div class="logo"></div>
-  <div>Monedas</div>
+  <div class="header-left">
+    <img class="tiktok-logo" src="https://upload.wikimedia.org/wikipedia/en/6/69/TikTok_logo.png" alt="TikTok Logo">
+    <div class="header-text">TikTok Coins</div>
+  </div>
+  <div class="header-right">
+    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/753/753345.png" alt="Incognito">
+    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/329/329455.png" alt="Documento">
+  </div>
 </div>
 
 <div class="user">
@@ -352,6 +392,9 @@ document.querySelectorAll('.card').forEach(card=>{
   }
 });
 
+const coinsContainer=document.querySelector('.coins');
+
+// Compra con animación GIF
 function buy(){
   modal.classList.add('show');
   box.innerHTML='Procesando compra<div class="loader"></div>';
@@ -359,11 +402,22 @@ function buy(){
     coins+=selected;
     count.textContent=coins;
     anim.innerHTML=`<span class="plus">+${selected}</span>`;
+    
+    // GIF de monedas cayendo
+    for(let i=0;i<5;i++){
+      const gif=document.createElement('img');
+      gif.src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif';
+      gif.className='coin-gif';
+      coinsContainer.appendChild(gif);
+      setTimeout(()=>gif.remove(),1000);
+    }
+
     box.innerHTML=`Compra completada<br><strong>${selected} monedas</strong><br>
     <button onclick="modal.classList.remove('show')" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:12px;background:#000;color:#fff">Aceptar</button>`;
   },1400);
 }
 
+// Edición de usuario
 function editUser(){
   const u=document.querySelector('.username');
   const i=document.createElement('input');
@@ -381,6 +435,7 @@ function editUser(){
   }
 }
 
+// Cambiar imagen y reiniciar contador
 function resetUser(name){
   coins=0;
   count.textContent=coins;
@@ -388,6 +443,7 @@ function resetUser(name){
   pic.src=`https://i.pravatar.cc/46?u=${first}`;
 }
 
+// Cambiar imagen con archivo
 function updatePic(input){
   if(input.files && input.files[0]){
     pic.src=URL.createObjectURL(input.files[0]);
