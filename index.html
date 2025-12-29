@@ -33,13 +33,15 @@ body{
   top:0;
   left:50%;
   transform:translateX(-50%);
-  width:390px;
   background:#ecfbf4;
-  border-top:3px solid var(--green);
-  padding:8px 14px;
-  font-size:13px;
+  border:2px solid var(--green);
+  border-radius:8px;
+  padding:4px 10px;
+  font-size:12px;
   font-weight:600;
   color:#0f7a4a;
+  text-align:center;
+  display:inline-block;
   z-index:1000;
 }
 
@@ -179,12 +181,22 @@ body{
   display:flex;
   gap:12px;
   font-size:14px;
+  align-items:center;
 }
 .illu{
   width:42px;
   height:42px;
   border-radius:10px;
   background:linear-gradient(135deg,#e0e7ff,#fce7f3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.illu img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
 }
 
 /* FOOTER */
@@ -267,9 +279,9 @@ body{
 
 <div class="user">
   <div class="avatar" onclick="file.click()">
-    <img id="pic">
+    <img id="pic" src="https://i.pravatar.cc/46?u=JTN">
   </div>
-  <input type="file" id="file" hidden onchange="pic.src=URL.createObjectURL(this.files[0])">
+  <input type="file" id="file" hidden onchange="updatePic(this)">
   <div class="user-info">
     <div class="username" onclick="editUser()">JTN Cruz</div>
     <div class="coins">
@@ -305,7 +317,7 @@ body{
 </div>
 
 <div class="info">
-  <div class="illu"></div>
+  <div class="illu"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828465.png"></div>
   <div>
     <strong>Pago seguro</strong><br>
     Protección de pagos y datos
@@ -333,6 +345,7 @@ body{
 let coins=0, selected=400;
 setTimeout(()=>invite.classList.add('show'),500);
 
+// Selección de tarjeta
 document.querySelectorAll('.card').forEach(card=>{
   card.onclick=()=>{
     document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
@@ -341,6 +354,7 @@ document.querySelectorAll('.card').forEach(card=>{
   }
 });
 
+// Compra
 function buy(){
   modal.classList.add('show');
   box.innerHTML='Procesando compra<div class="loader"></div>';
@@ -353,15 +367,39 @@ function buy(){
   },1400);
 }
 
+// Edición de usuario
 function editUser(){
   const u=document.querySelector('.username');
   const i=document.createElement('input');
   i.value=u.textContent;
   i.style.fontSize='15px';
   i.style.fontWeight='600';
+  i.style.width='100%';
   u.replaceWith(i);
   i.focus();
-  i.onblur=()=>{u.textContent=i.value||'Usuario';i.replaceWith(u)};
+  i.onblur=()=>{
+    const newName=i.value||'Usuario';
+    u.textContent=newName;
+    i.replaceWith(u);
+    resetUser(newName);
+  }
+}
+
+// Cambiar imagen según primera letra y reiniciar contador
+function resetUser(name){
+  coins=0;
+  count.textContent=coins;
+  const first=name.charAt(0).toUpperCase();
+  pic.src=`https://i.pravatar.cc/46?u=${first}`;
+}
+
+// Cambiar imagen con archivo local
+function updatePic(input){
+  if(input.files && input.files[0]){
+    pic.src=URL.createObjectURL(input.files[0]);
+    coins=0;
+    count.textContent=coins;
+  }
 }
 </script>
 
