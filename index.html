@@ -20,7 +20,7 @@ body{background:var(--bg);display:flex;justify-content:center;min-height:100vh;c
 .avatar{width:48px;height:48px;border-radius:50%;background:var(--field);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--confirm-green);}
 .user input{flex:1;background:var(--field);border:none;outline:none;color:var(--text);padding:14px;border-radius:16px;font-size:16px;border:1px solid #ccc;}
 .balance{text-align:center;margin:20px 0;}
-.balance .coins{font-size:44px;font-weight:800;transition:.25s;color:#000;}
+.balance .coins{font-size:44px;font-weight:800;transition:.25s;color:var(--coin-yellow);}
 .balance span{font-size:14px;color:var(--muted);}
 .packages{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .pkg{background:#FAFAFA;border-radius:20px;padding:18px 10px;text-align:center;cursor:pointer;color:var(--text);border:2px solid var(--tiktok-red);position:relative;overflow:hidden;transition:.25s;}
@@ -139,7 +139,7 @@ function flyCoin(start,end){
   const c=document.createElement("div"); c.className="coin";
   c.style.left=start.left+"px"; c.style.top=start.top+"px";
   document.body.appendChild(c);
-  c.getBoundingClientRect(); 
+  c.getBoundingClientRect();
   const dx=end.left-start.left + (Math.random()*30-15), dy=end.top-start.top + (Math.random()*30-15);
   c.style.transition='transform 1s cubic-bezier(.22,.61,.36,1), opacity 1s';
   requestAnimationFrame(()=>{c.style.transform=`translate(${dx}px,${dy}px) scale(0.5) rotate(${360+Math.random()*360}deg)`; c.style.opacity=0;});
