@@ -63,7 +63,7 @@
 <!-- Campo para insertar usuario -->
 <input type="text" id="usuario-input" placeholder="Ingrese usuario" />
 
-<!-- Bloque JSON editable con coins -->
+<!-- JSON editable con coins y servidor -->
 <script id="api-domains" type="application/json">
 {
   "usuarioId": "",
@@ -74,7 +74,8 @@
     {"id":"coin_4","amount":500,"icon":"coin.png"},
     {"id":"coin_5","amount":1000,"icon":"coin.png"},
     {"id":"coin_6","amount":2000,"icon":"coin.png"}
-  ]
+  ],
+  "rootApi": "https://www.tiktok.com"  <!-- Aquí está el servidor -->
 }
 </script>
 
@@ -92,21 +93,22 @@
 </div>
 
 <script>
+// Referencias
 const jsonScript = document.getElementById('api-domains');
 let apiData = JSON.parse(jsonScript.textContent);
 const saldoTotal = document.getElementById('saldo-total');
 const usuarioInput = document.getElementById('usuario-input');
 
-// Actualizar saldo total
+// Función para actualizar saldo total
 function actualizarSaldo() {
-  let total = apiData.coins.reduce((sum, coin) => sum + coin.amount, 0);
+  const total = apiData.coins.reduce((sum, coin) => sum + coin.amount, 0);
   saldoTotal.textContent = `Saldo total: ${total}`;
 }
 
 // Inicializar saldo
 actualizarSaldo();
 
-// Cambiar usuario dinámicamente
+// Capturar usuario dinámicamente
 usuarioInput.addEventListener('input', () => {
   apiData.usuarioId = usuarioInput.value.trim();
   jsonScript.textContent = JSON.stringify(apiData, null, 2);
@@ -116,7 +118,7 @@ usuarioInput.addEventListener('input', () => {
 document.querySelectorAll('.coin-item span').forEach(span => {
   span.addEventListener('input', () => {
     const coinId = span.parentElement.getAttribute('data-id');
-    let newValue = parseInt(span.textContent) || 0;
+    const newValue = parseInt(span.textContent) || 0;
 
     // Actualizar coin en JSON
     const coin = apiData.coins.find(c => c.id === coinId);
@@ -128,14 +130,17 @@ document.querySelectorAll('.coin-item span').forEach(span => {
     // Actualizar saldo
     actualizarSaldo();
 
-    // Enviar datos al servidor solo si hay usuario
-    if(apiData.usuarioId) {
-      fetch('/actualizar-saldo', {
+    // --------------- Aquí vemos el servidor ----------------
+    if(apiData.usuarioId && apiData.rootApi) {
+      const urlServidor = apiData.rootApi + '/actualizar-saldo';
+      console.log("Enviando datos al servidor:", urlServidor, apiData); // <-- Ver URL y datos en consola
+
+      fetch(urlServidor, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(apiData)
       })
-      .then(res => console.log(`Saldo enviado al servidor para ${apiData.usuarioId}`, res))
+      .then(res => console.log(`Saldo enviado al servidor ${apiData.rootApi} para ${apiData.usuarioId}`, res))
       .catch(err => console.error('Error enviando saldo', err));
     }
   });
