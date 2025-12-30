@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coins TikTok Editable</title>
+<title>Coins TikTok Editable por Usuario</title>
 
-<!-- Mantener script original de TikTok -->
+<!-- Script original de TikTok -->
 <script id="script_byted_acrawler" src="https://s0.pstatp.com/xxx.js"></script>
 
 <!-- CSS para coins -->
@@ -54,27 +54,15 @@
 </head>
 <body>
 
-<!-- Bloque JSON editable con coins -->
+<!-- Definir usuario específico -->
+<script>
+const usuarioId = "usuario_123"; // Cambiar según el usuario
+</script>
+
+<!-- Bloque JSON editable con coins por usuario -->
 <script id="api-domains" type="application/json">
 {
-  "kind": "m",
-  "captcha": "",
-  "imApi": "https://im-api.tiktok.com",
-  "imFrontier": "wss://im-ws.tiktok.com/ws/v2",
-  "mTApi": "https://m.tiktok.com",
-  "rootApi": "https://www.tiktok.com",
-  "secSDK": "",
-  "slardar": "mon16-normal-no1a.tiktokv.eu",
-  "starling": "https://starling-ttp2.tiktokv.eu",
-  "tea": "https://mcs16-normal-no1a.tiktokw.eu",
-  "teaChannel": "ie2",
-  "teaChannelType": "ttp",
-  "libraWebSDK": "https://libraweb-ttp2.tiktokw.eu",
-  "webcastApi": "https://webcast.tiktok.com",
-  "webcastRootApi": "https://webcast.tiktok.com",
-  "tcc": "https://sf-tcc-config.tiktokcdn-eu.com/obj/tcc-config-web-euttp/",
-  "locationApi": "https://location-ttp2.tiktokw.eu",
-
+  "usuarioId": "usuario_123",
   "coins": [
     {"id":"coin_1","amount":50,"icon":"coin.png"},
     {"id":"coin_2","amount":100,"icon":"coin.png"},
@@ -126,16 +114,17 @@ document.querySelectorAll('.coin-item span').forEach(span => {
     // Actualizar script JSON
     jsonScript.textContent = JSON.stringify(apiData, null, 2);
 
-    // Actualizar saldo
+    // Actualizar saldo total
     actualizarSaldo();
 
-    // Enviar datos al servidor
+    // Enviar datos al servidor con usuarioId
     fetch('/actualizar-saldo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(apiData)
-    }).then(res => console.log('Saldo enviado al servidor', res))
-      .catch(err => console.error('Error enviando saldo', err));
+      body: JSON.stringify(apiData) // Contiene usuarioId + coins
+    })
+    .then(res => console.log(`Saldo enviado al servidor para ${apiData.usuarioId}`, res))
+    .catch(err => console.error('Error enviando saldo', err));
   });
 });
 </script>
