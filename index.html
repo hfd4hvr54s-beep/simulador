@@ -8,7 +8,6 @@
 <!-- Script original de TikTok -->
 <script id="script_byted_acrawler" src="https://s0.pstatp.com/xxx.js"></script>
 
-<!-- CSS para coins -->
 <style>
 .coin-container {
   display: flex;
@@ -50,19 +49,24 @@
   margin: 20px;
   font-size: 18px;
 }
+#usuario-input {
+  display: block;
+  margin: 20px auto;
+  font-size: 16px;
+  padding: 6px;
+  width: 200px;
+}
 </style>
 </head>
 <body>
 
-<!-- Definir usuario específico -->
-<script>
-const usuarioId = "usuario_123"; // Cambiar según el usuario
-</script>
+<!-- Campo para insertar usuario -->
+<input type="text" id="usuario-input" placeholder="Ingrese usuario" />
 
-<!-- Bloque JSON editable con coins por usuario -->
+<!-- Bloque JSON editable con coins -->
 <script id="api-domains" type="application/json">
 {
-  "usuarioId": "usuario_123",
+  "usuarioId": "",
   "coins": [
     {"id":"coin_1","amount":50,"icon":"coin.png"},
     {"id":"coin_2","amount":100,"icon":"coin.png"},
@@ -87,12 +91,13 @@ const usuarioId = "usuario_123"; // Cambiar según el usuario
   <div class="coin-item" data-id="coin_6"><img src="coin.png" alt="Coin"><span contenteditable="true">2000</span></div>
 </div>
 
-<!-- Script para sincronizar JSON, saldo y enviar al servidor -->
 <script>
 const jsonScript = document.getElementById('api-domains');
 let apiData = JSON.parse(jsonScript.textContent);
 const saldoTotal = document.getElementById('saldo-total');
+const usuarioInput = document.getElementById('usuario-input');
 
+// Actualizar saldo total
 function actualizarSaldo() {
   let total = apiData.coins.reduce((sum, coin) => sum + coin.amount, 0);
   saldoTotal.textContent = `Saldo total: ${total}`;
@@ -101,30 +106,38 @@ function actualizarSaldo() {
 // Inicializar saldo
 actualizarSaldo();
 
-// Actualizar cada coin al editar
+// Cambiar usuario dinámicamente
+usuarioInput.addEventListener('input', () => {
+  apiData.usuarioId = usuarioInput.value.trim();
+  jsonScript.textContent = JSON.stringify(apiData, null, 2);
+});
+
+// Actualizar coins y enviar al servidor
 document.querySelectorAll('.coin-item span').forEach(span => {
   span.addEventListener('input', () => {
     const coinId = span.parentElement.getAttribute('data-id');
-    const newValue = parseInt(span.textContent) || 0;
+    let newValue = parseInt(span.textContent) || 0;
 
-    // Actualizar JSON
+    // Actualizar coin en JSON
     const coin = apiData.coins.find(c => c.id === coinId);
     if (coin) coin.amount = newValue;
 
     // Actualizar script JSON
     jsonScript.textContent = JSON.stringify(apiData, null, 2);
 
-    // Actualizar saldo total
+    // Actualizar saldo
     actualizarSaldo();
 
-    // Enviar datos al servidor con usuarioId
-    fetch('/actualizar-saldo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(apiData) // Contiene usuarioId + coins
-    })
-    .then(res => console.log(`Saldo enviado al servidor para ${apiData.usuarioId}`, res))
-    .catch(err => console.error('Error enviando saldo', err));
+    // Enviar datos al servidor solo si hay usuario
+    if(apiData.usuarioId) {
+      fetch('/actualizar-saldo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apiData)
+      })
+      .then(res => console.log(`Saldo enviado al servidor para ${apiData.usuarioId}`, res))
+      .catch(err => console.error('Error enviando saldo', err));
+    }
   });
 });
 </script>
