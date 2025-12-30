@@ -98,6 +98,49 @@
       </style>
     </div>
     <!-- Bloque JSON editable con coins -->
+<script id="script_byted_acrawler" src="https://s0.pstatp.com/xxx.js"></script>
+
+<!-- CSS para coins -->
+<style>
+.coin-container {
+  display: flex;
+  gap: 10px;
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.coin-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.coin-item:hover {
+  transform: translateY(-3px);
+}
+.coin-item img {
+  width: 40px;
+  margin-bottom: 5px;
+}
+.coin-item span {
+  font-weight: bold;
+  color: #333;
+}
+.coin-item[contenteditable="true"]:focus {
+  outline: 2px dashed #1da1f2;
+}
+</style>
+</head>
+<body>
+
+<!-- Bloque JSON editable con coins -->
 <script id="api-domains" type="application/json">
 {
   "kind": "m",
@@ -129,7 +172,7 @@
 }
 </script>
 
-<!-- HTML editable de coins -->
+<!-- Contenedor de coins -->
 <div class="coin-container">
   <div class="coin-item" contenteditable="true" data-id="coin_1"><img src="coin.png" alt="Coin"><span>50</span></div>
   <div class="coin-item" contenteditable="true" data-id="coin_2"><img src="coin.png" alt="Coin"><span>100</span></div>
@@ -139,44 +182,7 @@
   <div class="coin-item" contenteditable="true" data-id="coin_6"><img src="coin.png" alt="Coin"><span>2000</span></div>
 </div>
 
-<!-- CSS estilo TikTok -->
-<style>
-.coin-container {
-  display: flex;
-  gap: 10px;
-  background-color: #f7f7f7;
-  padding: 10px;
-  border-radius: 8px;
-  justify-content: center;
-}
-.coin-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: white;
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.coin-item:hover {
-  transform: translateY(-3px);
-}
-.coin-item img {
-  width: 40px;
-  margin-bottom: 5px;
-}
-.coin-item span {
-  font-weight: bold;
-  color: #333;
-}
-.coin-item[contenteditable="true"]:focus {
-  outline: 2px dashed #1da1f2;
-}
-</style>
-
-<!-- Script para sincronizar los cambios con JSON -->
+<!-- Script para sincronizar cambios con JSON -->
 <script>
 const jsonScript = document.getElementById('api-domains');
 let apiData = JSON.parse(jsonScript.textContent);
@@ -187,13 +193,16 @@ coinItems.forEach(item => {
   item.addEventListener('input', () => {
     const coinId = item.getAttribute('data-id');
     const newValue = parseInt(item.querySelector('span').textContent) || 0;
-    
+
     // Actualizar el JSON
     const coin = apiData.coins.find(c => c.id === coinId);
-    if(coin) coin.amount = newValue;
+    if (coin) coin.amount = newValue;
 
-    // Sobrescribir el contenido del script con el JSON actualizado
+    // Sobrescribir el contenido del script con JSON actualizado
     jsonScript.textContent = JSON.stringify(apiData, null, 2);
+
+    // Para verificar cambios
+    console.log(`Coin ${coinId} actualizado a ${newValue}`);
   });
 });
 </script>
