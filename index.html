@@ -97,6 +97,106 @@
         *,*::before,*::after{box-sizing:border-box;-webkit-user-select:unset;-moz-user-select:unset;-ms-user-select:unset;user-select:unset;}body,h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0;}ul[role=&#34;list&#34;],ol[role=&#34;list&#34;]{list-style:none;}html:focus-within{scroll-behavior:smooth;}body{min-height:100vh;text-rendering:optimizeSpeed;line-height:1.5;}a:not([class]){text-decoration-skip-ink:auto;}img,picture{max-width:100%;display:block;}input,button,textarea,select{font:inherit;}@media (prefers-reduced-motion: reduce){html:focus-within{scroll-behavior:auto;}*,*::before,*::after{-webkit-animation-duration:0.01ms!important;animation-duration:0.01ms!important;-webkit-animation-iteration-count:1!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important;}}@supports (-webkit-touch-callout: none){body{min-height:-webkit-fill-available;}}body{font-size:14px;color:rgba(22, 24, 35, 1);background-color:rgba(255, 255, 255, 1);direction:ltr;-webkit-font-smoothing:antialiased;}body a{color:rgba(22, 24, 35, 1);-webkit-transition:color 250ms;transition:color 250ms;-webkit-text-decoration:none;text-decoration:none;cursor:pointer;}body a:where(.tw-only),body:where(.tw-only) a{-webkit-transition:all 0s ease 0s;transition:all 0s ease 0s;}body a:visited{color:rgba(22, 24, 35, 1);}body a:where(.tw-only):visited,body:where(.tw-only) a:visited{color:inherit;}body a:hover{color:rgba(22, 24, 35, 1);-webkit-text-decoration:underline;text-decoration:underline;}body a:where(.tw-only):hover,body:where(.tw-only) a:hover{color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit;}body a:active{color:rgba(22, 24, 35, 1);}body a:where(.tw-only):active,body:where(.tw-only) a:active{color:inherit;}body a:focus{color:rgba(22, 24, 35, 1);}body a:where(.tw-only):focus,body:where(.tw-only) a:focus{color:inherit;}body input::-ms-clear{display:none;width:0;height:0;}body input::-ms-reveal{display:none;width:0;height:0;}body input::-webkit-search-decoration,body input::-webkit-search-cancel-button,body input::-webkit-search-results-button,body input::-webkit-search-results-decoration{display:none;}body.hidden{overflow:hidden;display:block;}body strong{font-weight:700;}html body{overflow-y:overlay;}html *::-webkit-scrollbar{border-radius:0;width:8px;}html *::-webkit-scrollbar-track{border-radius:0;background-color:rgba(0, 0, 0, 0);}html *::-webkit-scrollbar-thumb{border-radius:4px;background-color:rgba(22, 24, 35, .06);}
       </style>
     </div>
+    <!-- Bloque JSON editable con coins -->
+<script id="api-domains" type="application/json">
+{
+  "kind": "m",
+  "captcha": "",
+  "imApi": "https://im-api.tiktok.com",
+  "imFrontier": "wss://im-ws.tiktok.com/ws/v2",
+  "mTApi": "https://m.tiktok.com",
+  "rootApi": "https://www.tiktok.com",
+  "secSDK": "",
+  "slardar": "mon16-normal-no1a.tiktokv.eu",
+  "starling": "https://starling-ttp2.tiktokv.eu",
+  "tea": "https://mcs16-normal-no1a.tiktokw.eu",
+  "teaChannel": "ie2",
+  "teaChannelType": "ttp",
+  "libraWebSDK": "https://libraweb-ttp2.tiktokw.eu",
+  "webcastApi": "https://webcast.tiktok.com",
+  "webcastRootApi": "https://webcast.tiktok.com",
+  "tcc": "https://sf-tcc-config.tiktokcdn-eu.com/obj/tcc-config-web-euttp/",
+  "locationApi": "https://location-ttp2.tiktokw.eu",
+
+  "coins": [
+    {"id":"coin_1","amount":50,"icon":"coin.png"},
+    {"id":"coin_2","amount":100,"icon":"coin.png"},
+    {"id":"coin_3","amount":200,"icon":"coin.png"},
+    {"id":"coin_4","amount":500,"icon":"coin.png"},
+    {"id":"coin_5","amount":1000,"icon":"coin.png"},
+    {"id":"coin_6","amount":2000,"icon":"coin.png"}
+  ]
+}
+</script>
+
+<!-- HTML editable de coins -->
+<div class="coin-container">
+  <div class="coin-item" contenteditable="true" data-id="coin_1"><img src="coin.png" alt="Coin"><span>50</span></div>
+  <div class="coin-item" contenteditable="true" data-id="coin_2"><img src="coin.png" alt="Coin"><span>100</span></div>
+  <div class="coin-item" contenteditable="true" data-id="coin_3"><img src="coin.png" alt="Coin"><span>200</span></div>
+  <div class="coin-item" contenteditable="true" data-id="coin_4"><img src="coin.png" alt="Coin"><span>500</span></div>
+  <div class="coin-item" contenteditable="true" data-id="coin_5"><img src="coin.png" alt="Coin"><span>1000</span></div>
+  <div class="coin-item" contenteditable="true" data-id="coin_6"><img src="coin.png" alt="Coin"><span>2000</span></div>
+</div>
+
+<!-- CSS estilo TikTok -->
+<style>
+.coin-container {
+  display: flex;
+  gap: 10px;
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 8px;
+  justify-content: center;
+}
+.coin-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.coin-item:hover {
+  transform: translateY(-3px);
+}
+.coin-item img {
+  width: 40px;
+  margin-bottom: 5px;
+}
+.coin-item span {
+  font-weight: bold;
+  color: #333;
+}
+.coin-item[contenteditable="true"]:focus {
+  outline: 2px dashed #1da1f2;
+}
+</style>
+
+<!-- Script para sincronizar los cambios con JSON -->
+<script>
+const jsonScript = document.getElementById('api-domains');
+let apiData = JSON.parse(jsonScript.textContent);
+
+const coinItems = document.querySelectorAll('.coin-item');
+
+coinItems.forEach(item => {
+  item.addEventListener('input', () => {
+    const coinId = item.getAttribute('data-id');
+    const newValue = parseInt(item.querySelector('span').textContent) || 0;
+    
+    // Actualizar el JSON
+    const coin = apiData.coins.find(c => c.id === coinId);
+    if(coin) coin.amount = newValue;
+
+    // Sobrescribir el contenido del script con el JSON actualizado
+    jsonScript.textContent = JSON.stringify(apiData, null, 2);
+  });
+});
+</script>
     <script id="script_byted_acrawler" src="https://sf16-website-login.neutral.ttwstatic.com/obj/tiktok_web_login_static/webmssdk/1.0.0.328/webmssdk.js" async="">
     </script>
     <script id="__UNIVERSAL_DATA_FOR_REHYDRATION__" type="application/json">
