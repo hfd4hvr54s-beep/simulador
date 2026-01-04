@@ -3,150 +3,448 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coins TikTok Editable por Usuario</title>
-
-<!-- Script original de TikTok -->
-<script id="script_byted_acrawler" src="https://s0.pstatp.com/xxx.js"></script>
+<title>Coins Demo</title>
 
 <style>
-.coin-container {
-  display: flex;
-  gap: 10px;
-  background-color: #f7f7f7;
-  padding: 10px;
-  border-radius: 8px;
-  justify-content: center;
-  margin-top: 20px;
+:root{
+  --pink:#ff2d55;
+  --pink-soft:#fff1f5;
+  --green:#1fbf75;
+  --gray:#8e8e93;
+  --border:#e5e5ea;
+  --bg:#f2f2f7;
 }
-.coin-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: white;
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.2s;
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,Arial;
+  color:#000;
 }
-.coin-item:hover {
-  transform: translateY(-3px);
+.app{
+  width:100%;
+  max-width:420px;
+  margin:auto;
+  background:#fff;
+  min-height:100vh;
 }
-.coin-item img {
-  width: 40px;
-  margin-bottom: 5px;
+
+/* BARRA PAGO SEGURO */
+.secure{
+  position:fixed;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  background:transparent;
+  color:#fff;
+  font-size:12px;
+  font-weight:600;
+  padding:4px 10px;
+  border-top:4px solid var(--green);
+  border-radius:4px;
+  display:inline-block;
+  clip-path:polygon(10% 0%,90% 0%,100% 100%,0% 100%);
+  z-index:1000;
 }
-.coin-item span {
-  font-weight: bold;
-  color: #333;
+
+/* HEADER */
+.header{
+  margin-top:44px;
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
 }
-.coin-item span[contenteditable="true"]:focus {
-  outline: 2px dashed #1da1f2;
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
-#saldo-total {
-  text-align: center;
-  font-weight: bold;
-  margin: 20px;
-  font-size: 18px;
+.tiktok-logo{
+  width:20px;
+  height:20px;
 }
-#usuario-input {
-  display: block;
-  margin: 20px auto;
-  font-size: 16px;
-  padding: 6px;
-  width: 200px;
+.header-text{
+  font-size:17px;
+  font-weight:700;
 }
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.header-icon{
+  width:20px;
+  height:20px;
+  cursor:pointer;
+}
+
+/* USUARIO */
+.user{
+  display:flex;
+  gap:12px;
+  padding:14px;
+  border-bottom:1px solid var(--border);
+}
+.avatar{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:#d1d1d6;
+  overflow:hidden;
+  cursor:pointer;
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.user-info{
+  flex:1;
+}
+.username{
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+.coins{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:6px;
+  font-size:13px;
+  color:var(--gray);
+  position:relative;
+}
+.coin{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ffd36a,#f5b400);
+}
+.plus{
+  color:var(--green);
+  font-weight:700;
+  animation:float 1.2s ease forwards;
+}
+@keyframes float{
+  to{opacity:0;transform:translateY(-14px)}
+}
+/* Animación monedas GIF */
+.coin-gif{
+  position:absolute;
+  width:20px;
+  height:20px;
+  pointer-events:none;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  animation:fall 1s linear forwards;
+  z-index:100;
+}
+@keyframes fall{
+  to{transform:translate(-50%,60px);opacity:0;}
+}
+
+/* INVITAR */
+.invite-wrap{overflow:hidden}
+.invite{
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  font-weight:600;
+  transform:translateY(-100%);
+  opacity:0;
+  transition:0.9s ease;
+}
+.invite.show{
+  transform:translateY(0);
+  opacity:1;
+}
+.invite.active{
+  background:var(--pink-soft);
+  box-shadow:inset 0 0 0 2px var(--pink);
+}
+
+/* SECCIÓN */
+.section{padding:14px}
+.section strong{font-size:16px}
+.note{
+  margin-top:6px;
+  font-size:13px;
+  color:#ff3b30;
+}
+
+/* GRID */
+.grid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.card{
+  background:#f3f3f4;
+  border-radius:12px;
+  padding:14px 6px;
+  text-align:center;
+  cursor:pointer;
+}
+.card span{
+  font-size:18px;
+  font-weight:800;
+}
+.card small{
+  display:block;
+  font-size:13px;
+  color:var(--gray);
+  margin-top:4px;
+}
+.card.active{
+  background:var(--pink-soft);
+  box-shadow:inset 0 0 0 2px var(--pink);
+}
+
+/* INFO */
+.info{
+  margin:14px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  display:flex;
+  gap:12px;
+  font-size:14px;
+  align-items:center;
+}
+.illu{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.illu img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+/* FOOTER */
+.footer{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border-top:1px solid var(--border);
+}
+.payments{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:10px 0;
+}
+.pay img{
+  width:28px;  /* más pequeños y uniformes */
+  height:28px;
+}
+.buy{
+  margin:10px 14px 14px;
+  width:calc(100% - 28px);
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  background:#fe2c55;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.modal.show{display:flex}
+.box{
+  background:#fff;
+  width:260px;
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+}
+.loader{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:4px solid #eee;
+  border-top:4px solid #fe2c55;
+  margin:14px auto;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.spacer{height:200px}
 </style>
 </head>
+
 <body>
 
-<!-- Campo para insertar usuario -->
-<input type="text" id="usuario-input" placeholder="Ingrese usuario" />
+<div class="secure">🔒 Pago seguro · Conexión cifrada</div>
 
-<!-- JSON editable con coins y servidor -->
-<script id="api-domains" type="application/json">
-{
-  "usuarioId": "",
-  "coins": [
-    {"id":"coin_1","amount":50,"icon":"coin.png"},
-    {"id":"coin_2","amount":100,"icon":"coin.png"},
-    {"id":"coin_3","amount":200,"icon":"coin.png"},
-    {"id":"coin_4","amount":500,"icon":"coin.png"},
-    {"id":"coin_5","amount":1000,"icon":"coin.png"},
-    {"id":"coin_6","amount":2000,"icon":"coin.png"}
-  ],
-  "rootApi": "https://www.tiktok.com"
-}
-</script>
+<div class="app">
 
-<!-- Saldo total -->
-<div id="saldo-total">Saldo total: 0</div>
+<div class="header">
+  <div class="header-left">
+    <!-- Logo TikTok actualizado -->
+    <img class="tiktok-logo" src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok Logo">
+    <div class="header-text">TikTok Coins</div>
+  </div>
+  <div class="header-right">
+    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/753/753345.png" alt="Incognito">
+    <img class="header-icon" src="https://cdn-icons-png.flaticon.com/512/329/329455.png" alt="Documento">
+  </div>
+</div>
 
-<!-- Contenedor de coins -->
-<div class="coin-container">
-  <div class="coin-item" data-id="coin_1"><img src="coin.png" alt="Coin"><span contenteditable="true">50</span></div>
-  <div class="coin-item" data-id="coin_2"><img src="coin.png" alt="Coin"><span contenteditable="true">100</span></div>
-  <div class="coin-item" data-id="coin_3"><img src="coin.png" alt="Coin"><span contenteditable="true">200</span></div>
-  <div class="coin-item" data-id="coin_4"><img src="coin.png" alt="Coin"><span contenteditable="true">500</span></div>
-  <div class="coin-item" data-id="coin_5"><img src="coin.png" alt="Coin"><span contenteditable="true">1000</span></div>
-  <div class="coin-item" data-id="coin_6"><img src="coin.png" alt="Coin"><span contenteditable="true">2000</span></div>
+<div class="user">
+  <div class="avatar" onclick="file.click()">
+    <img id="pic" src="https://i.pravatar.cc/46?u=JTN">
+  </div>
+  <input type="file" id="file" hidden onchange="updatePic(this)">
+  <div class="user-info">
+    <div class="username" onclick="editUser()">JTN Cruz</div>
+    <div class="coins">
+      <div class="coin"></div>
+      <span id="count">0</span>
+      <span id="anim"></span>
+    </div>
+  </div>
+</div>
+
+<div class="invite-wrap">
+  <div class="invite" id="invite">
+    Invita y consigue recompensas
+    <span>USD 3.35 ›</span>
+  </div>
+</div>
+
+<div class="section">
+  <strong>Recargar</strong>
+  <div class="note">Ahorra un 25 % con tarifa de servicio más baja</div>
+
+  <div class="grid">
+    <div class="card" data-c="30"><span>30</span><small>USD 0.33</small></div>
+    <div class="card" data-c="60"><span>60</span><small>USD 0.65</small></div>
+    <div class="card" data-c="80"><span>80</span><small>USD 0.87</small></div>
+    <div class="card active" data-c="400"><span>400</span><small>USD 4.32</small></div>
+    <div class="card" data-c="600"><span>600</span><small>USD 6.48</small></div>
+    <div class="card" data-c="800"><span>800</span><small>USD 8.64</small></div>
+    <div class="card" data-c="1000"><span>1,000</span><small>USD 10.8</small></div>
+    <div class="card" data-c="2000"><span>2,000</span><small>USD 21.6</small></div>
+    <div class="card" data-c="0"><span>⚙️</span><small>Personalizar</small></div>
+  </div>
+</div>
+
+<div class="info">
+  <div class="illu"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Green_shield_icon.svg/512px-Green_shield_icon.svg.png" alt="Pago Seguro"></div>
+  <div>
+    <strong>Pago seguro</strong><br>
+    Protección de pagos y datos
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+</div>
+
+<div class="footer">
+  <div class="payments">
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="VISA"></div>
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Pay"></div>
+    <div class="pay"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal"></div>
+  </div>
+  <button class="buy" onclick="buy()">Comprar</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box" id="box"></div>
 </div>
 
 <script>
-// Referencias
-const jsonScript = document.getElementById('api-domains');
-let apiData = JSON.parse(jsonScript.textContent);
-const saldoTotal = document.getElementById('saldo-total');
-const usuarioInput = document.getElementById('usuario-input');
+let coins=0, selected=400;
+setTimeout(()=>invite.classList.add('show'),500);
 
-// Función para calcular y mostrar saldo total sumando todos los coins
-function actualizarSaldoTotal() {
-  const total = apiData.coins.reduce((sum, coin) => sum + coin.amount, 0);
-  saldoTotal.textContent = `Saldo total: ${total}`;
+document.querySelectorAll('.card').forEach(card=>{
+  card.onclick=()=>{
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    selected=+card.dataset.c;
+  }
+});
+
+const coinsContainer=document.querySelector('.coins');
+
+function buy(){
+  modal.classList.add('show');
+  box.innerHTML='Procesando compra<div class="loader"></div>';
+  setTimeout(()=>{
+    coins+=selected;
+    count.textContent=coins;
+    anim.innerHTML=`<span class="plus">+${selected}</span>`;
+    
+    // GIF monedas animadas
+    for(let i=0;i<5;i++){
+      const gif=document.createElement('img');
+      gif.src='https://i.gifer.com/embedded/download/3oEjI6SIIHBdRxXI40/200w.gif';
+      gif.className='coin-gif';
+      coinsContainer.appendChild(gif);
+      setTimeout(()=>gif.remove(),1000);
+    }
+
+    box.innerHTML=`Compra completada<br><strong>${selected} monedas</strong><br>
+    <button onclick="modal.classList.remove('show')" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:12px;background:#000;color:#fff">Aceptar</button>`;
+  },1400);
 }
 
-// Inicializar saldo visual
-actualizarSaldoTotal();
+function editUser(){
+  const u=document.querySelector('.username');
+  const i=document.createElement('input');
+  i.value=u.textContent;
+  i.style.fontSize='15px';
+  i.style.fontWeight='600';
+  i.style.width='100%';
+  u.replaceWith(i);
+  i.focus();
+  i.onblur=()=>{
+    const newName=i.value||'Usuario';
+    u.textContent=newName;
+    i.replaceWith(u);
+    resetUser(newName);
+  }
+}
 
-// Actualizar usuario dinámicamente
-usuarioInput.addEventListener('input', () => {
-  apiData.usuarioId = usuarioInput.value.trim();
-  jsonScript.textContent = JSON.stringify(apiData, null, 2);
-});
+function resetUser(name){
+  coins=0;
+  count.textContent=coins;
+  const first=name.charAt(0).toUpperCase();
+  pic.src=`https://i.pravatar.cc/46?u=${first}`;
+}
 
-// Actualizar coins y enviar al servidor
-document.querySelectorAll('.coin-item span').forEach(span => {
-  span.addEventListener('input', () => {
-    const coinId = span.parentElement.getAttribute('data-id');
-    const newValue = parseInt(span.textContent) || 0;
-
-    // Actualizar coin en JSON
-    const coin = apiData.coins.find(c => c.id === coinId);
-    if (coin) {
-      coin.amount = newValue;
-    }
-
-    // Actualizar script JSON
-    jsonScript.textContent = JSON.stringify(apiData, null, 2);
-
-    // Actualizar saldo total sumando todos los coins
-    actualizarSaldoTotal();
-
-    // Enviar datos al servidor solo si hay usuario
-    if(apiData.usuarioId && apiData.rootApi) {
-      const urlServidor = apiData.rootApi + '/actualizar-saldo';
-      console.log("Enviando datos al servidor:", urlServidor, apiData);
-
-      fetch(urlServidor, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(apiData)
-      })
-      .then(res => console.log(`Saldo enviado al servidor ${apiData.rootApi} para ${apiData.usuarioId}`, res))
-      .catch(err => console.error('Error enviando saldo', err));
-    }
-  });
-});
+function updatePic(input){
+  if(input.files && input.files[0]){
+    pic.src=URL.createObjectURL(input.files[0]);
+    coins=0;
+    count.textContent=coins;
+  }
+}
 </script>
 
 </body>
